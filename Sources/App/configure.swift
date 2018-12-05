@@ -1,10 +1,12 @@
-import FluentMySQL
+import Authentication
+import FluentPostgreSQL
 import Vapor
 import Leaf
 
 public func configure(_ config: inout Config, _ env: inout Environment, _ services: inout Services) throws {
     /// Register providers first
-    try services.register(FluentMySQLProvider())
+    try services.register(FluentPostgreSQLProvider())
+    try services.register(AuthenticationProvider())
 
     services.register([TemplateRenderer.self, ViewRenderer.self]) { container -> LeafRenderer in
         let leafConfig = LeafConfig(tags: LeafTagConfig.default(),
@@ -13,6 +15,21 @@ public func configure(_ config: inout Config, _ env: inout Environment, _ servic
         return LeafRenderer(config: leafConfig,
                             using: container)
     }
+
+    let user = Environment.get("USER") ?? "root"
+    let hostname = Environment.get("DATABASE_HOSTNAME") ?? "localhost"
+    let name = Environment.get("DATABASE_DB") ?? "pigeon"
+    // Configure our database, from: `createdb pigeon`
+    var databases = DatabasesConfig()
+    let config = PostgreSQLDatabaseConfig(hostname: hostname,
+                                          username: user,
+                                          database: name)
+    databases.add(database: PostgreSQLDatabase(config: config), as: .psql)
+    services.register(databases)
+
+    var migrations = MigrationConfig()
+    migrations.add(model: User.self, database: .psql)
+    services.register(migrations)
 
     /// Register routes to the router
     let router = EngineRouter.default()
