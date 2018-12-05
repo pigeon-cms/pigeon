@@ -1,8 +1,6 @@
 import Vapor
 
-/// Register your application's routes here.
 public func routes(_ router: Router) throws {
-    // Basic "It works" example
     router.get { req -> EventLoopFuture<View> in
         return try generateVueRoot(for: req)
     }
