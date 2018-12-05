@@ -1,6 +1,9 @@
 import Vapor
 
 public func routes(_ router: Router) throws {
+    let userRouteController = UserController()
+    try userRouteController.boot(router: router)
+
     router.get { req -> EventLoopFuture<View> in
         return try generateVueRoot(for: req)
     }
