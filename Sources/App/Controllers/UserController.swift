@@ -5,13 +5,36 @@ import Fluent
 class UserController: RouteCollection {
 
     func boot(router: Router) throws {
-        let group = router.grouped("users")
-        group.post(User.self, at: "register", use: registerUserHandler)
+        let authMiddleware = User.basicAuthMiddleware(using: BCrypt)
+        let userSessionMiddleware = User.authSessionsMiddleware()
+        let authGroup = router.grouped(SessionsMiddleware.self)
+                              .grouped([authMiddleware, userSessionMiddleware])
+        
+        authGroup.get("", use: createViewHandler)
+        authGroup.get("login", use: forceLoginTest) // TODO: remove! just for testing
+        authGroup.post(User.self, at: "register", use: registerUserHandler)
+        authGroup.post("login", use: attemptUserLogin)
     }
 
 }
 
 private extension UserController {
+    func createViewHandler(_ request: Request) throws -> EventLoopFuture<View> {
+        let user: User
+        do {
+            user = try request.requireAuthenticated(User.self)
+        } catch {
+            return try generateLoginPage(for: request)
+        }
+        
+        print(user)
+        return try generateVueRoot(for: request)
+    }
+    
+    func attemptUserLogin(_ request: Request) -> Future<HTTPResponseStatus> {
+        
+    }
+
     func registerUserHandler(_ request: Request, newUser: User) -> Future<HTTPResponseStatus> {
         return User.query(on: request).filter(\.email == newUser.email).first().flatMap { existingUser in
             guard existingUser == nil else {
@@ -23,6 +46,17 @@ private extension UserController {
             let persistedUser = User(id: nil, email: newUser.email, password: hashedPassword)
 
             return persistedUser.save(on: request).transform(to: .created)
+        }
+    }
+    
+    func forceLoginTest(_ request: Request) throws -> EventLoopFuture<String> {
+        return User.find(UUID(uuidString: "C8A090A2-E6FA-4D45-9644-16F46B7CCF92")!,
+                         on: request).map { user in
+            guard let user = user else {
+                throw Abort(.badRequest)
+            }
+            try request.authenticate(user)
+            return "Logged in!"
         }
     }
 }
