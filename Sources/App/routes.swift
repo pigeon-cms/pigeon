@@ -5,10 +5,10 @@ public func routes(_ router: Router) throws {
     let userRouteController = UserController()
     try userRouteController.boot(router: router)
 
-    let basicAuthMiddleware = User.basicAuthMiddleware(using: BCrypt)
-    let basicAuthGroup = router.grouped([basicAuthMiddleware])
+    let authMiddleware = User.basicAuthMiddleware(using: BCrypt)
+    let authGroup = router.grouped([authMiddleware]).grouped(SessionsMiddleware.self)
 
-    basicAuthGroup.get { req -> EventLoopFuture<View> in
+    authGroup.get { req -> EventLoopFuture<View> in
         let user: User
         do {
             user = try req.requireAuthenticated(User.self)
