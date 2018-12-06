@@ -12,3 +12,5 @@ extension User: BasicAuthenticatable {
     static let usernameKey: WritableKeyPath<User, String> = \.email
     static let passwordKey: WritableKeyPath<User, String> = \.password
 }
+
+extension User: SessionAuthenticatable { }
