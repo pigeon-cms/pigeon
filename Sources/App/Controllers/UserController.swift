@@ -31,11 +31,24 @@ private extension UserController {
         return try generateVueRoot(for: request)
     }
     
-    func attemptUserLogin(_ request: Request) -> Future<HTTPResponseStatus> {
-        
+    func attemptUserLogin(_ request: Request) throws -> EventLoopFuture<Response> {
+        return try request.content.decode(User.self).flatMap { user in
+            return User.authenticate(
+                using: BasicAuthorization.init(username: user.email,
+                                               password: user.password),
+                verifier: try request.make(BCryptDigest.self),
+                on: request
+            ).map { user in
+                guard let user = user else {
+                    return request.redirect(to: "/")
+                }
+                try request.authenticate(user)
+                return request.redirect(to: "/")
+            }
+        }
     }
 
-    func registerUserHandler(_ request: Request, newUser: User) -> Future<HTTPResponseStatus> {
+    func registerUserHandler(_ request: Request, newUser: User) -> EventLoopFuture<HTTPResponseStatus> {
         return User.query(on: request).filter(\.email == newUser.email).first().flatMap { existingUser in
             guard existingUser == nil else {
                 throw Abort(.badRequest, reason: "A user with this email already exists" , identifier: nil)
