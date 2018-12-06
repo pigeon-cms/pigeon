@@ -6,11 +6,18 @@ public func routes(_ router: Router) throws {
     try userRouteController.boot(router: router)
 
     let basicAuthMiddleware = User.basicAuthMiddleware(using: BCrypt)
-    let guardAuthMiddleware = User.guardAuthMiddleware()
-    let basicAuthGroup = router.grouped([basicAuthMiddleware, guardAuthMiddleware])
+    let basicAuthGroup = router.grouped([basicAuthMiddleware])
 
     basicAuthGroup.get { req -> EventLoopFuture<View> in
-//        let user = try req.requireAuthenticated(User.self)
+        let user: User
+        do {
+            user = try req.requireAuthenticated(User.self)
+        } catch {
+            return try generateLoginPage(for: req)
+        }
+        
+        print(user)
+        // TODO: should all this be in middleware?
         return try generateVueRoot(for: req)
     }
     
