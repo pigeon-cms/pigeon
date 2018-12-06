@@ -24,10 +24,24 @@ private extension UserController {
         do {
             user = try request.requireAuthenticated(User.self)
         } catch {
-            return try generateLoginPage(for: request)
+            return try handleUnauthenticatedUser(request)
         }
-        
-        return try generateVueRoot(for: request)
+
+        return try generateVueRoot(for: request, with: user)
+    }
+
+    /// Handles a request from an unauthenticated user.
+    /// If any users exist, this generates the login page. If none have been created yet,
+    /// the first-time registration page is generated.
+    func handleUnauthenticatedUser(_ request: Request) throws -> EventLoopFuture<View> {
+        return User.query(on: request).count().flatMap { count -> EventLoopFuture<View> in
+            if count > 0 {
+                return try generateLoginPage(for: request)
+            } else {
+                //                    return try generateFirstTimeRegistrationPage(for: request)
+                fatalError()
+            }
+        }
     }
     
     func loginUserHandler(_ request: Request) throws -> EventLoopFuture<Response> {
