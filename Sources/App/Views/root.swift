@@ -10,9 +10,3 @@ func generateVueRoot(for req: Request) throws -> Future<View> {
     let page = RootPage(exampleData: "Hello, world!")
     return leaf.render("index", page)
 }
-
-func generateLoginPage(for req: Request) throws -> Future<View> {
-    let leaf = try req.make(LeafRenderer.self)
-    let page = RootPage(exampleData: "log in")
-    return leaf.render("index", page)
-}

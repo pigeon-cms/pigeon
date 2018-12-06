@@ -5,7 +5,5 @@
     </head>
     <body>
         <h1>#(exampleData)</h1>
-        <div id="app"></div>
-        <script src="/scripts/bundle.js"></script>
     </body>
 </html>
