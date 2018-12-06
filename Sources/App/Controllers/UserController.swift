@@ -11,14 +11,14 @@ class UserController: RouteCollection {
                               .grouped([authMiddleware, userSessionMiddleware])
         
         authGroup.get("", use: createViewHandler)
-        authGroup.get("login", use: forceLoginTest) // TODO: remove! just for testing
         authGroup.post(User.self, at: "register", use: registerUserHandler)
-        authGroup.post("login", use: attemptUserLogin)
+        authGroup.post("login", use: loginUserHandler)
     }
 
 }
 
 private extension UserController {
+
     func createViewHandler(_ request: Request) throws -> EventLoopFuture<View> {
         let user: User
         do {
@@ -27,11 +27,10 @@ private extension UserController {
             return try generateLoginPage(for: request)
         }
         
-        print(user)
         return try generateVueRoot(for: request)
     }
     
-    func attemptUserLogin(_ request: Request) throws -> EventLoopFuture<Response> {
+    func loginUserHandler(_ request: Request) throws -> EventLoopFuture<Response> {
         return try request.content.decode(User.self).flatMap { user in
             return User.authenticate(
                 using: BasicAuthorization.init(username: user.email,
@@ -48,7 +47,12 @@ private extension UserController {
         }
     }
 
-    func registerUserHandler(_ request: Request, newUser: User) -> EventLoopFuture<HTTPResponseStatus> {
+    func registerUserHandler(_ request: Request, newUser: User) throws -> EventLoopFuture<HTTPResponseStatus> {
+        do {
+            let _ = try request.requireAuthenticated(User.self)
+        } catch {
+            throw Abort(.forbidden)
+        }
         return User.query(on: request).filter(\.email == newUser.email).first().flatMap { existingUser in
             guard existingUser == nil else {
                 throw Abort(.badRequest, reason: "A user with this email already exists" , identifier: nil)
@@ -61,15 +65,5 @@ private extension UserController {
             return persistedUser.save(on: request).transform(to: .created)
         }
     }
-    
-    func forceLoginTest(_ request: Request) throws -> EventLoopFuture<String> {
-        return User.find(UUID(uuidString: "C8A090A2-E6FA-4D45-9644-16F46B7CCF92")!,
-                         on: request).map { user in
-            guard let user = user else {
-                throw Abort(.badRequest)
-            }
-            try request.authenticate(user)
-            return "Logged in!"
-        }
-    }
+
 }
