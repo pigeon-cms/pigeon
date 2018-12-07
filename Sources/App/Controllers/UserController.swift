@@ -60,8 +60,8 @@ private extension UserController {
         }
     }
 
-    func registerUserHandler(_ request: Request, newUser: User) throws -> EventLoopFuture<HTTPResponseStatus> {
-        return User.query(on: request).count().flatMap { count -> EventLoopFuture<HTTPResponseStatus> in
+    func registerUserHandler(_ request: Request, newUser: User) throws -> EventLoopFuture<Response> {
+        return User.query(on: request).count().flatMap { count -> EventLoopFuture<Response> in
             if count > 0 { // only check authentication if users exist
                 // on the first run (no users saved) we should allow registering freely
                 guard try request.isAuthenticated(User.self) else {
@@ -71,7 +71,10 @@ private extension UserController {
             // TODO: password, username can't be empty
             return User.query(on: request).filter(\.email == newUser.email).first().flatMap { existingUser in
                 guard existingUser == nil else {
-                    throw Abort(.badRequest, reason: "A user with this email already exists" , identifier: nil)
+                    throw Abort(.badRequest, reason: "A user with this email already exists")
+                }
+                guard !newUser.email.isEmpty, !newUser.password.isEmpty else {
+                    throw Abort(.badRequest, reason: "An email and a password are required")
                 }
                 
                 let digest = try request.make(BCryptDigest.self)
@@ -79,7 +82,9 @@ private extension UserController {
                 let persistedUser = User(id: nil, name: nil,
                                          email: newUser.email, password: hashedPassword)
                 
-                return persistedUser.save(on: request).transform(to: .created)
+                return persistedUser.save(on: request).map { _ in
+                    return request.redirect(to: "/")
+                }
             }
         }
     }
