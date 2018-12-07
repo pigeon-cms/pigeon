@@ -4,6 +4,7 @@ import FluentPostgreSQL
 
 struct User: Content, PostgreSQLUUIDModel, Migration {
     var id: UUID?
+    var name: String?
     private(set) var email: String
     private(set) var password: String
 }

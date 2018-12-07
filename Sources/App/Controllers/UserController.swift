@@ -38,8 +38,7 @@ private extension UserController {
             if count > 0 {
                 return try generateLoginPage(for: request)
             } else {
-                //                    return try generateFirstTimeRegistrationPage(for: request)
-                fatalError()
+                return try generateFirstTimeRegistrationPage(for: request)
             }
         }
     }
@@ -62,21 +61,26 @@ private extension UserController {
     }
 
     func registerUserHandler(_ request: Request, newUser: User) throws -> EventLoopFuture<HTTPResponseStatus> {
-        do {
-            let _ = try request.requireAuthenticated(User.self)
-        } catch {
-            throw Abort(.forbidden)
-        }
-        return User.query(on: request).filter(\.email == newUser.email).first().flatMap { existingUser in
-            guard existingUser == nil else {
-                throw Abort(.badRequest, reason: "A user with this email already exists" , identifier: nil)
+        return User.query(on: request).count().flatMap { count -> EventLoopFuture<HTTPResponseStatus> in
+            if count > 0 { // only check authentication if users exist
+                // on the first run (no users saved) we should allow registering freely
+                guard try request.isAuthenticated(User.self) else {
+                    throw Abort(.forbidden)
+                }
             }
-
-            let digest = try request.make(BCryptDigest.self)
-            let hashedPassword = try digest.hash(newUser.password)
-            let persistedUser = User(id: nil, email: newUser.email, password: hashedPassword)
-
-            return persistedUser.save(on: request).transform(to: .created)
+            // TODO: password, username can't be empty
+            return User.query(on: request).filter(\.email == newUser.email).first().flatMap { existingUser in
+                guard existingUser == nil else {
+                    throw Abort(.badRequest, reason: "A user with this email already exists" , identifier: nil)
+                }
+                
+                let digest = try request.make(BCryptDigest.self)
+                let hashedPassword = try digest.hash(newUser.password)
+                let persistedUser = User(id: nil, name: nil,
+                                         email: newUser.email, password: hashedPassword)
+                
+                return persistedUser.save(on: request).transform(to: .created)
+            }
         }
     }
 
