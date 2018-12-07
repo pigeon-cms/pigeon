@@ -68,7 +68,7 @@ private extension UserController {
                     throw Abort(.forbidden)
                 }
             }
-            // TODO: password, username can't be empty
+
             return User.query(on: request).filter(\.email == newUser.email).first().flatMap { existingUser in
                 guard existingUser == nil else {
                     throw Abort(.badRequest, reason: "A user with this email already exists")
