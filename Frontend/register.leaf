@@ -18,12 +18,14 @@
         		name="email"
         		id="email"
                 autocomplete="username"
+                required
         	/>
         	<input
         		type="password"
         		name="password"
         		id="password"
                 autocomplete="new-password"
+                required
         	/>
         	<input
         		type="submit"
