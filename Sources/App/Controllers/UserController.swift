@@ -82,8 +82,8 @@ private extension UserController {
                 let persistedUser = User(id: nil, name: nil,
                                          email: newUser.email, password: hashedPassword)
                 
-                return persistedUser.save(on: request).map { _ in
-                    return request.redirect(to: "/")
+                return persistedUser.save(on: request).flatMap { _ in
+                    return try self.loginUserHandler(request)
                 }
             }
         }
