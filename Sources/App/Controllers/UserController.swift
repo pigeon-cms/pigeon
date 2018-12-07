@@ -1,40 +1,44 @@
 import Vapor
 import Crypto
 import Fluent
+import Authentication
 
+/// Creates the authorization middleware for the application.
+/// Manages the routes for logging in users or creating first-time users.
 class UserController: RouteCollection {
+
+    var viewController: AppViewController?
 
     func boot(router: Router) throws {
         let authMiddleware = User.basicAuthMiddleware(using: BCrypt)
         let userSessionMiddleware = User.authSessionsMiddleware()
         let authGroup = router.grouped(SessionsMiddleware.self)
                               .grouped([authMiddleware, userSessionMiddleware])
-        
-        authGroup.get("", use: createViewHandler)
-        authGroup.post(User.self, at: "register", use: registerUserHandler)
-        authGroup.post("login", use: loginUserHandler)
+
+        authGroup.get("/login", use: handleUnauthenticatedUser)
+        authGroup.post("/login", use: loginUserHandler)
+        authGroup.post(User.self, at: "/register", use: registerUserHandler)
+
+        /// All downstream routes should go through `protectedAuthGroup`, which redirects to "/login"
+        /// for unauthenticated users.
+        let redirectMiddleware = RedirectMiddleware<User>.login()
+        let protectedAuthGroup = authGroup.grouped(redirectMiddleware)
+        viewController = AppViewController()
+        try viewController?.boot(router: protectedAuthGroup)
     }
 
 }
 
 private extension UserController {
 
-    func createViewHandler(_ request: Request) throws -> EventLoopFuture<View> {
-        let user: User
-        do {
-            user = try request.requireAuthenticated(User.self)
-        } catch {
-            return try handleUnauthenticatedUser(request)
-        }
-
-        return try generateVueRoot(for: request, with: user)
-    }
-
     /// Handles a request from an unauthenticated user.
     /// If any users exist, this generates the login page. If none have been created yet,
     /// the first-time registration page is generated.
-    func handleUnauthenticatedUser(_ request: Request) throws -> EventLoopFuture<View> {
-        return User.query(on: request).count().flatMap { count -> EventLoopFuture<View> in
+    func handleUnauthenticatedUser(_ request: Request) throws -> Future<View> {
+        guard try !request.isAuthenticated(User.self) else {
+            throw Abort.redirect(to: "/")
+        }
+        return User.query(on: request).count().flatMap { count -> Future<View> in
             if count > 0 {
                 return try generateLoginPage(for: request)
             } else {
@@ -43,7 +47,7 @@ private extension UserController {
         }
     }
     
-    func loginUserHandler(_ request: Request) throws -> EventLoopFuture<Response> {
+    func loginUserHandler(_ request: Request) throws -> Future<Response> {
         return try request.content.decode(User.self).flatMap { user in
             return User.authenticate(
                 using: BasicAuthorization.init(username: user.email,
@@ -60,8 +64,8 @@ private extension UserController {
         }
     }
 
-    func registerUserHandler(_ request: Request, newUser: User) throws -> EventLoopFuture<Response> {
-        return User.query(on: request).count().flatMap { count -> EventLoopFuture<Response> in
+    func registerUserHandler(_ request: Request, newUser: User) throws -> Future<Response> {
+        return User.query(on: request).count().flatMap { count -> Future<Response> in
             if count > 0 { // only check authentication if users exist
                 // on the first run (no users saved) we should allow registering freely
                 guard try request.isAuthenticated(User.self) else {
