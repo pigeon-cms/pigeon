@@ -4,6 +4,14 @@
         <title>Pigeon CMS</title>
     </head>
     <body>
+        <nav>
+            <ul>
+            #if(administrator) {
+                #embed("administration")
+            }
+            </ul>
+        </nav>
+        <img src="/images/pigeon.svg" />
         <h1>#(exampleData)</h1>
     </body>
 </html>

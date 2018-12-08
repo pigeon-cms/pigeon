@@ -11,7 +11,7 @@ class AppViewController: RouteCollection {
 private extension AppViewController {
 
     func createRootViewHandler(_ request: Request) throws -> Future<View> {
-        return try generateVueRoot(for: request)
+        return try generateIndex(for: request)
     }
 
 }
