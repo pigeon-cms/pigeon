@@ -4,7 +4,7 @@ import Fluent
 import Authentication
 
 /// Creates the authorization middleware for the application.
-/// Manages the routes for logging in users or creating first-time users.
+/// Manages the routes for logging in and registering users.
 class UserController: RouteCollection {
 
     var viewController: AppViewController?
@@ -72,8 +72,12 @@ private extension UserController {
                     throw Abort(.forbidden)
                 }
             }
+            /// the first created account starts as an owner; all others start as users
+            let privileges: UserPrivileges = count == 0 ? .owner : .user
 
-            return User.query(on: request).filter(\.email == newUser.email).first().flatMap { existingUser in
+            return User.query(on: request)
+                       .filter(\.email == newUser.email)
+                       .first().flatMap { existingUser in
                 guard existingUser == nil else {
                     throw Abort(.badRequest, reason: "A user with this email already exists")
                 }
@@ -83,7 +87,7 @@ private extension UserController {
                 
                 let digest = try request.make(BCryptDigest.self)
                 let hashedPassword = try digest.hash(newUser.password)
-                let persistedUser = User(id: nil, name: nil,
+                let persistedUser = User(id: nil, name: newUser.name, privileges: privileges,
                                          email: newUser.email, password: hashedPassword)
                 
                 return persistedUser.save(on: request).flatMap { _ in
