@@ -5,7 +5,7 @@ import Authentication
 
 /// Creates the authorization middleware for the application.
 /// Manages the routes for logging in and registering users.
-class UserController: RouteCollection {
+class UserController: RouteCollection, UserDelegate {
 
     var viewController: AppViewController?
 
@@ -23,16 +23,28 @@ class UserController: RouteCollection {
         /// for unauthenticated users.
         let redirectMiddleware = RedirectMiddleware<User>.login()
         let protectedAuthGroup = authGroup.grouped(redirectMiddleware)
-        viewController = AppViewController()
+        viewController = AppViewController(userDelegate: self)
         try viewController?.boot(router: protectedAuthGroup)
     }
     
-    class func userPrivileges(on request: Request) throws -> UserPrivileges {
+    func authenticatedUser(on request: Request) throws -> User {
+        guard let user = try request.authenticated(User.self) else {
+            throw Abort(.forbidden)
+        }
+
+        return user
+    }
+    
+    func userPrivileges(on request: Request) throws -> UserPrivileges {
         guard let user = try request.authenticated(User.self) else {
             throw Abort(.forbidden)
         }
         
         return user.privileges ?? .user
+    }
+    
+    func allUsers(on request: Request) throws -> Future<[User]> {
+        return User.query(on: request).all()
     }
 
 }

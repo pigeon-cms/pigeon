@@ -5,6 +5,13 @@
     </head>
     <body>
         <img src="/images/pigeon.svg" />
-        
+        <ul>
+        #for(user in users) {
+        	#if(user == currentUser) {
+        		<p>It's a me!</p>
+	        }
+        	<li>#(user.name)  #(user.email)</li>
+	    }
+		</ul>
     </body>
 </html>
