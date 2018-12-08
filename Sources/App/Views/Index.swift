@@ -1,7 +1,7 @@
 import Vapor
 import Leaf
 
-struct IndexPage: Codable {
+struct BasePage: Codable {
     var administrationLinks: [Link]
     var exampleData: String
 }
@@ -23,8 +23,6 @@ struct PageAuthorization: Codable {
 }
 
 func generateIndex(for req: Request, privileges: UserPrivileges) throws -> Future<View> {
-    let leaf = try req.make(LeafRenderer.self)
-    
     let pageAuthorization = PageAuthorization(privileges: privileges)
     var administrationLinks = [Link]()
     if pageAuthorization.administratorLinks {
@@ -32,7 +30,7 @@ func generateIndex(for req: Request, privileges: UserPrivileges) throws -> Futur
         administrationLinks.append(Link(name: "Settings", path: "/settings"))
     }
     
-    let indexPage = IndexPage(administrationLinks: administrationLinks,
-                              exampleData: "Hello, world!")
-    return leaf.render("index", indexPage)
+    let indexPage = BasePage(administrationLinks: administrationLinks,
+                             exampleData: "Hello, world!")
+    return try req.view().render("index", indexPage)
 }

@@ -15,6 +15,7 @@ public func configure(_ config: inout Config, _ env: inout Environment, _ servic
         return LeafRenderer(config: leafConfig,
                             using: container)
     }
+    config.prefer(LeafRenderer.self, for: ViewRenderer.self)
 
     // TODO: create a nice service class for setting up DBs, offer PostgreSQL alternatives
     let user = Environment.get("USER") ?? "root"
