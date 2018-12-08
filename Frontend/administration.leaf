@@ -1,9 +1,7 @@
-#for(link in administrationLinks) {
-    #if(isFirst) {
+#if(count(administrationLinks) > 0) {
 <ul>
-    }
+    #for(link in administrationLinks) {
     <li><a href="#(link.path)"">#(link.name)</a></li>
-    #if(isLast) {
+    }   
 </ul>
-    }
 }
