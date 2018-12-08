@@ -4,6 +4,9 @@
         <title>Pigeon CMS</title>
     </head>
     <body>
+    	<nav>
+            #embed("administration")
+        </nav>
         <img src="/images/pigeon.svg" />
         <ul>
         #for(user in users) {
