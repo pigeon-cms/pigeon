@@ -4,8 +4,6 @@ import Vapor
 import Leaf
 
 public func configure(_ config: inout Config, _ env: inout Environment, _ services: inout Services) throws {
-    config.prefer(MemoryKeyedCache.self, for: KeyedCache.self) // TODO: database?
-
     /// Register providers first
     try services.register(FluentPostgreSQLProvider())
     try services.register(AuthenticationProvider())
@@ -18,6 +16,7 @@ public func configure(_ config: inout Config, _ env: inout Environment, _ servic
                             using: container)
     }
 
+    // TODO: create a nice service class for setting up DBs, offer PostgreSQL alternatives
     let user = Environment.get("USER") ?? "root"
     let hostname = Environment.get("DATABASE_HOSTNAME") ?? "localhost"
     let name = Environment.get("DATABASE_DB") ?? "pigeon"
@@ -31,7 +30,16 @@ public func configure(_ config: inout Config, _ env: inout Environment, _ servic
 
     var migrations = MigrationConfig()
     migrations.add(model: User.self, database: .psql)
+    migrations.prepareCache(for: .psql)
     services.register(migrations)
+    
+    // Configure KeyedCache for database session caching
+    services.register(KeyedCache.self) { container in
+        try container.keyedCache(for: .psql)
+    }
+    
+    config.prefer(DatabaseKeyedCache<ConfiguredDatabase<PostgreSQLDatabase>>.self,
+                  for: KeyedCache.self)
 
     /// Register routes to the router
     let router = EngineRouter.default()
