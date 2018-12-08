@@ -26,6 +26,14 @@ class UserController: RouteCollection {
         viewController = AppViewController()
         try viewController?.boot(router: protectedAuthGroup)
     }
+    
+    class func userPrivileges(on request: Request) throws -> UserPrivileges {
+        guard let user = try request.authenticated(User.self) else {
+            throw Abort(.forbidden)
+        }
+        
+        return user.privileges ?? .user
+    }
 
 }
 

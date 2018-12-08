@@ -5,12 +5,12 @@ import FluentPostgreSQL
 struct User: Content, PostgreSQLUUIDModel, Migration {
     var id: UUID?
     var name: String?
-    var privileges: UserPrivileges
+    var privileges: UserPrivileges?
     private(set) var email: String
     private(set) var password: String
 }
 
-enum UserPrivileges: Int, Codable {
+enum UserPrivileges: Int, Codable, Equatable {
     /// Can edit existing content types
     case user
     /// Can create new content types and edit existing types

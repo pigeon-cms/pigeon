@@ -11,7 +11,8 @@ class AppViewController: RouteCollection {
 private extension AppViewController {
 
     func createRootViewHandler(_ request: Request) throws -> Future<View> {
-        return try generateIndex(for: request)
+        let privileges = try UserController.userPrivileges(on: request)
+        return try generateIndex(for: request, privileges: privileges)
     }
 
 }

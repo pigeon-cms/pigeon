@@ -5,11 +5,7 @@
     </head>
     <body>
         <nav>
-            <ul>
-            #if(administrator) {
-                #embed("administration")
-            }
-            </ul>
+            #embed("administration")
         </nav>
         <img src="/images/pigeon.svg" />
         <h1>#(exampleData)</h1>
