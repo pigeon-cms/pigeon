@@ -19,7 +19,7 @@ enum SupportedType: Codable, RawRepresentable {
     case Bool
     case Date
     case URL
-    indirect case array(type: SupportedType)
+    indirect case Array(type: SupportedType)
 
     typealias RawValue = String
 
@@ -47,10 +47,40 @@ enum SupportedType: Codable, RawRepresentable {
     }
 
     private static func parseArrayType(_ rawValue: RawValue) -> SupportedType? {
-        return nil // TODO
+        switch rawValue {
+        case "Array<String>":
+            return .Array(type: .String)
+        case "Array<Int>":
+            return .Array(type: .Int)
+        case "Array<Float>":
+            return .Array(type: .Float)
+        case "Array<Bool>":
+            return .Array(type: .Bool)
+        case "Array<Date>":
+            return .Array(type: .Date)
+        case "Array<URL>":
+            return .Array(type: .URL)
+        default:
+            return nil
+        }
     }
 
     var rawValue: RawValue {
-        return "String" // TOOD
+        switch self {
+        case .String:
+            return "String"
+        case .Int:
+            return "Int"
+        case .Float:
+            return "Float"
+        case .Bool:
+            return "Bool"
+        case .Date:
+            return "Date"
+        case .URL:
+            return "URL"
+        case .Array(type: let arrayType):
+            return "Array<" + arrayType.rawValue + ">"
+        }
     }
 }
