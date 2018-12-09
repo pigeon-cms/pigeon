@@ -9,8 +9,12 @@ var create = new Vue({
 			this.fields.push({
 				name: null,
 				type: type,
-				value: null
+				value: null,
+				defaultValue: null
 			})
+		},
+		removeField: function(field, event) {
+			this.fields.splice( this.fields.indexOf(field), 1 )
 		}
 	}
 })

@@ -10,18 +10,38 @@
 		method="POST">
 	<ul>
 		<li v-for="field in fields">
-			{{ field.name }}
+			<span class="field-type">{{ field.type }}</span>
 			<input
 				type="text"
 				v-model="field.name"
 				name="name"
-				placeholder="Name"
+				placeholder="Label"
 			/>
+			<input
+				v-if="field.type == 'String' || field.type == 'URL'"
+				type="text"
+				v-model="field.defaultValue"
+				name="default"
+				placeholder="Default value"
+			/>
+			<input
+				v-if="field.type == 'Bool'"
+				type="checkbox"
+				v-model="field.defaultValue"
+				name="default"
+			/>
+			<span class="tip" v-if="field.type == 'Date'">Defaults to the current date</span>
 
+			<button type="button" v-on:click="removeField(field)">Remove</button>
 		</li>
 	</ul>
 	</form>
-<button v-on:click="addField('string')">String</button>
+<div class="add-field">
+	<button v-on:click="addField('String')">Text</button>
+	<button v-on:click="addField('Date')">Date</button>
+	<button v-on:click="addField('URL')">Link</button>
+	<button v-on:click="addField('Bool')">Switch</button>
+</div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/vue"></script>
