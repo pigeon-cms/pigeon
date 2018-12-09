@@ -5,17 +5,24 @@ struct GenericContentItem: Content, PostgreSQLUUIDModel, Migration {
     var id: UUID?
     var date: Date?
     var authors: [User]?
-    var content: [String: SupportedType] // All the content for a single item
+    var content: [GenericContentField] // All the content for a single item
+}
+
+struct GenericContentField: Content, PostgreSQLUUIDModel, Migration {
+    var id: UUID?
+    var name: String // "Title"
+    var value: SupportedType // .string("A Post Title")
+    // TODO: width? shape? something to define how it's displayed
 }
 
 enum SupportedType: Codable, Equatable {
-    case string(String)
-    case int(Int)
-    case float(Float)
-    case bool(Bool)
-    case date(Date)
-    case url(URL)
-    case array([SupportedType])
+    case string(String?)
+    case int(Int?)
+    case float(Float?)
+    case bool(Bool?)
+    case date(Date?)
+    case url(URL?)
+    case array([SupportedType]?)
 
     init(from decoder: Decoder) throws {
         let container = try decoder.singleValueContainer()
