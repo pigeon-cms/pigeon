@@ -25,6 +25,7 @@ extension Request {
         let pageAuthorization = try PageAuthorization(privileges: privileges())
         var administrationLinks = [Link]()
         if pageAuthorization.administratorLinks {
+            administrationLinks.append(Link(name: "Content Types", path: "/types"))
             administrationLinks.append(Link(name: "Users & Roles", path: "/users"))
             administrationLinks.append(Link(name: "Settings", path: "/settings"))
         }

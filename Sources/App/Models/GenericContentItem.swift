@@ -11,7 +11,8 @@ struct GenericContentItem: Content, PostgreSQLUUIDModel, Migration {
 struct GenericContentField: Codable {
     var name: String // "Title"
     var value: SupportedType // .string("A Post Title")
-    // TODO: width? shape? something to define how it's displayed
+    var required = false
+    // TODO: Define how it's displayed
 }
 
 enum SupportedType: Codable, Equatable {

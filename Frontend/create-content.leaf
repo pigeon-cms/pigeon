@@ -1,0 +1,5 @@
+#if(count(contentTypes) == 0) {
+	<h2>Create your first content type</h2>
+} else {
+	<h2>Create a new content type</h2>
+}
