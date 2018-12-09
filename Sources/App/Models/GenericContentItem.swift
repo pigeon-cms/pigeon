@@ -43,6 +43,10 @@ enum SupportedType: Codable, Equatable {
             self = .array(try container.decode([SupportedType].self))
             return
         } catch { }
+        do {
+            self = .string(try container.decode(String.self))
+            return
+        } catch { }
         self = .int(-1)
     }
 
