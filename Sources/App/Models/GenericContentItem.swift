@@ -8,8 +8,7 @@ struct GenericContentItem: Content, PostgreSQLUUIDModel, Migration {
     var content: [GenericContentField] // All the content for a single item
 }
 
-struct GenericContentField: Content, PostgreSQLUUIDModel, Migration {
-    var id: UUID?
+struct GenericContentField: Codable {
     var name: String // "Title"
     var value: SupportedType // .string("A Post Title")
     // TODO: width? shape? something to define how it's displayed
