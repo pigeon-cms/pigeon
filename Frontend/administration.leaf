@@ -1,7 +1,7 @@
 #if(count(shared.administrationLinks) > 0) {
 <ul>
-    #for(link in shared.administrationLinks) {
-    <li><a href="#(link.path)"">#(link.name)</a></li>
-    }   
+	#for(link in shared.administrationLinks) {
+	<li><a href="#(link.path)"">#(link.name)</a></li>
+	}
 </ul>
 }
