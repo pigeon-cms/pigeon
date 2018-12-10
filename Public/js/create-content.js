@@ -15,6 +15,9 @@ var create = new Vue({
 		},
 		removeField: function(field, event) {
 			this.fields.splice( this.fields.indexOf(field), 1 )
+		},
+		handleSubmit: function(event) {
+			console.log("Need to submit content: " + this.fields)
 		}
 	}
 })

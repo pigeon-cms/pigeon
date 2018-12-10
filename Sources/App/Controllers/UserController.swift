@@ -23,8 +23,12 @@ class UserController: RouteCollection {
         /// for unauthenticated users.
         let redirectMiddleware = RedirectMiddleware<User>.login()
         let protectedAuthGroup = authGroup.grouped(redirectMiddleware)
+        
         viewController = AppViewController()
         try viewController?.boot(router: protectedAuthGroup)
+        
+        let contentController = ContentTypeController()
+        try contentController.boot(router: protectedAuthGroup)
     }
 
 }
