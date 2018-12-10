@@ -6,30 +6,26 @@
 
 <div id="create">
 	<form
-		@submit.prevent="handleSubmit"
+		v-on:submit.prevent="handleSubmit"
 	>
-	<!-- Remove typ info from forms, submit this.fields directly in js -->
 	<ul>
 		<li v-for="field in fields">
 			<span class="field-type">{{ field.type }}</span>
 			<input
 				type="text"
 				v-model="field.name"
-				v-bind:name="'template['+fields.indexOf(field)+']'"
 				placeholder="Label"
 			/>
 			<input
 				v-if="field.type == 'String' || field.type == 'URL'"
 				type="text"
 				v-model="field.defaultValue"
-				v-bind:name="'template['+fields.indexOf(field)+']'"
 				placeholder="Default value"
 			/>
 			<input
 				v-if="field.type == 'Bool'"
 				type="checkbox"
 				v-model="field.defaultValue"
-				v-bind:name="'template['+fields.indexOf(field)+']'"
 			/>
 			<span class="tip" v-if="field.type == 'Date'">Creation date</span>
 

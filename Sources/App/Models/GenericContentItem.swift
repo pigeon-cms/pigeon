@@ -8,7 +8,7 @@ struct GenericContentItem: Content, PostgreSQLUUIDModel, Migration {
     var content: [GenericContentField] // All the content for a single item
 }
 
-struct GenericContentField: Codable {
+struct GenericContentField: Content {
     var name: String // "Title"
     var value: SupportedType? // .string("A Post Title")
     var defaultValue: SupportedType?
@@ -16,7 +16,7 @@ struct GenericContentField: Codable {
     // TODO: Define how it's displayed
 }
 
-enum SupportedType: Codable, Equatable {
+enum SupportedType: Content, Equatable {
     case string(String?)
     case int(Int?)
     case float(Float?)
