@@ -10,20 +10,85 @@ struct GenericContentItem: Content, PostgreSQLUUIDModel, Migration {
 
 struct GenericContentField: Content {
     var name: String // "Title"
-    var value: SupportedType? // .string("A Post Title")
-    var defaultValue: SupportedType?
+    var type: SupportedType
+    var value: SupportedValue? // .string("A Post Title")
     var required = false
     // TODO: Define how it's displayed
 }
 
-enum SupportedType: Content, Equatable {
+//struct SupportedTypeValue: Content, Equatable {
+//    typealias RawValue = String
+//
+//    let type: SupportedType
+//    var value: SupportedValue?
+//
+//    init(type: SupportedType) {
+//        self.type = type
+//    }
+//}
+
+enum SupportedType: Content, Equatable, RawRepresentable {
+    typealias RawValue = String
+    
+    case String
+    case Int
+    case Float
+    case Bool
+    case Date
+    case URL
+    indirect case Array(SupportedType)
+    
+    init?(rawValue: RawValue) {
+        switch rawValue {
+        case "String": self = .String
+        case "Int": self = .Int
+        case "Float": self = .Float
+        case "Bool": self = .Bool
+        case "Date": self = .Date
+        case "URL": self = .URL
+        default:
+            if let arrayType = SupportedType.parseArrayType(rawValue) {
+                self = arrayType
+            } else {
+                return nil
+            }
+        }
+    }
+
+    private static func parseArrayType(_ rawValue: RawValue) -> SupportedType? {
+        switch rawValue {
+        case "Array<String>": return .Array(.String)
+        case "Array<Int>": return .Array(.Int)
+        case "Array<Float>": return .Array(.Float)
+        case "Array<Bool>": return .Array(.Bool)
+        case "Array<Date>": return .Array(.Date)
+        case "Array<URL>": return .Array(.URL)
+        default:
+            return nil
+        }
+    }
+
+    var rawValue: RawValue {
+        switch self {
+        case .String: return "String"
+        case .Int: return "Int"
+        case .Float: return "Float"
+        case .Bool: return "Bool"
+        case .Date: return "Date"
+        case .URL: return "URL"
+        case .Array(let type): return "Array<" + type.rawValue + ">"
+        }
+    }
+}
+
+enum SupportedValue: Content, Equatable {
     case string(String?)
     case int(Int?)
     case float(Float?)
     case bool(Bool?)
     case date(Date?)
     case url(URL?)
-    case array([SupportedType]?)
+    case array([SupportedValue]?)
 
     init(from decoder: Decoder) throws {
         let container = try decoder.singleValueContainer()
@@ -48,7 +113,7 @@ enum SupportedType: Content, Equatable {
             return
         } catch { }
         do {
-            self = .array(try container.decode([SupportedType].self))
+            self = .array(try container.decode([SupportedValue].self))
             return
         } catch { }
         do {
@@ -70,65 +135,4 @@ enum SupportedType: Content, Equatable {
         case .array(let array): try container.encode(array)
         }
     }
-
-    //    init?(rawValue: RawValue) {
-    //        switch rawValue {
-    //        case "String":
-    //            self = .String
-    //        case "Int":
-    //            self = .Int
-    //        case "Float":
-    //            self = .Float
-    //        case "Bool":
-    //            self = .Bool
-    //        case "Date":
-    //            self = .Date
-    //        case "URL":
-    //            self = .URL
-    //        default:
-    //            if let arrayType = SupportedType.parseArrayType(rawValue) {
-    //                self = arrayType
-    //            } else {
-    //                return nil
-    //            }
-    //        }
-    //    }
-    //
-    //    private static func parseArrayType(_ rawValue: RawValue) -> SupportedType? {
-    //        switch rawValue {
-    //        case "Array<String>":
-    //            return .Array(type: .String)
-    //        case "Array<Int>":
-    //            return .Array(type: .Int)
-    //        case "Array<Float>":
-    //            return .Array(type: .Float)
-    //        case "Array<Bool>":
-    //            return .Array(type: .Bool)
-    //        case "Array<Date>":
-    //            return .Array(type: .Date)
-    //        case "Array<URL>":
-    //            return .Array(type: .URL)
-    //        default:
-    //            return nil
-    //        }
-    //    }
-    //
-    //    var rawValue: RawValue {
-    //        switch self {
-    //        case .String:
-    //            return "String"
-    //        case .Int:
-    //            return "Int"
-    //        case .Float:
-    //            return "Float"
-    //        case .Bool:
-    //            return "Bool"
-    //        case .Date:
-    //            return "Date"
-    //        case .URL:
-    //            return "URL"
-    //        case .Array(type: let arrayType):
-    //            return "Array<" + arrayType.rawValue + ">"
-    //        }
-    //    }
 }

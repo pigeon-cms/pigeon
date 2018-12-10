@@ -19,13 +19,13 @@
 			<input
 				v-if="field.type == 'String' || field.type == 'URL'"
 				type="text"
-				v-model="field.defaultValue"
+				v-model="field.value"
 				placeholder="Default value"
 			/>
 			<input
 				v-if="field.type == 'Bool'"
 				type="checkbox"
-				v-model="field.defaultValue"
+				v-model="field.value"
 			/>
 			<span class="tip" v-if="field.type == 'Date'">Creation date</span>
 

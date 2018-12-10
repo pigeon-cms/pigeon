@@ -10,7 +10,6 @@ var create = new Vue({
 				name: null,
 				type: type,
 				value: null,
-				defaultValue: null,
 				required: false
 			})
 		},
