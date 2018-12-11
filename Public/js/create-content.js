@@ -1,6 +1,8 @@
 var create = new Vue({
 	el: '#create',
 	data: {
+		fieldName: null,
+		fieldPluralName: null,
 		fields: []
 	},
 	methods: {
