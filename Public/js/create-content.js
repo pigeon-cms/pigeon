@@ -31,8 +31,6 @@ var create = new Vue({
 			var xhr = new XMLHttpRequest()
 			xhr.open('POST', '/type/create', true)
 			xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8')
-
-			// send the collected data as JSON
 			xhr.send(JSON.stringify(category))
 
 			xhr.onloadend = function () { }
