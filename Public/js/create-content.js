@@ -18,15 +18,22 @@ var create = new Vue({
 		removeField: function(field, event) {
 			this.fields.splice( this.fields.indexOf(field), 1 )
 		},
+		createCategory: function() {
+			return {
+				name: this.fieldName,
+				plural: (this.fieldPluralName || this.fieldName + 's'),
+				template: this.fields
+			}
+		},
 		handleSubmit: function(event) {
-			console.log('Need to submit content: ' + JSON.stringify(this.fields))
+			let category = this.createCategory()
 
 			var xhr = new XMLHttpRequest()
 			xhr.open('POST', '/type/create', true)
 			xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8')
 
 			// send the collected data as JSON
-			xhr.send(JSON.stringify(this.fields))
+			xhr.send(JSON.stringify(category))
 
 			xhr.onloadend = function () { }
 		}
