@@ -9,10 +9,6 @@
 		</nav>
 		<img src="/images/pigeon.svg" />
 		<h1>Content Types</h1>
-		#for(type in contentTypes) {
-			<div>
-				Content Type #(type.name)
-			</div>
-		}
+		#embed("create-content")
 	</body>
 </html>

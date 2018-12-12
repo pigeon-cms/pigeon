@@ -3,21 +3,22 @@ import Vapor
 class AppViewController: RouteCollection {
     
     func boot(router: Router) throws {
-        router.get("/", use: createRootViewHandler)
-        router.get("/types", use: createTypesViewHandler)
-        router.get("/users", use: createUsersViewHandler)
+        router.get("/", use: rootViewHandler)
+        router.get("/types", use: typesViewHandler)
+        router.get("/types/create", use: createTypesViewHandler)
+        router.get("/users", use: usersViewHandler)
     }
 
 }
 
 private extension AppViewController {
 
-    func createRootViewHandler(_ request: Request) throws -> Future<View> {
+    func rootViewHandler(_ request: Request) throws -> Future<View> {
         let privileges = try request.privileges()
         return try generateIndex(for: request, privileges: privileges)
     }
     
-    func createUsersViewHandler(_ request: Request) throws -> Future<View> {
+    func usersViewHandler(_ request: Request) throws -> Future<View> {
         let user = try request.user()
         let privileges = try request.privileges()
         
@@ -30,6 +31,23 @@ private extension AppViewController {
         }
     }
 
+    func typesViewHandler(_ request: Request) throws -> Future<View> {
+        let user = try request.user()
+        let privileges = try request.privileges()
+
+        guard privileges.rawValue > UserPrivileges.administrator.rawValue else {
+            throw Abort(.unauthorized)
+        }
+
+        return request.allContentTypes().flatMap { contentTypes in
+            if contentTypes.count > 0 {
+                return try typesView(for: request, currentUser: user, contentTypes: contentTypes)
+            } else {
+                return try createTypesView(for: request, currentUser: user, contentTypes: contentTypes)
+            }
+        }
+    }
+
     func createTypesViewHandler(_ request: Request) throws -> Future<View> {
         let user = try request.user()
         let privileges = try request.privileges()
@@ -39,7 +57,7 @@ private extension AppViewController {
         }
 
         return request.allContentTypes().flatMap { contentTypes in
-            return try generateTypes(for: request, currentUser: user, contentTypes: contentTypes)
+            return try createTypesView(for: request, currentUser: user, contentTypes: contentTypes)
         }
     }
 

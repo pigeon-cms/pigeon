@@ -9,7 +9,11 @@ class ContentTypeController: RouteCollection {
     private func createTypeHandler(_ request: Request, category: GenericContentCategory) throws -> Future<Response> {
         print(request)
         print(category)
-        throw Abort.redirect(to: "/")
+//        var category = category
+//        category.items = category.items ?? [UUID: GenericContentItem]()
+        return category.save(on: request).map { _ in
+            return request.redirect(to: "/types")
+        }
     }
     
 }

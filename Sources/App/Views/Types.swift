@@ -6,11 +6,22 @@ struct TypesPage: Codable {
     var contentTypes: [GenericContentCategory]
 }
 
-func generateTypes(for req: Request,
-                   currentUser: User,
-                   contentTypes: [GenericContentCategory]) throws -> Future<View> {
+func typesView(for req: Request,
+               currentUser: User,
+               contentTypes: [GenericContentCategory]) throws -> Future<View> {
+    
     let typesPage = TypesPage(shared: try req.base(),
                               currentUser: currentUser,
                               contentTypes: contentTypes)
     return try req.view().render("types", typesPage)
+}
+
+func createTypesView(for req: Request,
+                     currentUser: User,
+                     contentTypes: [GenericContentCategory]) throws -> Future<View> {
+
+    let typesPage = TypesPage(shared: try req.base(),
+                              currentUser: currentUser,
+                              contentTypes: contentTypes)
+    return try req.view().render("create-types", typesPage)
 }
