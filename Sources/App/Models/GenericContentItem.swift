@@ -44,7 +44,7 @@ struct GenericContentField: Content {
 //    }
 //}
 
-enum SupportedType: Content, Equatable, RawRepresentable {
+enum SupportedType: Content, ReflectionDecodable, Equatable, RawRepresentable {
     typealias RawValue = String
     
     case String
@@ -95,6 +95,10 @@ enum SupportedType: Content, Equatable, RawRepresentable {
         case .URL: return "URL"
         case .Array(let type): return "Array<" + type.rawValue + ">"
         }
+    }
+
+    static func reflectDecoded() throws -> (SupportedType, SupportedType) {
+        return (.String, .Int)
     }
 }
 
