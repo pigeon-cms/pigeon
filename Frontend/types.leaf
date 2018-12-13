@@ -9,10 +9,12 @@
 		</nav>
 		<img src="/images/pigeon.svg" />
 		<h1>Content Types</h1>
+		<ul>
 		#for(type in contentTypes) {
-			<div>
-				Content Type #(type.name)
-			</div>
+			<li>
+				#(type.plural)
+			</li>
 		}
+		</ul>
 	</body>
 </html>
