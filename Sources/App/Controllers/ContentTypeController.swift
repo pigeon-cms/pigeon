@@ -1,4 +1,5 @@
 import Vapor
+import Fluent
 
 class ContentTypeController: RouteCollection {
     
@@ -7,16 +8,20 @@ class ContentTypeController: RouteCollection {
     }
     
     private func createTypeHandler(_ request: Request, category: GenericContentCategory) throws -> Future<Response> {
-        print(request)
-        print(category)
-//        var category = category
-//        category.items = category.items ?? [UUID: GenericContentItem]()
-        return category.save(on: request).map { _ in
-            let response = HTTPResponse(status: .created,
-                                        headers: HTTPHeaders([("Location", "/types")]))
-            return Response(http: response, using: request.sharedContainer)
-        }.catch { error in
-            print("-> CREATE ERROR \(error)")
+        return GenericContentCategory.query(on: request)
+                                     .filter(\.plural == category.plural)
+                                     .first().flatMap { existingCategory in
+            guard existingCategory == nil else {
+                throw Abort(.badRequest, reason: "A type with that name exists")
+            }
+
+            return category.save(on: request).map { _ in
+                let response = HTTPResponse(status: .created,
+                                            headers: HTTPHeaders([("Location", "/types")]))
+                return Response(http: response, using: request.sharedContainer)
+            }.catchMap { error in
+                throw Abort(.internalServerError, reason: error.localizedDescription)
+            }
         }
     }
     

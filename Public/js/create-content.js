@@ -1,13 +1,12 @@
 var create = new Vue({
 	el: '#create',
 	data: {
-		fieldName: null,
-		fieldPluralName: null,
+		name: null,
+		plural: null,
 		fields: []
 	},
 	methods: {
 		addField: function(type) {
-			console.log(type)
 			this.fields.push({
 				name: null,
 				type: type,
@@ -20,20 +19,37 @@ var create = new Vue({
 		},
 		createCategory: function() {
 			return {
-				name: this.fieldName,
-				plural: (this.fieldPluralName || this.fieldName + 's'),
+				name: this.name,
+				plural: (this.plural || this.name + 's'),
 				template: this.fields
 			}
 		},
 		handleSubmit: function(event) {
-			let category = this.createCategory()
+			const self = this
+			let category = self.createCategory()
 
 			var xhr = new XMLHttpRequest()
 			xhr.open('POST', '/type/create', true)
 			xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8')
 			xhr.send(JSON.stringify(category))
 
-			xhr.onloadend = function () { }
+			xhr.onloadend = function () {
+				const location = xhr.getResponseHeader('Location')
+				if (location) {
+					window.location.href = location
+				}
+
+				const response = JSON.parse(xhr.responseText)
+				if (response.error) {
+					self.handleError(response.reason)
+				}
+			}
+		},
+		handleError: function(error) {
+			// TODO: show any error in a div
+			if (error == 'A type with that name exists') {
+				console.log('Plural error!') // TODO: place a red dot next to "plural" field
+			}
 		}
 	}
 })

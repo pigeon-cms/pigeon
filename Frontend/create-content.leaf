@@ -12,7 +12,7 @@
 		<li>
 			<input
 				type="text"
-				v-model="fieldName"
+				v-model="name"
 				placeholder="Post"
 				required
 			/>
@@ -20,8 +20,8 @@
 		<li>
 			<input
 				type="text"
-				v-model="fieldPluralName"
-				v-bind:placeholder="(fieldName || 'Post') + 's'"
+				v-model="plural"
+				v-bind:placeholder="(name || 'Post') + 's'"
 			/>
 		</li>
 		<li v-for="field in fields">
