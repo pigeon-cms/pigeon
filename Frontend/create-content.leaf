@@ -5,12 +5,14 @@
 }
 
 <div id="create">
-	<div
-		v-if="error"
-		class="form-error"
+	<ul
+		v-if="errors"
+		class="form-errors"
 	>
-		<span>{{ error }}</span>
-	</div>
+		<li v-for="error in errors">
+			{{ error }}
+		</li>
+	</ul>
 	<form
 		v-on:submit.prevent="handleSubmit"
 	>

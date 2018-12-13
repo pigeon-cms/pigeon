@@ -4,7 +4,7 @@ var create = new Vue({
 		name: null,
 		plural: null,
 		fields: [],
-		error: null
+		errors: []
 	},
 	methods: {
 		addField: function(type) {
@@ -27,6 +27,7 @@ var create = new Vue({
 		},
 		handleSubmit: function(event) {
 			const self = this
+			self.errors = []
 			let category = self.createCategory()
 
 			var xhr = new XMLHttpRequest()
@@ -47,7 +48,7 @@ var create = new Vue({
 			}
 		},
 		handleError: function(error) {
-			this.error = error
+			this.errors.push(error)
 			if (error == 'A type with that name exists') {
 				console.log('Plural error!') // TODO: place a red dot next to "plural" field
 			}
