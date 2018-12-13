@@ -3,7 +3,8 @@ var create = new Vue({
 	data: {
 		name: null,
 		plural: null,
-		fields: []
+		fields: [],
+		error: null
 	},
 	methods: {
 		addField: function(type) {
@@ -46,7 +47,7 @@ var create = new Vue({
 			}
 		},
 		handleError: function(error) {
-			// TODO: show any error in a div
+			this.error = error
 			if (error == 'A type with that name exists') {
 				console.log('Plural error!') // TODO: place a red dot next to "plural" field
 			}
