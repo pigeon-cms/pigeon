@@ -12,7 +12,11 @@ class ContentTypeController: RouteCollection {
 //        var category = category
 //        category.items = category.items ?? [UUID: GenericContentItem]()
         return category.save(on: request).map { _ in
-            return request.redirect(to: "/types")
+            let response = HTTPResponse(status: .created,
+                                        headers: HTTPHeaders([("Location", "/types")]))
+            return Response(http: response, using: request.sharedContainer)
+        }.catch { error in
+            print("-> CREATE ERROR \(error)")
         }
     }
     

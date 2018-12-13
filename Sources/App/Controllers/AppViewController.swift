@@ -43,7 +43,7 @@ private extension AppViewController {
             if contentTypes.count > 0 {
                 return try typesView(for: request, currentUser: user, contentTypes: contentTypes)
             } else {
-                return try createTypesView(for: request, currentUser: user, contentTypes: contentTypes)
+                throw Abort.redirect(to: "/types/create")
             }
         }
     }
