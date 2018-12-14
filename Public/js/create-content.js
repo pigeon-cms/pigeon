@@ -12,7 +12,7 @@ var create = new Vue({
 				name: null,
 				type: type,
 				value: null,
-				required: false
+				required: true
 			})
 		},
 		removeField: function(field, event) {

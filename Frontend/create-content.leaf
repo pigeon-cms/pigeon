@@ -52,6 +52,10 @@
 				v-model="field.value"
 			/>
 			<span class="tip" v-if="field.type == 'Date'">Creation date</span>
+			<input
+				type="checkbox"
+				v-model="field.required"
+			/>
 
 			<button type="button" v-on:click="removeField(field)">Remove</button>
 		</li>
