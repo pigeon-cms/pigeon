@@ -9,7 +9,9 @@ public func configure(_ config: inout Config, _ env: inout Environment, _ servic
     try services.register(AuthenticationProvider())
 
     services.register([TemplateRenderer.self, ViewRenderer.self]) { container -> LeafRenderer in
-        let leafConfig = LeafConfig(tags: LeafTagConfig.default(),
+        var tagConfig = LeafTagConfig.default()
+        tagConfig.use(JSTag(), as: "js")
+        let leafConfig = LeafConfig(tags: tagConfig,
                                     viewsDir: DirectoryConfig.detect().workDir + "Frontend",
                                     shouldCache: container.environment != .development)
         return LeafRenderer(config: leafConfig,
