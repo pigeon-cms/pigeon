@@ -5,6 +5,7 @@ class ContentTypeController: RouteCollection {
     
     func boot(router: Router) throws {
         router.post(GenericContentCategory.self, at: "/type/create", use: createTypeHandler)
+        router.post(GenericContentCategory.self, at: "/type/edit", use: editTypeHandler)
     }
     
     private func createTypeHandler(_ request: Request, category: GenericContentCategory) throws -> Future<Response> {
@@ -22,6 +23,28 @@ class ContentTypeController: RouteCollection {
             }.catchMap { error in
                 throw Abort(.internalServerError, reason: error.localizedDescription)
             }
+        }
+    }
+
+    private func editTypeHandler(_ request: Request, category: GenericContentCategory) throws -> Future<Response> {
+        return GenericContentCategory.query(on: request)
+                                     .filter(\.id == category.id)
+                                     .first().flatMap { existingCategory in
+            guard let existingCategory = existingCategory else {
+                throw Abort(.badRequest, reason: "Couldn't locate the type you're trying to edit")
+            }
+
+            print("FOUND!")
+            print(existingCategory)
+            throw Abort(.badRequest, reason: "TODO: save properties etc")
+
+//            return category.save(on: request).map { _ in
+//                let response = HTTPResponse(status: .created,
+//                                            headers: HTTPHeaders([("Location", "/types")]))
+//                return Response(http: response, using: request.sharedContainer)
+//                }.catchMap { error in
+//                    throw Abort(.internalServerError, reason: error.localizedDescription)
+//            }
         }
     }
     
