@@ -8,9 +8,8 @@ final class JSTag: TagRenderer {
 
     func render(tag: TagContext) throws -> EventLoopFuture<TemplateData> {
         guard let escaped = tag.parameters.first?.string?.replacingOccurrences(of: "'", with: "\\'") else {
-            throw Abort(.badRequest)
+            return tag.container.future(tag.parameters.first ?? TemplateData.null)
         }
-        print(escaped)
         return tag.container.future(TemplateData.string(escaped))
     }
 }
