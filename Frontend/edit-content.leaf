@@ -70,8 +70,8 @@
 	var edit = new Vue({
 		el: "#edit",
 		data: {
-			name: '#(contentType.name)',
-			plural: '#(contentType.plural)',
+			name: '#js(contentType.name)',
+			plural: '#js(contentType.plural)',
 			fields: [
 				#for(field in contentType.template) {
 					{
