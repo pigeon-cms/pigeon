@@ -1,4 +1,5 @@
 import Vapor
+import Fluent
 
 class AppViewController: RouteCollection {
     
@@ -6,6 +7,7 @@ class AppViewController: RouteCollection {
         router.get("/", use: rootViewHandler)
         router.get("/types", use: typesViewHandler)
         router.get("/types/create", use: createTypesViewHandler)
+        router.get("/type", String.parameter, use: typeViewHandler)
         router.get("/users", use: usersViewHandler)
     }
 
@@ -58,6 +60,23 @@ private extension AppViewController {
 
         return request.allContentTypes().flatMap { contentTypes in
             return try createTypesView(for: request, currentUser: user, contentTypes: contentTypes)
+        }
+    }
+
+    private func typeViewHandler(_ request: Request) throws -> Future<View> {
+        let user = try request.user()
+
+        guard let typeName = try request.parameters.next(String.self).removingPercentEncoding else {
+            throw Abort(.notFound)
+        }
+
+        return GenericContentCategory.query(on: request)
+                                     .filter(\.plural == typeName)
+                                     .first().flatMap { category in
+            guard let category = category else {
+                throw Abort(.notFound)
+            }
+            return try createSingleTypeView(for: request, currentUser: user, contentType: category)
         }
     }
 
