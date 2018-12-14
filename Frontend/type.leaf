@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<title>Pigeon CMS</title>
+	</head>
+	<body>
+		<nav>
+			#embed("administration")
+		</nav>
+		<img src="/images/pigeon.svg" />
+		#embed("edit-content")
+	</body>
+</html>

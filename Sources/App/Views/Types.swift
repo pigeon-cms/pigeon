@@ -1,9 +1,16 @@
 import Vapor
+import Leaf
 
 struct TypesPage: Codable {
     var shared: BasePage
     var currentUser: User
     var contentTypes: [GenericContentCategory]
+}
+
+struct TypePage: Codable {
+    var shared: BasePage
+    var currentUser: User
+    var contentType: GenericContentCategory
 }
 
 func typesView(for req: Request,
@@ -30,8 +37,8 @@ func createSingleTypeView(for req: Request,
                           currentUser: User,
                           contentType: GenericContentCategory) throws -> Future<View> {
 
-    let typesPage = TypesPage(shared: try req.base(),
-                              currentUser: currentUser,
-                              contentTypes: [contentType])
-    return try req.view().render("types", typesPage)
+    let typePage = TypePage(shared: try req.base(),
+                            currentUser: currentUser,
+                            contentType: contentType)
+    return try req.view().render("type", typePage)
 }
