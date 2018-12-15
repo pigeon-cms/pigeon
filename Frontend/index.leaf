@@ -5,6 +5,7 @@
 	</head>
 	<body>
 		<nav>
+			#embed("navigation")
 			#embed("administration")
 		</nav>
 		<img src="/images/pigeon.svg" />

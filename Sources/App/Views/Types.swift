@@ -16,29 +16,37 @@ struct TypePage: Codable {
 func typesView(for req: Request,
                currentUser: User,
                contentTypes: [GenericContentCategory]) throws -> Future<View> {
-    
-    let typesPage = TypesPage(shared: try req.base(),
-                              currentUser: currentUser,
-                              contentTypes: contentTypes)
-    return try req.view().render("Types/types", typesPage)
+
+    return try req.base().flatMap { basePage in
+        let typesPage = TypesPage(shared: basePage,
+                                  currentUser: currentUser,
+                                  contentTypes: contentTypes)
+        return try req.view().render("Types/types", typesPage)
+    }
+
 }
 
 func createTypesView(for req: Request,
                      currentUser: User,
                      contentTypes: [GenericContentCategory]) throws -> Future<View> {
 
-    let typesPage = TypesPage(shared: try req.base(),
-                              currentUser: currentUser,
-                              contentTypes: contentTypes)
-    return try req.view().render("Types/create-types", typesPage)
+    return try req.base().flatMap { basePage in
+        let typesPage = TypesPage(shared: basePage,
+                                  currentUser: currentUser,
+                                  contentTypes: contentTypes)
+        return try req.view().render("Types/create-types", typesPage)
+    }
+
 }
 
 func createSingleTypeView(for req: Request,
                           currentUser: User,
                           contentType: GenericContentCategory) throws -> Future<View> {
 
-    let typePage = TypePage(shared: try req.base(),
-                            currentUser: currentUser,
-                            contentType: contentType)
-    return try req.view().render("Types/type", typePage)
+    return try req.base().flatMap { basePage in
+        let typePage = TypePage(shared: basePage,
+                                currentUser: currentUser,
+                                contentType: contentType)
+        return try req.view().render("Types/type", typePage)
+    }
 }

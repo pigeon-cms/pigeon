@@ -6,6 +6,8 @@ struct IndexPage: Codable {
 }
 
 func generateIndex(for req: Request, privileges: UserPrivileges) throws -> Future<View> {
-    let indexPage = try IndexPage(shared: req.base())
-    return try req.view().render("index", indexPage)
+    return try req.base().flatMap { basePage in
+        let indexPage = IndexPage(shared: basePage)
+        return try req.view().render("index", indexPage)
+    }
 }

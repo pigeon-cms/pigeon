@@ -1,0 +1,7 @@
+#if(count(shared.links) > 0) {
+<ul>
+	#for(link in shared.links) {
+	<li><a href="#(link.path)"">#(link.name)</a></li>
+	}
+</ul>
+}
