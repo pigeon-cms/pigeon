@@ -1,7 +1,7 @@
 import Vapor
 import FluentPostgreSQL
 
-struct GenericContentCategory: Content, PostgreSQLUUIDModel, Migration {
+final class GenericContentCategory: Content, PostgreSQLUUIDModel, Migration {
     var id: UUID?
     var name: String // "Post"
     var plural: String // "Posts"

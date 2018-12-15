@@ -34,17 +34,17 @@ class ContentTypeController: RouteCollection {
                 throw Abort(.badRequest, reason: "Couldn't locate the type you're trying to edit")
             }
 
-            print("FOUND!")
-            print(existingCategory)
-            throw Abort(.badRequest, reason: "TODO: save properties etc")
+            existingCategory.name = category.name
+            existingCategory.plural = category.plural
+            existingCategory.template = category.template
 
-//            return category.save(on: request).map { _ in
-//                let response = HTTPResponse(status: .created,
-//                                            headers: HTTPHeaders([("Location", "/types")]))
-//                return Response(http: response, using: request.sharedContainer)
-//                }.catchMap { error in
-//                    throw Abort(.internalServerError, reason: error.localizedDescription)
-//            }
+            return existingCategory.save(on: request).map { _ in
+                let response = HTTPResponse(status: .created,
+                                            headers: HTTPHeaders([("Location", "/types")]))
+                return Response(http: response, using: request.sharedContainer)
+                }.catchMap { error in
+                    throw Abort(.internalServerError, reason: error.localizedDescription)
+            }
         }
     }
     
