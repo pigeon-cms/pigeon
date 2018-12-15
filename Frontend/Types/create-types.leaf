@@ -8,6 +8,7 @@
 			#embed("administration")
 		</nav>
 		<img src="/images/pigeon.svg" />
-		#embed("edit-content")
+		<h1>Content Types</h1>
+		#embed("Types/create-content")
 	</body>
 </html>

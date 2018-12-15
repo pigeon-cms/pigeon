@@ -20,7 +20,7 @@ func typesView(for req: Request,
     let typesPage = TypesPage(shared: try req.base(),
                               currentUser: currentUser,
                               contentTypes: contentTypes)
-    return try req.view().render("types", typesPage)
+    return try req.view().render("Types/types", typesPage)
 }
 
 func createTypesView(for req: Request,
@@ -30,7 +30,7 @@ func createTypesView(for req: Request,
     let typesPage = TypesPage(shared: try req.base(),
                               currentUser: currentUser,
                               contentTypes: contentTypes)
-    return try req.view().render("create-types", typesPage)
+    return try req.view().render("Types/create-types", typesPage)
 }
 
 func createSingleTypeView(for req: Request,
@@ -40,5 +40,5 @@ func createSingleTypeView(for req: Request,
     let typePage = TypePage(shared: try req.base(),
                             currentUser: currentUser,
                             contentType: contentType)
-    return try req.view().render("type", typePage)
+    return try req.view().render("Types/type", typePage)
 }

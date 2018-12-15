@@ -11,5 +11,5 @@ func generateUsers(for req: Request, currentUser: User, users: [User]) throws ->
     let usersPage = try UsersPage(shared: req.base(),
                                   currentUser: currentUser,
                                   users: users)
-    return try req.view().render("users", usersPage)
+    return try req.view().render("Users/users", usersPage)
 }
