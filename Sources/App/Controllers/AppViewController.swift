@@ -2,7 +2,7 @@ import Vapor
 import Fluent
 
 class AppViewController: PigeonController {
-    
+
     override func loginGuardedBoot(router: Router) throws {
         router.get("/", use: rootViewHandler)
         router.get("/types", use: typesViewHandler)
@@ -19,15 +19,15 @@ private extension AppViewController {
         let privileges = try request.privileges()
         return try generateIndex(for: request, privileges: privileges)
     }
-    
+
     func usersViewHandler(_ request: Request) throws -> Future<View> {
         let user = try request.user()
         let privileges = try request.privileges()
-        
+
         guard privileges.rawValue > UserPrivileges.administrator.rawValue else {
             throw Abort(.unauthorized)
         }
-        
+
         return request.allUsers().flatMap { users in
             return try generateUsers(for: request, currentUser: user, users: users)
         }

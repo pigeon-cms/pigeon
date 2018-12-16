@@ -13,7 +13,7 @@ struct Link: Codable {
 struct PageAuthorization: Codable {
     var editContentTypes: Bool
     var administratorLinks: Bool
-    
+
     init(privileges: UserPrivileges?) {
         let privileges = privileges ?? .user
         editContentTypes = privileges.rawValue >= UserPrivileges.editor.rawValue
@@ -42,6 +42,6 @@ extension Request {
 
             return BasePage(links: links, administrationLinks: administrationLinks)
         }
-        
+
     }
 }

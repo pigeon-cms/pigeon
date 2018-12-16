@@ -31,7 +31,7 @@ private extension UserController {
             }
         }
     }
-    
+
     func loginUserHandler(_ request: Request) throws -> Future<Response> {
         guard try !request.isAuthenticated(User.self) else {
             throw Abort.redirect(to: "/users")
@@ -72,12 +72,12 @@ private extension UserController {
                 guard !newUser.email.isEmpty, !newUser.password.isEmpty else {
                     throw Abort(.badRequest, reason: "An email and a password are required")
                 }
-                
+
                 let digest = try request.make(BCryptDigest.self)
                 let hashedPassword = try digest.hash(newUser.password)
                 let persistedUser = User(id: nil, name: newUser.name, privileges: privileges,
                                          email: newUser.email, password: hashedPassword)
-                
+
                 return persistedUser.save(on: request).flatMap { _ in
                     return try self.loginUserHandler(request)
                 }
@@ -91,11 +91,11 @@ extension Request {
     func user() throws -> User {
         return try requireAuthenticated(User.self)
     }
-    
+
     func privileges() throws -> UserPrivileges {
         return try user().privileges ?? .user
     }
-    
+
     func allUsers() -> Future<[User]> {
         return User.query(on: self).all()
     }

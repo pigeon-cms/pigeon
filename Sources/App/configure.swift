@@ -37,12 +37,12 @@ public func configure(_ config: inout Config, _ env: inout Environment, _ servic
     migrations.add(model: GenericContentItem.self, database: .psql)
     migrations.prepareCache(for: .psql)
     services.register(migrations)
-    
+
     // Configure KeyedCache for database session caching
     services.register(KeyedCache.self) { container in
         try container.keyedCache(for: .psql)
     }
-    
+
     config.prefer(DatabaseKeyedCache<ConfiguredDatabase<PostgreSQLDatabase>>.self,
                   for: KeyedCache.self)
 

@@ -2,12 +2,12 @@ import Vapor
 import Fluent
 
 class ContentTypeController: PigeonController {
-    
+
     override func loginGuardedBoot(router: Router) throws {
         router.post(GenericContentCategory.self, at: "/type/create", use: createTypeHandler)
         router.post(GenericContentCategory.self, at: "/type/edit", use: editTypeHandler)
     }
-    
+
     private func createTypeHandler(_ request: Request, category: GenericContentCategory) throws -> Future<Response> {
         category.plural = makeURLSafe(category.plural)
 
@@ -57,7 +57,7 @@ class ContentTypeController: PigeonController {
     func makeURLSafe(_ string: String) -> String {
         return string.replacingOccurrences(of: "%", with: "")
     }
-    
+
 }
 
 extension Request {
