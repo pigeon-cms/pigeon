@@ -1,3 +1,13 @@
 #embed("header")
 #embed("nav")
 <h1>#(plural)</h1>
+
+#if(count(posts) == 0) {
+<h2>No posts found.</h2>
+}
+
+#for(post in posts) {
+<h2>#(post.content.first.value) #(post.date)</h2>
+}
+
+<a href="#(plural)/create">Create a post</a> <!-- TODO: singular name -->
