@@ -1,9 +1,9 @@
 import Vapor
 import Fluent
 
-class AppViewController: RouteCollection {
+class AppViewController: PigeonController {
     
-    func boot(router: Router) throws {
+    override func bootLoggedIn(router: Router) throws {
         router.get("/", use: rootViewHandler)
         router.get("/types", use: typesViewHandler)
         router.get("/types/create", use: createTypesViewHandler)

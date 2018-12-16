@@ -1,34 +1,15 @@
 import Vapor
-import Crypto
 import Fluent
-import Authentication
+import Crypto
 
 /// Creates the authorization middleware for the application.
 /// Manages the routes for logging in and registering users.
-class UserController: RouteCollection {
+class UserController: PigeonController {
 
-    var viewController: AppViewController?
-
-    func boot(router: Router) throws {
-        let authMiddleware = User.basicAuthMiddleware(using: BCrypt)
-        let userSessionMiddleware = User.authSessionsMiddleware()
-        let authGroup = router.grouped(SessionsMiddleware.self)
-                              .grouped([authMiddleware, userSessionMiddleware])
-
-        authGroup.get("/login", use: handleUnauthenticatedUser)
-        authGroup.post("/login", use: loginUserHandler)
-        authGroup.post(User.self, at: "/register", use: registerUserHandler)
-
-        /// All downstream routes should go through `protectedAuthGroup`, which redirects to "/login"
-        /// for unauthenticated users.
-        let redirectMiddleware = RedirectMiddleware<User>.login()
-        let protectedAuthGroup = authGroup.grouped(redirectMiddleware)
-        
-        viewController = AppViewController()
-        try viewController?.boot(router: protectedAuthGroup)
-        
-        let contentController = ContentTypeController()
-        try contentController.boot(router: protectedAuthGroup)
+    override func bootAuth(router: Router) throws {
+        router.get("/login", use: handleUnauthenticatedUser)
+        router.post("/login", use: loginUserHandler)
+        router.post(User.self, at: "/register", use: registerUserHandler)
     }
 
 }

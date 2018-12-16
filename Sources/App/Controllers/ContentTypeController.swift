@@ -1,9 +1,9 @@
 import Vapor
 import Fluent
 
-class ContentTypeController: RouteCollection {
+class ContentTypeController: PigeonController {
     
-    func boot(router: Router) throws {
+    override func bootLoggedIn(router: Router) throws {
         router.post(GenericContentCategory.self, at: "/type/create", use: createTypeHandler)
         router.post(GenericContentCategory.self, at: "/type/edit", use: editTypeHandler)
     }
