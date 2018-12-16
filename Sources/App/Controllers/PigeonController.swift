@@ -10,16 +10,19 @@ class PigeonController: RouteCollection {
         let authRouter = router.grouped(SessionsMiddleware.self)
                                .grouped([authMiddleware,
                                          userSessionMiddleware])
-        try bootAuth(router: authRouter)
+        try authBoot(router: authRouter)
         
         let redirectMiddleware = RedirectMiddleware<User>.login()
         let loggedInRouter = authRouter.grouped(redirectMiddleware)
-        try bootLoggedIn(router: loggedInRouter)
+        try loginGuardedBoot(router: loggedInRouter)
 
     }
     
-    func bootAuth(router: Router) throws { }
+    /// Routes registered to this router have access to authentication and session middlewares.
+    func authBoot(router: Router) throws { }
     
-    func bootLoggedIn(router: Router) throws { }
+    /// Routes registered to this router can only be accessed by logged-in users.
+    /// Other requests will be redirected to `/login`.
+    func loginGuardedBoot(router: Router) throws { }
     
 }

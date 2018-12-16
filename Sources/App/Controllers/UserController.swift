@@ -6,7 +6,7 @@ import Crypto
 /// Manages the routes for logging in and registering users.
 class UserController: PigeonController {
 
-    override func bootAuth(router: Router) throws {
+    override func authBoot(router: Router) throws {
         router.get("/login", use: handleUnauthenticatedUser)
         router.post("/login", use: loginUserHandler)
         router.post(User.self, at: "/register", use: registerUserHandler)

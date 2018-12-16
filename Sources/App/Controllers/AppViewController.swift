@@ -3,7 +3,7 @@ import Fluent
 
 class AppViewController: PigeonController {
     
-    override func bootLoggedIn(router: Router) throws {
+    override func loginGuardedBoot(router: Router) throws {
         router.get("/", use: rootViewHandler)
         router.get("/types", use: typesViewHandler)
         router.get("/types/create", use: createTypesViewHandler)
