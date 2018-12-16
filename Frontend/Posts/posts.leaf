@@ -3,11 +3,11 @@
 <h1>#(plural)</h1>
 
 #if(count(posts) == 0) {
-<h2>No posts found.</h2>
+<h2>No #lowercase(category.plural) found.</h2>
 }
 
 #for(post in posts) {
 <h2>#(post.content.first.value) #(post.date)</h2>
 }
 
-<a href="/content/#(plural)/create">Create a post</a> <!-- TODO: singular name -->
+<a href="/content/#(category.plural)/create">Create a #lowercase(category.name)</a> <!-- TODO: singular name -->

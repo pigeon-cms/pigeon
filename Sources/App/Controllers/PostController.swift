@@ -6,6 +6,7 @@ class PostController: PigeonController {
     override func loginGuardedBoot(router: Router) throws {
         router.get(["/content", String.parameter], use: postViewController)
         router.get(["/content", String.parameter, "/create"], use: createPostView)
+        router.post(GenericContentItem.self, at: ["/content", String.parameter], use: createPostController)
 //        router.get(["/content", String.parameter, String.parameter], use: editPostView)
     }
 
@@ -20,8 +21,8 @@ private extension PostController {
 
         return try request.contentCategory(typePluralName: typeName).flatMap { category in
             return try self.generatePostListView(for: request,
-                                                 posts: category.items ?? [],
-                                                 plural: category.plural)
+                                                 category: category,
+                                                 posts: category.items ?? [])
         }
     }
 
@@ -36,20 +37,24 @@ private extension PostController {
         }
     }
 
+    func createPostController(_ request: Request, item: GenericContentItem) throws -> Future<View> {
+        // TODO: save the item
+    }
+
     struct PostListPage: Codable {
         var shared: BasePage
+        var category: GenericContentCategory
         var posts: [GenericContentItem]
-        var plural: String
         // TODO: page number / paging
     }
     
     func generatePostListView(for request: Request,
-                              posts: [GenericContentItem],
-                              plural: String) throws -> Future<View> {
+                              category: GenericContentCategory,
+                              posts: [GenericContentItem]) throws -> Future<View> {
         return try request.base().flatMap { basePage in
             let postsPage = PostListPage(shared: basePage,
-                                         posts: posts,
-                                         plural: plural)
+                                         category: category,
+                                         posts: posts)
             return try request.view().render("Posts/posts", postsPage)
         }
     }
