@@ -2,8 +2,7 @@ import Vapor
 import Fluent
 import Crypto
 
-/// Creates the authorization middleware for the application.
-/// Manages the routes for logging in and registering users.
+/// Manages logging in and registering users.
 class UserController: PigeonController {
 
     override func authBoot(router: Router) throws {

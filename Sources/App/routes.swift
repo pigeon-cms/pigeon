@@ -7,6 +7,9 @@ public func routes(_ router: Router) throws {
 
     let contentController = ContentTypeController()
     try router.register(collection: contentController)
+    
+    let postController = PostController()
+    try router.register(collection: postController)
 
     let viewController = AppViewController()
     try router.register(collection: viewController)
