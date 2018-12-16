@@ -52,6 +52,9 @@ private extension UserController {
     }
     
     func loginUserHandler(_ request: Request) throws -> Future<Response> {
+        guard try !request.isAuthenticated(User.self) else {
+            throw Abort.redirect(to: "/users")
+        }
         return try request.content.decode(User.self).flatMap { user in
             return User.authenticate(
                 using: BasicAuthorization.init(username: user.email,
@@ -95,9 +98,6 @@ private extension UserController {
                                          email: newUser.email, password: hashedPassword)
                 
                 return persistedUser.save(on: request).flatMap { _ in
-                    if count > 0 {
-                        throw Abort.redirect(to: "/users")
-                    }
                     return try self.loginUserHandler(request)
                 }
             }
