@@ -1,0 +1,3 @@
+#embed("header")
+#embed("nav")
+<h1>#(plural)</h1>

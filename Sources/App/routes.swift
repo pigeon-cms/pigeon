@@ -1,9 +1,26 @@
 import Vapor
+import Authentication
 
-/// Register your application's routes here.
 public func routes(_ router: Router) throws {
-    // Basic "It works" example
-    router.get { req in
-        return "Hello, world!"
+    let userRouteController = UserController()
+    try router.register(collection: userRouteController)
+
+    let contentController = ContentTypeController()
+    try router.register(collection: contentController)
+    
+    let postController = PostController()
+    try router.register(collection: postController)
+
+    let viewController = AppViewController()
+    try router.register(collection: viewController)
+
+    router.get("/json") { _ in
+        // TODO
+        return "json"
+    }
+
+    router.get("/graphql") { _ in
+        // TODO
+        return "graphql"
     }
 }

@@ -1,0 +1,5 @@
+#embed("header")
+#embed("nav")
+		<h1>Content Types</h1>
+		#embed("Types/create-content")
+#embed("footer")

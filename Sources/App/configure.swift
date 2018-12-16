@@ -1,10 +1,50 @@
-import FluentMySQL
+import Authentication
+import FluentPostgreSQL
 import Vapor
+import Leaf
 
-/// Called before your application initializes.
 public func configure(_ config: inout Config, _ env: inout Environment, _ services: inout Services) throws {
     /// Register providers first
-    try services.register(FluentMySQLProvider())
+    try services.register(FluentPostgreSQLProvider())
+    try services.register(AuthenticationProvider())
+
+    services.register([TemplateRenderer.self, ViewRenderer.self]) { container -> LeafRenderer in
+        var tagConfig = LeafTagConfig.default()
+        tagConfig.use(JSTag(), as: "js")
+        let leafConfig = LeafConfig(tags: tagConfig,
+                                    viewsDir: DirectoryConfig.detect().workDir + "Frontend",
+                                    shouldCache: container.environment != .development)
+        return LeafRenderer(config: leafConfig,
+                            using: container)
+    }
+    config.prefer(LeafRenderer.self, for: ViewRenderer.self)
+
+    // TODO: create a nice service class for setting up DBs, offer PostgreSQL alternatives
+    let user = Environment.get("USER") ?? "root"
+    let hostname = Environment.get("DATABASE_HOSTNAME") ?? "localhost"
+    let name = Environment.get("DATABASE_DB") ?? "pigeon"
+    // Configure our database, from: `createdb pigeon`
+    var databases = DatabasesConfig()
+    let databaseConfig = PostgreSQLDatabaseConfig(hostname: hostname,
+                                                  username: user,
+                                                  database: name)
+    databases.add(database: PostgreSQLDatabase(config: databaseConfig), as: .psql)
+    services.register(databases)
+
+    var migrations = MigrationConfig()
+    migrations.add(model: User.self, database: .psql)
+    migrations.add(model: GenericContentCategory.self, database: .psql)
+    migrations.add(model: GenericContentItem.self, database: .psql)
+    migrations.prepareCache(for: .psql)
+    services.register(migrations)
+
+    // Configure KeyedCache for database session caching
+    services.register(KeyedCache.self) { container in
+        try container.keyedCache(for: .psql)
+    }
+
+    config.prefer(DatabaseKeyedCache<ConfiguredDatabase<PostgreSQLDatabase>>.self,
+                  for: KeyedCache.self)
 
     /// Register routes to the router
     let router = EngineRouter.default()
@@ -13,7 +53,7 @@ public func configure(_ config: inout Config, _ env: inout Environment, _ servic
 
     /// Register middleware
     var middlewares = MiddlewareConfig() // Create _empty_ middleware config
-    /// middlewares.use(FileMiddleware.self) // Serves files from `Public/` directory
+    middlewares.use(FileMiddleware.self) // Serves files from `Public/` directory
     middlewares.use(ErrorMiddleware.self) // Catches errors and converts to HTTP response
     services.register(middlewares)
 }

@@ -1,0 +1,6 @@
+#embed("header")
+#embed("nav")
+
+#embed("Types/edit-content")
+
+#embed("footer")

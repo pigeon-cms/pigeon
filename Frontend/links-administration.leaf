@@ -1,0 +1,8 @@
+#if(count(shared.administrationLinks) > 0) {
+<h3>Administration</h3>
+<ul>
+	#for(link in shared.administrationLinks) {
+	<li><a href="#(link.path)"">#(link.name)</a></li>
+	}
+</ul>
+}

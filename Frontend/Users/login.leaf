@@ -1,0 +1,22 @@
+#embed("header")
+<form
+	action="/login"
+	method="POST">
+	<input
+		type="email"
+		name="email"
+		id="email"
+		autocomplete="username"
+	/>
+	<input
+		type="password"
+		name="password"
+		id="password"
+		autocomplete="current-password"
+	/>
+	<input
+		type="submit"
+		value="login"
+	/>
+</form>
+#embed("footer")
