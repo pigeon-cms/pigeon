@@ -1,0 +1,4 @@
+<nav>
+	#embed(links-content)
+	#embed(links-administration)
+</nav>

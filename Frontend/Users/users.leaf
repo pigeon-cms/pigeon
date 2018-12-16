@@ -1,22 +1,12 @@
-<!doctype html>
-<html lang="en">
-	<head>
-		<title>Pigeon CMS</title>
-	</head>
-	<body>
-		<nav>
-			#embed("navigation")
-			#embed("administration")
-		</nav>
-		<img src="/images/pigeon.svg" />
-		<h1>Users</h1>
-		<ul>
-		#for(user in users) {
-			#if(user == currentUser) {
-				<p>It's a me!</p>
-			}
-			<li>#(user.name)  #(user.email)</li>
-		}
-		</ul>
-	</body>
-</html>
+#embed(header)
+#embed(nav)
+<h1>Users</h1>
+<ul>
+#for(user in users) {
+	#if(user == currentUser) {
+		<p>It's a me!</p>
+	}
+	<li>#(user.name)  #(user.email)</li>
+}
+</ul>
+#embed(footer)

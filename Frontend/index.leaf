@@ -1,14 +1,3 @@
-<!doctype html>
-<html lang="en">
-	<head>
-		<title>Pigeon CMS</title>
-	</head>
-	<body>
-		<nav>
-			#embed("navigation")
-			#embed("administration")
-		</nav>
-		<img src="/images/pigeon.svg" />
-		<h1>#(exampleData)</h1>
-	</body>
-</html>
+#embed(header)
+#embed(nav)
+#embed(footer)

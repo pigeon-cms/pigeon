@@ -1,36 +1,29 @@
-<!doctype html>
-<html lang="en">
-	<head>
-		<title>Pigeon CMS</title>
-	</head>
-	<body>
-		<img src="/images/pigeon.svg" />
-		<form
-			action="/register"
-			method="POST">
-			<input
-				type="text"
-				name="name"
-				id="name"
-			/>
-			<input
-				type="email"
-				name="email"
-				id="email"
-				autocomplete="username"
-				required
-			/>
-			<input
-				type="password"
-				name="password"
-				id="password"
-				autocomplete="new-password"
-				required
-			/>
-			<input
-				type="submit"
-				value="register"
-			/>
-		</form>
-	</body>
-</html>
+#embed(header)
+<form
+	action="/register"
+	method="POST">
+	<input
+		type="text"
+		name="name"
+		id="name"
+	/>
+	<input
+		type="email"
+		name="email"
+		id="email"
+		autocomplete="username"
+		required
+	/>
+	<input
+		type="password"
+		name="password"
+		id="password"
+		autocomplete="new-password"
+		required
+	/>
+	<input
+		type="submit"
+		value="register"
+	/>
+</form>
+#embed(footer)
