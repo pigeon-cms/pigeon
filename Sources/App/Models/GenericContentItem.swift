@@ -3,9 +3,13 @@ import FluentPostgreSQL
 
 struct GenericContentItem: Content, PostgreSQLUUIDModel, Migration {
     var id: UUID?
+    var categoryID: UUID
     var date: Date?
     var authors: [User]?
     var content: [GenericContentField] // All the content for a single item
+    var category: Parent<GenericContentItem, GenericContentCategory> {
+        return parent(\.categoryID)
+    }
 }
 
 struct GenericContentField: Content {

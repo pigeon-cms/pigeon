@@ -20,9 +20,12 @@ private extension PostController {
         }
 
         return try request.contentCategory(typePluralName: typeName).flatMap { category in
-            return try self.generatePostListView(for: request,
-                                                 category: category,
-                                                 posts: category.items ?? [])
+            return try category.items.query(on: request).range(..<50).all().flatMap { items in
+                return try self.generatePostListView(for: request,
+                                                     category: category,
+                                                     items: items)
+            }
+
         }
     }
 
@@ -39,22 +42,24 @@ private extension PostController {
 
     func createPostController(_ request: Request, item: GenericContentItem) throws -> Future<View> {
         // TODO: save the item
+        print(item)
+        fatalError()
     }
 
     struct PostListPage: Codable {
         var shared: BasePage
         var category: GenericContentCategory
-        var posts: [GenericContentItem]
+        var items: [GenericContentItem]
         // TODO: page number / paging
     }
     
     func generatePostListView(for request: Request,
                               category: GenericContentCategory,
-                              posts: [GenericContentItem]) throws -> Future<View> {
+                              items: [GenericContentItem]) throws -> Future<View> {
         return try request.base().flatMap { basePage in
             let postsPage = PostListPage(shared: basePage,
                                          category: category,
-                                         posts: posts)
+                                         items: items)
             return try request.view().render("Posts/posts", postsPage)
         }
     }

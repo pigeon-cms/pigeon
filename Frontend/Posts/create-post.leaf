@@ -40,7 +40,6 @@
 		data: {
 			name: '#js(category.name)',
 			plural: '#js(category.plural)',
-			id: '#js(category.id)',
 			fields: [
 				#for(field in category.template) {
 					{
@@ -67,6 +66,7 @@
 			},
 			createItem: function() {
 				return {
+					categoryID: #js(category.id),
 					authors: [],
 					date: Date.UTC(),
 					content: this.fields
