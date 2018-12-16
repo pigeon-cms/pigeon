@@ -95,6 +95,9 @@ private extension UserController {
                                          email: newUser.email, password: hashedPassword)
                 
                 return persistedUser.save(on: request).flatMap { _ in
+                    if count > 0 {
+                        throw Abort.redirect(to: "/users")
+                    }
                     return try self.loginUserHandler(request)
                 }
             }

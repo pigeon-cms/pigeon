@@ -1,15 +1,5 @@
-<!doctype html>
-<html lang="en">
-	<head>
-		<title>Pigeon CMS</title>
-	</head>
-	<body>
-		<nav>
-			#embed("navigation")
-			#embed("administration")
-		</nav>
-		<img src="/images/pigeon.svg" />
+#embed("header")
+#embed("nav")
 		<h1>Content Types</h1>
 		#embed("Types/create-content")
-	</body>
-</html>
+#embed("footer")

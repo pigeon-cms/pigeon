@@ -1,4 +1,4 @@
-#embed(header)
+#embed("header")
 <form
 	action="/register"
 	method="POST">
@@ -26,4 +26,4 @@
 		value="register"
 	/>
 </form>
-#embed(footer)
+#embed("footer")

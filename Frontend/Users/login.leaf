@@ -1,4 +1,4 @@
-#embed(header)
+#embed("header")
 <form
 	action="/login"
 	method="POST">
@@ -19,4 +19,4 @@
 		value="login"
 	/>
 </form>
-#embed(footer)
+#embed("footer")
