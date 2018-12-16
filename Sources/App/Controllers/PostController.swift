@@ -4,8 +4,9 @@ import Fluent
 class PostController: PigeonController {
 
     override func loginGuardedBoot(router: Router) throws {
-        router.get("/", String.parameter, use: postViewController)
-        router.get([String.parameter, "/create"], use: createPostView)
+        router.get(["/content", String.parameter], use: postViewController)
+        router.get(["/content", String.parameter, "/create"], use: createPostView)
+//        router.get(["/content", String.parameter, String.parameter], use: editPostView)
     }
 
 }

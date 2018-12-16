@@ -10,4 +10,4 @@
 <h2>#(post.content.first.value) #(post.date)</h2>
 }
 
-<a href="#(plural)/create">Create a post</a> <!-- TODO: singular name -->
+<a href="/content/#(plural)/create">Create a post</a> <!-- TODO: singular name -->
