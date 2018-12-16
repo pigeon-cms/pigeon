@@ -9,9 +9,9 @@ struct UsersPage: Codable {
 
 func generateUsers(for req: Request, currentUser: User, users: [User]) throws -> Future<View> {
     return try req.base().flatMap { basePage in
-        let usersPage = try UsersPage(shared: basePage,
-                                      currentUser: currentUser,
-                                      users: users)
+        let usersPage = UsersPage(shared: basePage,
+                                  currentUser: currentUser,
+                                  users: users)
         return try req.view().render("Users/users", usersPage)
     }
 

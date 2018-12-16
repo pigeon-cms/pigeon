@@ -1,4 +1,5 @@
 #if(count(shared.links) > 0) {
+<h3>Content</h3>
 <ul>
 	#for(link in shared.links) {
 	<li><a href="#(link.path)"">#(link.name)</a></li>

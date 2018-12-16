@@ -9,6 +9,8 @@ class ContentTypeController: RouteCollection {
     }
     
     private func createTypeHandler(_ request: Request, category: GenericContentCategory) throws -> Future<Response> {
+        category.plural = makeURLSafe(category.plural)
+
         return GenericContentCategory.query(on: request)
                                      .filter(\.plural == category.plural)
                                      .first().flatMap { existingCategory in
@@ -27,6 +29,8 @@ class ContentTypeController: RouteCollection {
     }
 
     private func editTypeHandler(_ request: Request, category: GenericContentCategory) throws -> Future<Response> {
+        category.plural = makeURLSafe(category.plural)
+
         return GenericContentCategory.query(on: request)
                                      .filter(\.id == category.id)
                                      .first().flatMap { existingCategory in
@@ -46,6 +50,12 @@ class ContentTypeController: RouteCollection {
                     throw Abort(.internalServerError, reason: error.localizedDescription)
             }
         }
+    }
+
+    /// Removes % characters from a string to ensure we can properly escape and unescape it for URLs.
+    /// `removingPercentEncoding` fails on any % character that isn't part of a valid escape sequence.
+    func makeURLSafe(_ string: String) -> String {
+        return string.replacingOccurrences(of: "%", with: "")
     }
     
 }
