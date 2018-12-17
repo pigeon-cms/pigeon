@@ -74,15 +74,15 @@
 				xhr.send(JSON.stringify(item))
 
 				xhr.onloadend = function () {
-					// const location = xhr.getResponseHeader('Location')
-					// if (location) {
-					// 	window.location.href = location
-					// }
+					const location = xhr.getResponseHeader('Location')
+					if (location) {
+						window.location.href = location
+					}
 
-					// const response = JSON.parse(xhr.responseText)
-					// if (response.error) {
-					// 	self.handleError(response.reason)
-					// }
+					const response = JSON.parse(xhr.responseText)
+					if (response.error) {
+						self.handleError(response.reason)
+					}
 				}
 			},
 			handleError: function(error) {

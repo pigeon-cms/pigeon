@@ -8,11 +8,13 @@
 
 #for(item in items) {
 <h2>
+	<a href="/content/#(category.plural)/#(item.id)">
 	#for(field in item.content) {
 		#if(isFirst) { #(field.value) }
 	}
 	#(item.date)
+	</a>
 </h2>
 }
 
-<a href="/content/#(category.plural)/create">Create a #lowercase(category.name)</a> <!-- TODO: singular name -->
+<a href="/content/#(category.plural)/create">Create a #lowercase(category.name)</a>
