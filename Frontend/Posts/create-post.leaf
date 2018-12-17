@@ -53,22 +53,12 @@
 			errors: []
 		},
 		methods: {
-			addField: function(type) {
-				this.fields.push({
-					name: null,
-					type: type,
-					value: null,
-					required: true
-				})
-			},
-			removeField: function(field, event) {
-				this.fields.splice( this.fields.indexOf(field), 1 )
-			},
 			createItem: function() {
+				console.log(new Date().toISOString())
 				return {
-					categoryID: #js(category.id),
+					categoryID: '#js(category.id)',
 					authors: [],
-					date: Date.UTC(),
+					date: new Date().toISOString(),
 					content: this.fields
 				}
 			},

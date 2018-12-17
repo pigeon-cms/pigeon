@@ -19,6 +19,16 @@ public func configure(_ config: inout Config, _ env: inout Environment, _ servic
     }
     config.prefer(LeafRenderer.self, for: ViewRenderer.self)
 
+    /// Modify date configuration
+    var contentConfig = ContentConfig.default()
+    let jsonDecoder = JSONDecoder()
+    let dateFormatter = DateFormatter()
+    dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+    jsonDecoder.dateDecodingStrategy = .formatted(dateFormatter)
+    /// Register JSON encoder and content config
+    contentConfig.use(decoder: jsonDecoder, for: .json)
+    services.register(contentConfig)
+
     // TODO: create a nice service class for setting up DBs, offer PostgreSQL alternatives
     let user = Environment.get("USER") ?? "root"
     let hostname = Environment.get("DATABASE_HOSTNAME") ?? "localhost"
