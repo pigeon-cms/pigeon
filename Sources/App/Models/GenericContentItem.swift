@@ -1,7 +1,8 @@
 import Vapor
+import Pagination
 import FluentPostgreSQL
 
-final class GenericContentItem: Content, PostgreSQLUUIDModel, Migration {
+final class GenericContentItem: Content, Paginatable, PostgreSQLUUIDModel, Migration {
     var id: UUID?
     var categoryID: UUID
     var date: Date?
