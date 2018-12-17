@@ -20,12 +20,11 @@ public func configure(_ config: inout Config, _ env: inout Environment, _ servic
     config.prefer(LeafRenderer.self, for: ViewRenderer.self)
 
     /// Modify date configuration
-    var contentConfig = ContentConfig.default()
-    let jsonDecoder = JSONDecoder()
     let dateFormatter = DateFormatter()
     dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+    let jsonDecoder = JSONDecoder()
     jsonDecoder.dateDecodingStrategy = .formatted(dateFormatter)
-    /// Register JSON encoder and content config
+    var contentConfig = ContentConfig.default()
     contentConfig.use(decoder: jsonDecoder, for: .json)
     services.register(contentConfig)
 
