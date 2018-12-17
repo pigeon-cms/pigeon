@@ -13,6 +13,20 @@ final class GenericContentItem: Content, Paginatable, PostgreSQLUUIDModel, Migra
     }
 }
 
+final class GenericContentItemPublic: Content {
+    var date: Date?
+    var content: [String: SupportedValue]
+
+    init(_ item: GenericContentItem) {
+        date = item.date
+        content = item.content.reduce([String: SupportedValue]()) { dict, field in
+            var dict = dict
+            dict[field.name] = field.value
+            return dict
+        }
+    }
+}
+
 struct GenericContentField: Content {
     var name: String // "Title"
     var type: SupportedType
@@ -37,17 +51,6 @@ struct GenericContentField: Content {
         }
     }
 }
-
-//struct SupportedTypeValue: Content, Equatable {
-//    typealias RawValue = String
-//
-//    let type: SupportedType
-//    var value: SupportedValue?
-//
-//    init(type: SupportedType) {
-//        self.type = type
-//    }
-//}
 
 enum SupportedType: Content, ReflectionDecodable, Equatable, RawRepresentable {
     typealias RawValue = String

@@ -5,10 +5,6 @@ class EndpointController: PigeonController {
     
     override func authBoot(router: Router) throws {
         router.get(["/json", String.parameter], use: jsonHandler)
-//            return "json"
-//            return GenericContentCategory.query(on: request).paginate)
-//        }
-        
         router.get("/graphql") { _ in
             // TODO
             return "graphql"
@@ -19,13 +15,16 @@ class EndpointController: PigeonController {
 
 private extension EndpointController {
 
-    func jsonHandler(_ request: Request) throws -> Future<Paginated<GenericContentItem>> {
+    func jsonHandler(_ request: Request) throws -> Future<Paginated<GenericContentItemPublic>> {
         guard let typeName = try request.parameters.next(String.self).removingPercentEncoding else {
             throw Abort(.notFound)
         }
 
         return try request.contentCategory(typePluralName: typeName).flatMap { category in
-            return try category.items.query(on: request).paginate(for: request)
+            return try category.items.query(on: request).paginate(for: request).map { content in
+                let publicData = content.data.map { return GenericContentItemPublic($0) }
+                return Paginated<GenericContentItemPublic>(page: content.page, data: publicData)
+            }
         }
     }
 
