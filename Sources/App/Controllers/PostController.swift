@@ -40,10 +40,15 @@ private extension PostController {
         }
     }
 
-    func createPostController(_ request: Request, item: GenericContentItem) throws -> Future<View> {
-        // TODO: save the item
-        print(item)
-        fatalError()
+    func createPostController(_ request: Request, item: GenericContentItem) throws -> Future<Response> {
+        return item.save(on: request).flatMap { item in
+            print(item.categoryID)
+            return item.category.get(on: request).map { category in
+                let response = HTTPResponse(status: .created,
+                                            headers: HTTPHeaders([("Location", "/content/\(category.plural)")]))
+                return Response(http: response, using: request.sharedContainer)
+            }
+        }
     }
 
     struct PostListPage: Codable {

@@ -1,11 +1,11 @@
 import Vapor
 import FluentPostgreSQL
 
-struct GenericContentItem: Content, PostgreSQLUUIDModel, Migration {
+final class GenericContentItem: Content, PostgreSQLUUIDModel, Migration {
     var id: UUID?
     var categoryID: UUID
     var date: Date?
-    var authors: [User]?
+//    var authors: [PublicUser]?
     var content: [GenericContentField] // All the content for a single item
     var category: Parent<GenericContentItem, GenericContentCategory> {
         return parent(\.categoryID)
