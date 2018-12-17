@@ -2,12 +2,26 @@ import Vapor
 import Authentication
 import FluentPostgreSQL
 
+struct PublicUser: Content {
+    var name: String?
+    var privileges: UserPrivileges?
+
+    init(_ user: User) {
+        name = user.name
+        privileges = user.privileges
+    }
+}
+
 struct User: Content, PostgreSQLUUIDModel, Migration {
     var id: UUID?
     var name: String?
     var privileges: UserPrivileges?
     private(set) var email: String
     private(set) var password: String
+
+    var publicUser: PublicUser {
+        return PublicUser(self)
+    }
 }
 
 enum UserPrivileges: Int, Codable, Equatable {
