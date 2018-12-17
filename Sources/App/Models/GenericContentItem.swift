@@ -13,6 +13,8 @@ final class GenericContentItem: Content, Paginatable, PostgreSQLUUIDModel, Migra
     }
 }
 
+/// TODO: instead of this, need to figure out how to structure the actual content this way,
+/// with an 'order' property for the CMS display, and a way to hide props like 'id' and 'order'.
 final class GenericContentItemPublic: Content {
     var date: Date?
     var content: [String: SupportedValue]
