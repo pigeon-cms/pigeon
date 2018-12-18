@@ -70,7 +70,7 @@ private extension AppViewController {
             throw Abort(.notFound)
         }
 
-        return GenericContentCategory.query(on: request)
+        return ContentCategory.query(on: request)
                                      .filter(\.plural == typeName)
                                      .first().flatMap { category in
             guard let category = category else {

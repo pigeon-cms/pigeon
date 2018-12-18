@@ -6,7 +6,7 @@ class PostController: PigeonController {
     override func loginGuardedBoot(router: Router) throws {
         router.get(["/content", String.parameter], use: postViewController)
         router.get(["/content", String.parameter, "/create"], use: createPostView)
-        router.post(GenericContentItem.self, at: ["/content", String.parameter], use: createPostController)
+        router.post(ContentItem.self, at: ["/content", String.parameter], use: createPostController)
 //        router.get(["/content", String.parameter, String.parameter], use: editPostView)
     }
 
@@ -40,7 +40,7 @@ private extension PostController {
         }
     }
 
-    func createPostController(_ request: Request, item: GenericContentItem) throws -> Future<Response> {
+    func createPostController(_ request: Request, item: ContentItem) throws -> Future<Response> {
         return item.save(on: request).flatMap { item in
             print(item.categoryID)
             return item.category.get(on: request).map { category in
@@ -53,14 +53,14 @@ private extension PostController {
 
     struct PostListPage: Codable {
         var shared: BasePage
-        var category: GenericContentCategory
-        var items: [GenericContentItem]
+        var category: ContentCategory
+        var items: [ContentItem]
         // TODO: page number / paging
     }
     
     func generatePostListView(for request: Request,
-                              category: GenericContentCategory,
-                              items: [GenericContentItem]) throws -> Future<View> {
+                              category: ContentCategory,
+                              items: [ContentItem]) throws -> Future<View> {
         return try request.base().flatMap { basePage in
             let postsPage = PostListPage(shared: basePage,
                                          category: category,
@@ -71,11 +71,11 @@ private extension PostController {
 
     struct CreatePostPage: Codable {
         var shared: BasePage
-        var category: GenericContentCategory
+        var category: ContentCategory
     }
 
     func generateCreatePostView(for request: Request,
-                                category: GenericContentCategory) throws -> Future<View> {
+                                category: ContentCategory) throws -> Future<View> {
         return try request.base().flatMap { basePage in
             let createPostPage = CreatePostPage(shared: basePage, category: category)
             return try request.view().render("Posts/create-post", createPostPage)
@@ -84,8 +84,8 @@ private extension PostController {
 }
 
 extension Request {
-    func contentCategory(typePluralName: String) throws -> Future<GenericContentCategory> {
-        return GenericContentCategory.query(on: self)
+    func contentCategory(typePluralName: String) throws -> Future<ContentCategory> {
+        return ContentCategory.query(on: self)
                                      .filter(\.plural == typePluralName)
                                      .first().map { category in
             guard let category = category else {

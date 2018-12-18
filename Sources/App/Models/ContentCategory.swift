@@ -1,13 +1,13 @@
 import Vapor
 import FluentPostgreSQL
 
-final class GenericContentCategory: Content, PostgreSQLUUIDModel, Migration {
+final class ContentCategory: Content, PostgreSQLUUIDModel, Migration {
     var id: UUID?
     var name: String // "Post"
     var plural: String // "Posts"
-    var items: Children<GenericContentCategory, GenericContentItem> {
+    var items: Children<ContentCategory, ContentItem> {
         return children(\.categoryID)
     }
-    var template: [GenericContentField]
+    var template: [String: ContentField]
     // var accessLevel: SomeEnum // TODO: access level for api content
 }

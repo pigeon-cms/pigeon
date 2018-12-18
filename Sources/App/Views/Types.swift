@@ -4,18 +4,18 @@ import Leaf
 struct TypesPage: Codable {
     var shared: BasePage
     var currentUser: User
-    var contentTypes: [GenericContentCategory]
+    var contentTypes: [ContentCategory]
 }
 
 struct TypePage: Codable {
     var shared: BasePage
     var currentUser: User
-    var contentType: GenericContentCategory
+    var contentType: ContentCategory
 }
 
 func typesView(for req: Request,
                currentUser: User,
-               contentTypes: [GenericContentCategory]) throws -> Future<View> {
+               contentTypes: [ContentCategory]) throws -> Future<View> {
 
     return try req.base().flatMap { basePage in
         let typesPage = TypesPage(shared: basePage,
@@ -28,7 +28,7 @@ func typesView(for req: Request,
 
 func createTypesView(for req: Request,
                      currentUser: User,
-                     contentTypes: [GenericContentCategory]) throws -> Future<View> {
+                     contentTypes: [ContentCategory]) throws -> Future<View> {
 
     return try req.base().flatMap { basePage in
         let typesPage = TypesPage(shared: basePage,
@@ -41,7 +41,7 @@ func createTypesView(for req: Request,
 
 func createSingleTypeView(for req: Request,
                           currentUser: User,
-                          contentType: GenericContentCategory) throws -> Future<View> {
+                          contentType: ContentCategory) throws -> Future<View> {
 
     return try req.base().flatMap { basePage in
         let typePage = TypePage(shared: basePage,

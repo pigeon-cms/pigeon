@@ -15,16 +15,17 @@ class EndpointController: PigeonController {
 
 private extension EndpointController {
 
-    func jsonHandler(_ request: Request) throws -> Future<Paginated<GenericContentItemPublic>> {
+    func jsonHandler(_ request: Request) throws -> Future<Paginated<ContentItem>> {
         guard let typeName = try request.parameters.next(String.self).removingPercentEncoding else {
             throw Abort(.notFound)
         }
 
         return try request.contentCategory(typePluralName: typeName).flatMap { category in
-            return try category.items.query(on: request).paginate(for: request).map { content in
-                let publicData = content.data.map { return GenericContentItemPublic($0) }
-                return Paginated<GenericContentItemPublic>(page: content.page, data: publicData)
-            }
+            return try category.items.query(on: request).paginate(for: request)
+//            .map { content in
+//                let publicData = content.data.map { return ContentItemPublic($0) }
+//                return Paginated<ContentItemPublic>(page: content.page, data: publicData)
+//            }
         }
     }
 
