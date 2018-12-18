@@ -22,7 +22,10 @@ var create = new Vue({
 			return {
 				name: this.name,
 				plural: (this.plural || this.name + 's'),
-				template: this.fields
+				template: this.fields.map((field, index) => {
+					field['order'] = index
+					return field
+				})
 			}
 		},
 		handleSubmit: function(event) {

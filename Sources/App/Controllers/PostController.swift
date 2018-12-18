@@ -13,7 +13,7 @@ class PostController: PigeonController {
 }
 
 private extension PostController {
-    
+
     func postViewController(_ request: Request) throws -> Future<View> {
         guard let typeName = try request.parameters.next(String.self).removingPercentEncoding else {
             throw Abort(.notFound)
@@ -41,6 +41,7 @@ private extension PostController {
     }
 
     func createPostController(_ request: Request, item: ContentItem) throws -> Future<Response> {
+        print(item)
         return item.save(on: request).flatMap { item in
             print(item.categoryID)
             return item.category.get(on: request).map { category in
@@ -57,7 +58,7 @@ private extension PostController {
         var items: [ContentItem]
         // TODO: page number / paging
     }
-    
+
     func generatePostListView(for request: Request,
                               category: ContentCategory,
                               items: [ContentItem]) throws -> Future<View> {

@@ -9,9 +9,7 @@
 #for(item in items) {
 <h2>
 	<a href="/content/#(category.plural)/#(item.id)">
-	#for(field in item.content) {
-		#if(isFirst) { #(field.value) }
-	}
+		<!-- TODO: parse dictionary somewhere to get first property -->
 	#(item.date)
 	</a>
 </h2>

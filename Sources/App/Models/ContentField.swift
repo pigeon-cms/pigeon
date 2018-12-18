@@ -1,6 +1,7 @@
 import Vapor
 
 struct ContentField: Content {
+    var name: String
     var type: SupportedType
     var value: SupportedValue // .string("A Post Title")
     var order: Int
@@ -8,6 +9,7 @@ struct ContentField: Content {
 
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
+        name = try container.decode(String.self, forKey: .name)
         type = try container.decode(SupportedType.self, forKey: .type)
         order = try container.decode(Int.self, forKey: .order)
         required = try container.decode(Bool.self, forKey: .required)
@@ -22,14 +24,13 @@ struct ContentField: Content {
             fatalError() // TODO
         }
     }
-
-    /// RequestEncodable
-    func encode(using container: Container) throws -> EventLoopFuture<Request> {
-        return try value.encode(using: container)
-    }
-
-    /// ResponseEncodable
-    func encode(for req: Request) throws -> EventLoopFuture<Response> {
-        return try value.encode(for: req)
-    }
+//    /// RequestEncodable
+//    func encode(using container: Container) throws -> EventLoopFuture<Request> {
+//        return try value.encode(using: container)
+//    }
+//
+//    /// ResponseEncodable
+//    func encode(for req: Request) throws -> EventLoopFuture<Response> {
+//        return try value.encode(for: req)
+//    }
 }

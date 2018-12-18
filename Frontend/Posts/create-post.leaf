@@ -54,12 +54,15 @@
 		},
 		methods: {
 			createItem: function() {
-				console.log(new Date().toISOString())
 				return {
 					categoryID: '#js(category.id)',
 					authors: [],
 					date: new Date().toISOString(),
-					content: this.fields
+					content: this.fields.reduce(function(map, field, index) {
+						field['order'] = index
+						map[field.name] = field
+						return map
+					}, {})
 				}
 			},
 			handleSubmit: function(event) {

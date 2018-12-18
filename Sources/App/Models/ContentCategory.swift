@@ -8,6 +8,6 @@ final class ContentCategory: Content, PostgreSQLUUIDModel, Migration {
     var items: Children<ContentCategory, ContentItem> {
         return children(\.categoryID)
     }
-    var template: [String: ContentField]
+    var template: [ContentField]
     // var accessLevel: SomeEnum // TODO: access level for api content
 }
