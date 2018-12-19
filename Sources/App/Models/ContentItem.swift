@@ -7,27 +7,27 @@ final class ContentItem: Content, Paginatable, PostgreSQLUUIDModel, Migration {
     var categoryID: UUID
     var date: Date?
 //    var authors: [PublicUser]?
-    var content: [String: ContentField] // All the content for a single item
+    var content: [ContentField] // All the content for a single item
     var category: Parent<ContentItem, ContentCategory> {
         return parent(\.categoryID)
     }
 }
 
-///// TODO: instead of this, need to figure out how to structure the actual content this way,
-///// with an 'order' property for the CMS display, and a way to hide props like 'id' and 'order'.
-//final class ContentItemPublic: Content {
-//    var date: Date?
-//    var content: [String: SupportedValue]
-//
-//    init(_ item: ContentItem) {
-//        date = item.date
-//        content = item.content.reduce([String: SupportedValue]()) { dict, field in
-//            var dict = dict
-//            dict[field.name] = field.value
-//            return dict
-//        }
-//    }
-//}
+/// TODO: instead of this, need to figure out how to structure the actual content this way,
+/// with an 'order' property for the CMS display, and a way to hide props like 'id' and 'order'.
+final class ContentItemPublic: Content {
+    var date: Date?
+    var content: [String: SupportedValue]
+
+    init(_ item: ContentItem) {
+        date = item.date
+        content = item.content.reduce([String: SupportedValue]()) { dict, field in
+            var dict = dict
+            dict[field.name] = field.value
+            return dict
+        }
+    }
+}
 
 enum SupportedType: Content, ReflectionDecodable, Equatable, RawRepresentable {
     typealias RawValue = String

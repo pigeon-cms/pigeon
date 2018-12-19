@@ -12,8 +12,8 @@ class ContentTypeController: PigeonController {
         category.plural = makeURLSafe(category.plural)
 
         return ContentCategory.query(on: request)
-                                     .filter(\.plural == category.plural)
-                                     .first().flatMap { existingCategory in
+                              .filter(\.plural == category.plural)
+                              .first().flatMap { existingCategory in
             guard existingCategory == nil else {
                 throw Abort(.badRequest, reason: "A type with that name exists")
             }

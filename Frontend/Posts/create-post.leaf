@@ -58,11 +58,7 @@
 					categoryID: '#js(category.id)',
 					authors: [],
 					date: new Date().toISOString(),
-					content: this.fields.reduce(function(map, field, index) {
-						field['order'] = index
-						map[field.name] = field
-						return map
-					}, {})
+					content: this.fields
 				}
 			},
 			handleSubmit: function(event) {

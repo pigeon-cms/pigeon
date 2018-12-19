@@ -4,14 +4,12 @@ struct ContentField: Content {
     var name: String
     var type: SupportedType
     var value: SupportedValue // .string("A Post Title")
-    var order: Int
     var required: Bool
 
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         name = try container.decode(String.self, forKey: .name)
         type = try container.decode(SupportedType.self, forKey: .type)
-        order = try container.decode(Int.self, forKey: .order)
         required = try container.decode(Bool.self, forKey: .required)
         switch type {
         case .String: value = SupportedValue.string(try? container.decode(String.self, forKey: .value))
