@@ -23,6 +23,7 @@ final class ContentItemPublic: Content {
         date = item.date
         content = item.content.reduce([String: SupportedValue]()) { dict, field in
             var dict = dict
+            // TODO: camelCase conversion here
             dict[field.name] = field.value
             return dict
         }
