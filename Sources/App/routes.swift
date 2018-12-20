@@ -16,3 +16,4 @@ public func routes(_ router: Router) throws {
 
     let endpointController = EndpointController()
     try router.register(collection: endpointController)
+}
