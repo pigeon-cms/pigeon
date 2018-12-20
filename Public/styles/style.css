@@ -1,0 +1,61 @@
+@font-face {
+  font-family: 'Inter UI';
+  font-style:  normal;
+  font-weight: 400;
+  src: url("/fonts/Inter-UI-Regular.woff2") format("woff2"),
+       url("/fonts/Inter-UI-Regular.woff") format("woff");
+}
+
+@font-face {
+  font-family: 'Inter UI';
+  font-style:  normal;
+  font-weight: 700;
+  src: url("/fonts/Inter-UI-Bold.woff2") format("woff2"),
+       url("/fonts/Inter-UI-Bold.woff") format("woff");
+}
+
+
+body {
+	font-family: 'Inter UI', serif; /* 'SF Compact Display', -apple-system, 'Segoe UI', sans-serif; */
+	font-weight: 400;
+	font-size: 16px;
+	margin: 0;
+	background: #F3F4F6;
+	font-synthesis: none;
+	-webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	font-weight: 700;
+	margin: 0;
+	margin-top: 1em;
+}
+
+nav {
+	margin-left: 1.25em;
+	font-size: 1.25em;
+}
+
+nav h3 {
+	font-weight: 400;
+	font-size: 1em;
+	color: #82858D;
+}
+
+nav ul {
+	margin: 0;
+	margin-bottom: 4em;
+	padding: 0;
+}
+
+nav ul li {
+	margin-top: 0.5em;
+	list-style: none;
+	font-weight: 700;
+}
+
+nav ul a {
+	color: #1E1E21;
+	text-decoration: none;
+}
+

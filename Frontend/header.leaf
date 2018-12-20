@@ -2,6 +2,7 @@
 <html lang="en">
 	<head>
 		<title>Pigeon CMS</title>
+		<link rel="stylesheet" href="/styles/style.css">
 	</head>
 	<body>
-		<img src="/images/pigeon.svg" />
+		<img src="/images/pigeon.svg" alt="Pigeon logo" />
