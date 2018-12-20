@@ -1,0 +1,138 @@
+<div id="edit">
+	<h1>{{ plural }}</h1>
+	<ul
+		v-if="errors"
+		class="form-errors"
+	>
+		<li v-for="error in errors">
+			{{ error }}
+		</li>
+	</ul>
+	<form
+		v-on:submit.prevent="handleSubmit"
+	>
+	<ul>
+		<li>
+			<input
+				type="text"
+				v-model="name"
+				placeholder="Post"
+				required
+			/>
+		</li>
+		<li>
+			<input
+				type="text"
+				v-model="plural"
+				v-bind:placeholder="(name || 'Post') + 's'"
+			/>
+		</li>
+		<li v-for="field in fields">
+			<span class="field-type">{{ field.type }}</span>
+			<input
+				type="text"
+				v-model="field.name"
+				placeholder="Label"
+				required
+			/>
+			<input
+				v-if="field.type == 'String' || field.type == 'URL'"
+				type="text"
+				v-model="field.value"
+				placeholder="Default value"
+			/>
+			<input
+				v-if="field.type == 'Bool'"
+				type="checkbox"
+				v-model="field.value"
+			/>
+			<span class="tip" v-if="field.type == 'Date'">Creation date</span>
+			<input
+				type="checkbox"
+				v-model="field.required"
+			/>
+
+			<button type="button" v-on:click="removeField(field)">Remove</button>
+		</li>
+		<button>Save</button>
+	</ul>
+	</form>
+<div class="add-field">
+	<button v-on:click="addField('String')">Text</button>
+	<button v-on:click="addField('Date')">Date</button>
+	<button v-on:click="addField('URL')">Link</button>
+	<button v-on:click="addField('Bool')">Switch</button>
+</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<script>
+	var edit = new Vue({
+		el: "#edit",
+		data: {
+			name: '#js(contentType.name)',
+			plural: '#js(contentType.plural)',
+			id: '#js(contentType.id)',
+			fields: [
+				#for(field in contentType.template) {
+					{
+						name: '#js(field.name)',
+						type: '#js(field.type)',
+						value: '#js(field.value)',
+						required: #js(field.required)
+					\},
+				}
+			],
+			errors: []
+		},
+		methods: {
+			addField: function(type) {
+				this.fields.push({
+					name: null,
+					type: type,
+					value: null,
+					required: true
+				})
+			},
+			removeField: function(field, event) {
+				this.fields.splice( this.fields.indexOf(field), 1 )
+			},
+			createCategory: function() {
+				return {
+					name: this.name,
+					plural: (this.plural || this.name + 's'),
+					id: this.id,
+					template: this.fields
+				}
+			},
+			handleSubmit: function(event) {
+				const self = this
+				self.errors = []
+				let category = self.createCategory()
+
+				var xhr = new XMLHttpRequest()
+				xhr.open('POST', '/type/edit', true)
+				xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8')
+				xhr.send(JSON.stringify(category))
+
+				xhr.onloadend = function () {
+					const location = xhr.getResponseHeader('Location')
+					if (location) {
+						window.location.href = location
+					}
+
+					const response = JSON.parse(xhr.responseText)
+					if (response.error) {
+						self.handleError(response.reason)
+					}
+				}
+			},
+			handleError: function(error) {
+				this.errors.push(error)
+				if (error == 'A type with that name exists') {
+					console.log('Plural error!') // TODO: place a red dot next to "plural" field
+				}
+			}
+		}
+	})
+</script>
