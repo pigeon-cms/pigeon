@@ -1,3 +1,18 @@
 #embed("header")
 #embed("nav")
 <h1>#(plural)</h1>
+
+#if(count(items) == 0) {
+<h2>No #lowercase(category.plural) found.</h2>
+}
+
+#for(item in items) {
+<h2>
+	<a href="/content/#(category.plural)/#(item.id)">
+		<!-- TODO: parse dictionary somewhere to get first property -->
+	#(item.date)
+	</a>
+</h2>
+}
+
+<a href="/content/#(category.plural)/create">Create a #lowercase(category.name)</a>

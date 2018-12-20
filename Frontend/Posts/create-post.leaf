@@ -1,0 +1,96 @@
+#embed("header")
+#embed("nav")
+<div id="create">
+	<h1>#(category.plural)</h1>
+	<ul
+		v-if="errors"
+		class="form-errors"
+	>
+		<li v-for="error in errors">
+			{{ error }}
+		</li>
+	</ul>
+	<form
+		v-on:submit.prevent="handleSubmit"
+	>
+	<ul>
+		<li v-for="field in fields">
+			<span>{{ field.name }}</span>
+			<input
+				v-if="field.type == 'String' || field.type == 'URL'"
+				type="text"
+				v-model="field.value"
+				:required="field.required ? true : false"
+			/>
+			<input
+				v-if="field.type == 'Bool'"
+				type="checkbox"
+				v-model="field.value"
+			/>
+		</li>
+		<button type="button" v-on:click="handleCancel">Cancel</button>
+		<button>Save</button>
+	</ul>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<script>
+	var create = new Vue({
+		el: "#create",
+		data: {
+			name: '#js(category.name)',
+			plural: '#js(category.plural)',
+			fields: [
+				#for(field in category.template) {
+					{
+						name: '#js(field.name)',
+						type: '#js(field.type)',
+						value: '#js(field.value)',
+						required: #js(field.required)
+					\},
+				}
+			],
+			errors: []
+		},
+		methods: {
+			createItem: function() {
+				return {
+					categoryID: '#js(category.id)',
+					authors: [],
+					date: new Date().toISOString(),
+					content: this.fields
+				}
+			},
+			handleSubmit: function(event) {
+				console.log("SUBMIT")
+				const self = this
+				self.errors = []
+				let item = self.createItem()
+
+				var xhr = new XMLHttpRequest()
+				xhr.open('POST', '/content/#(category.plural)', true)
+				xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8')
+				xhr.send(JSON.stringify(item))
+
+				xhr.onloadend = function () {
+					const location = xhr.getResponseHeader('Location')
+					if (location) {
+						window.location.href = location
+					}
+
+					const response = JSON.parse(xhr.responseText)
+					if (response.error) {
+						self.handleError(response.reason)
+					}
+				}
+			},
+			handleError: function(error) {
+				this.errors.push(error)
+			},
+			handleCancel: function() {
+				console.log("CANCEL")
+			}
+		}
+	})
+</script>
+#embed("footer")

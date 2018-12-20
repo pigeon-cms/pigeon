@@ -14,13 +14,6 @@ public func routes(_ router: Router) throws {
     let viewController = AppViewController()
     try router.register(collection: viewController)
 
-    router.get("/json") { _ in
-        // TODO
-        return "json"
-    }
-
-    router.get("/graphql") { _ in
-        // TODO
-        return "graphql"
-    }
+    let endpointController = EndpointController()
+    try router.register(collection: endpointController)
 }

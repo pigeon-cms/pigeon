@@ -34,9 +34,9 @@ extension Request {
 
         var links = [Link]()
 
-        return GenericContentCategory.query(on: self).all().map { categories in
+        return ContentCategory.query(on: self).all().map { categories in
             categories.forEach {
-                let link = Link(name: $0.plural, path: "/\($0.plural)")
+                let link = Link(name: $0.plural, path: "/content/\($0.plural)")
                 links.append(link)
             }
 

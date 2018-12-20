@@ -4,16 +4,16 @@ import Fluent
 class ContentTypeController: PigeonController {
 
     override func loginGuardedBoot(router: Router) throws {
-        router.post(GenericContentCategory.self, at: "/type/create", use: createTypeHandler)
-        router.post(GenericContentCategory.self, at: "/type/edit", use: editTypeHandler)
+        router.post(ContentCategory.self, at: "/type/create", use: createTypeHandler)
+        router.post(ContentCategory.self, at: "/type/edit", use: editTypeHandler)
     }
 
-    private func createTypeHandler(_ request: Request, category: GenericContentCategory) throws -> Future<Response> {
+    private func createTypeHandler(_ request: Request, category: ContentCategory) throws -> Future<Response> {
         category.plural = makeURLSafe(category.plural)
 
-        return GenericContentCategory.query(on: request)
-                                     .filter(\.plural == category.plural)
-                                     .first().flatMap { existingCategory in
+        return ContentCategory.query(on: request)
+                              .filter(\.plural == category.plural)
+                              .first().flatMap { existingCategory in
             guard existingCategory == nil else {
                 throw Abort(.badRequest, reason: "A type with that name exists")
             }
@@ -28,10 +28,10 @@ class ContentTypeController: PigeonController {
         }
     }
 
-    private func editTypeHandler(_ request: Request, category: GenericContentCategory) throws -> Future<Response> {
+    private func editTypeHandler(_ request: Request, category: ContentCategory) throws -> Future<Response> {
         category.plural = makeURLSafe(category.plural)
 
-        return GenericContentCategory.query(on: request)
+        return ContentCategory.query(on: request)
                                      .filter(\.id == category.id)
                                      .first().flatMap { existingCategory in
             guard let existingCategory = existingCategory else {
@@ -61,7 +61,7 @@ class ContentTypeController: PigeonController {
 }
 
 extension Request {
-    func allContentTypes() -> Future<[GenericContentCategory]> {
-        return GenericContentCategory.query(on: self).all()
+    func allContentTypes() -> Future<[ContentCategory]> {
+        return ContentCategory.query(on: self).all()
     }
 }
