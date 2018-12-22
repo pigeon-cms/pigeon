@@ -16,7 +16,7 @@
 
 
 body {
-	font-family: 'Inter UI', serif; /* 'SF Compact Display', -apple-system, 'Segoe UI', sans-serif; */
+	font-family: 'Inter UI', 'SF Compact Display', -apple-system, 'Segoe UI', sans-serif;
 	font-weight: 400;
 	font-size: 16px;
 	margin: 0;
@@ -31,8 +31,13 @@ h1, h2, h3, h4, h5, h6 {
 	margin-top: 1em;
 }
 
+h1 {
+	font-size: 3em;
+	margin-top: 0;
+}
+
 nav {
-	margin-left: 1.25em;
+	margin-right: 10vw;
 	font-size: 1.25em;
 }
 
@@ -57,5 +62,10 @@ nav ul li {
 nav ul a {
 	color: #1E1E21;
 	text-decoration: none;
+}
+
+main {
+	margin-left: 1.25em;
+	display: flex;
 }
 

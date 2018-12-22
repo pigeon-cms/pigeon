@@ -4,13 +4,17 @@
 
 #if(count(items) == 0) {
 <h2>No #lowercase(category.plural) found.</h2>
+} else {
+	<h1>#(category.plural)</h1>
 }
 
 #for(item in items) {
 <h2>
 	<a href="/content/#(category.plural)/#(item.id)">
-		<!-- TODO: parse dictionary somewhere to get first property -->
-	#(item.date)
+	#for(field in item.content) {
+		#if(isFirst) { #(field.value) }
+	}
+	<span class="date">#(item.date)</span>
 	</a>
 </h2>
 }
