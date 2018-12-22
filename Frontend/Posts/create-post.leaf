@@ -28,7 +28,12 @@
 				v-model="field.value"
 			/>
 		</li>
-		<button type="button" v-on:click="handleCancel">Cancel</button>
+		<button
+			type="button"
+			v-on:click="handleCancel"
+		>
+			Cancel
+		</button>
 		<button>Save</button>
 	</ul>
 </div>
@@ -36,7 +41,7 @@
 <script src="https://cdn.jsdelivr.net/npm/vue"></script>
 <script>
 	var create = new Vue({
-		el: "#create",
+		el: '#create',
 		data: {
 			name: '#js(category.name)',
 			plural: '#js(category.plural)',

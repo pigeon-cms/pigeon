@@ -1,23 +1,26 @@
 #embed("header")
+<div id="register">
 <form
 	action="/register"
-	method="POST">
+	method="POST"
+	v-on:submit.prevent="handleSubmit"
+	>
 	<input
 		type="text"
 		name="name"
-		id="name"
+		v-model="user.name"
 	/>
 	<input
 		type="email"
 		name="email"
-		id="email"
-		autocomplete="username"
+		v-model="user.email"
+		autocomplete="user.username"
 		required
 	/>
 	<input
 		type="password"
 		name="password"
-		id="password"
+		v-model="user.password"
 		autocomplete="new-password"
 		required
 	/>
@@ -26,4 +29,42 @@
 		value="register"
 	/>
 </form>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<script>
+	var register = new Vue({
+		el: '#register',
+		data: function() {
+			return {
+				user: {
+					name: null,
+					email: null,
+					password: null,
+					timezoneOffset: new Date().getTimezoneOffset()
+				}
+			}
+		},
+		methods: {
+			handleSubmit: function(event) {
+				const self = this
+				self.errors = []
+				var xhr = new XMLHttpRequest()
+				xhr.open('POST', '/register', true)
+				xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8')
+				xhr.send(JSON.stringify(self.$data.user))
+
+				xhr.onloadend = function () {
+					const location = xhr.getResponseHeader('Location')
+					if (location) {
+						window.location.href = location
+					}
+					window.location.reload()
+				}
+			},
+			handleError: function(error) {
+				this.errors.push(error)
+			}
+		}
+	})
+</script>
 #embed("footer")

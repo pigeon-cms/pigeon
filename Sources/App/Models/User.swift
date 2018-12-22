@@ -5,10 +5,12 @@ import FluentPostgreSQL
 struct PublicUser: Content {
     var name: String?
     var privileges: UserPrivileges?
+    var timezoneOffset: Float?
 
     init(_ user: User) {
         name = user.name
         privileges = user.privileges
+        timezoneOffset = user.timezoneOffset
     }
 }
 
@@ -16,6 +18,7 @@ struct User: Content, PostgreSQLUUIDModel, Migration {
     var id: UUID?
     var name: String?
     var privileges: UserPrivileges?
+    var timezoneOffset: Float?
     private(set) var email: String
     private(set) var password: String
 
