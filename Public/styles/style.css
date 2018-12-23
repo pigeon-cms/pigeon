@@ -41,10 +41,18 @@ nav {
 	font-size: 1.25em;
 }
 
-nav h3 {
+h2, h3, h4, h5, h6 {
 	font-weight: 400;
-	font-size: 1em;
 	color: #82858D;
+}
+
+h2 {
+	font-size: 2em;
+	margin-top: 0;
+}
+
+h3 {
+	font-size: 1em;
 }
 
 nav ul {
@@ -59,6 +67,30 @@ nav ul li {
 	font-weight: 700;
 }
 
+form ul {
+	margin: 0;
+	padding: 0;
+}
+
+form ul li {
+	list-style: none;
+	min-height: 3.2em;
+}
+
+form {
+	margin-top: 2em;
+}
+
+input {
+	font-size: 1.25em;
+	height: 1em;
+	border-radius: 8px;
+	box-shadow: none;
+	background: #FBFCFE;
+	border: 1px solid #82858D;
+	padding: 8px 12px;
+}
+
 nav ul a {
 	color: #1E1E21;
 	text-decoration: none;
@@ -67,5 +99,12 @@ nav ul a {
 main {
 	margin-left: 1.25em;
 	display: flex;
+}
+
+label {
+	display: inline-block;
+	min-width: 140px;
+	font-weight: 700;
+	font-size: 1.25em;
 }
 

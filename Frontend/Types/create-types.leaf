@@ -20,22 +20,31 @@
 	>
 	<ul>
 		<li>
+			<label for="name">
+				Name
+			</label>
 			<input
 				type="text"
 				v-model="name"
+				id="name"
 				placeholder="Post"
 				required
 			/>
 		</li>
 		<li>
+			<label for="plural">
+				Plural name
+			</label>
 			<input
 				type="text"
 				v-model="plural"
+				id="plural"
 				v-bind:placeholder="(name || 'Post') + 's'"
 			/>
 		</li>
+		<label><p>Forms</p></label>
 		<li v-for="field in fields">
-			<span class="field-type">{{ field.type }}</span>
+			<label>{{ field.type }}</label>
 			<input
 				type="text"
 				v-model="field.name"
