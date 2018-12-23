@@ -40,7 +40,7 @@
 					name: null,
 					email: null,
 					password: null,
-					timezoneOffset: new Date().getTimezoneOffset()
+					timeZoneName: Intl.DateTimeFormat().resolvedOptions().timeZone
 				}
 			}
 		},

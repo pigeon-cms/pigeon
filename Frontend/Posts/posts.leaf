@@ -19,4 +19,4 @@
 </h2>
 }
 
-<a href="/content/#(category.plural)/create">Create a #lowercase(category.name)</a>
+<p><a href="/content/#(category.plural)/create">Create a #lowercase(category.name)</a></p>

@@ -9,5 +9,5 @@
 	</li>
 }
 </ul>
-<a href="/types/create">Create a new content type</a>
+<p><a href="/types/create">Create a new content type</a></p>
 #embed("footer")

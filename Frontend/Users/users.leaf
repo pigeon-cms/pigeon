@@ -6,7 +6,7 @@
 	#if(user == currentUser) {
 		<p>It's a me!</p>
 	}
-	<li>#(user.name)  #(user.email) #(user.timezoneOffset)</li>
+	<li>#(user.name)  #(user.email) #(user.timeZoneAbbreviation)</li>
 }
 </ul>
 #embed("footer")

@@ -75,7 +75,7 @@ private extension UserController {
                 let digest = try request.make(BCryptDigest.self)
                 let hashedPassword = try digest.hash(newUser.password)
                 let persistedUser = User(id: nil, name: newUser.name, privileges: privileges,
-                                         timezoneOffset: newUser.timezoneOffset,
+                                         timeZoneName: newUser.timeZoneName,
                                          email: newUser.email, password: hashedPassword)
 
                 return persistedUser.save(on: request).flatMap { _ in
