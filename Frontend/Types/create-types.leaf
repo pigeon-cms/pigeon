@@ -53,7 +53,7 @@
 			<th>Required</th>
 		</tr>
 		<tr v-if="fields.length === 0">
-			<td><b>&nbsp;</b></td>
+			<td><b class="placeholder">—</b></td>
 			<td><input type="text" disabled class="placeholder"></input></td>
 			<td><input type="text" disabled class="placeholder"></input></td>
 			<td><input type="checkbox" disabled class="placeholder"></span></td>

@@ -25,6 +25,11 @@ body {
 	-webkit-font-smoothing: antialiased;
 }
 
+main {
+	margin-left: 1.25em;
+	display: flex;
+}
+
 [v-cloak] {
   display: none;
 }
@@ -97,6 +102,11 @@ nav ul li {
 	font-weight: 700;
 }
 
+nav ul a {
+	color: #1E1E21;
+	text-decoration: none;
+}
+
 form ul {
 	margin: 0;
 	padding: 0;
@@ -122,10 +132,6 @@ input {
 	min-width: 60px;
 }
 
-input.placeholder {
-	opacity: 0.2;
-}
-
 input[type=text]:focus, textarea:focus {
 	outline: none;
 	border-color: #FBFCFE;
@@ -136,14 +142,8 @@ li.name input {
 	width: auto;
 }
 
-nav ul a {
-	color: #1E1E21;
-	text-decoration: none;
-}
-
-main {
-	margin-left: 1.25em;
-	display: flex;
+.placeholder {
+	opacity: 0.2;
 }
 
 label {
