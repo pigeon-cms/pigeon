@@ -114,8 +114,12 @@ input {
 	min-width: 60px;
 }
 
+input.placeholder {
+	opacity: 0.2;
+}
+
 li.name input {
-	width:  auto;
+	width: auto;
 }
 
 nav ul a {

@@ -52,6 +52,12 @@
 			<th>Default Value</th>
 			<th>Required</th>
 		</tr>
+		<tr v-if="fields.length === 0">
+			<td><b>&nbsp;</b></td>
+			<td><input type="text" disabled class="placeholder"></input></td>
+			<td><input type="text" disabled class="placeholder"></input></td>
+			<td><input type="checkbox" disabled class="placeholder"></span></td>
+		</tr>
 		<tr v-for="field in fields">
 			<td>
 				<b>{{ field.type }}</b>
