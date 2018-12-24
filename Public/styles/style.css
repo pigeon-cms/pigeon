@@ -25,6 +25,10 @@ body {
 	-webkit-font-smoothing: antialiased;
 }
 
+[v-cloak] {
+  display: none;
+}
+
 h1, h2, h3, h4, h5, h6 {
 	font-weight: 700;
 	margin: 0;
@@ -120,6 +124,12 @@ input {
 
 input.placeholder {
 	opacity: 0.2;
+}
+
+input[type=text]:focus, textarea:focus {
+	outline: none;
+	border-color: #FBFCFE;
+	box-shadow: 0 0 0 2px #89A0FF;
 }
 
 li.name input {

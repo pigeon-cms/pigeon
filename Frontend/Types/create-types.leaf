@@ -12,7 +12,7 @@
 		class="form-errors"
 	>
 		<li v-for="error in errors">
-			{{ error }}
+			<span class="error" v-text="error"></span>
 		</li>
 	</ul>
 	<form
@@ -58,9 +58,9 @@
 			<td><input type="text" disabled class="placeholder"></input></td>
 			<td><input type="checkbox" disabled class="placeholder"></span></td>
 		</tr>
-		<tr v-for="field in fields">
+		<tr v-cloak v-for="field in fields">
 			<td>
-				<b>{{ field.type }}</b>
+				<b v-text="field.type"></b>
 			</td>
 			<td>
 			<input
