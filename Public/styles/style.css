@@ -41,7 +41,7 @@ nav {
 	font-size: 1.25em;
 }
 
-h2, h3, h4, h5, h6 {
+h2, h3, h4, h5, h6, th {
 	font-weight: 400;
 	color: #82858D;
 }
@@ -53,6 +53,28 @@ h2 {
 
 h3 {
 	font-size: 1em;
+}
+
+table {
+	font-size: 1.25em;
+}
+
+table b {
+	display: inline-block;
+	min-width: 80px;
+}
+
+th:first-child {
+	text-align: left;
+}
+
+td:not(:first-child) {
+	text-align: center;
+	padding: 5px 2px;
+}
+
+td input {
+	width: 80%;
 }
 
 nav ul {
@@ -74,7 +96,7 @@ form ul {
 
 form ul li {
 	list-style: none;
-	min-height: 3.2em;
+	padding-bottom: 10px;
 }
 
 form {
@@ -82,13 +104,18 @@ form {
 }
 
 input {
-	font-size: 1.25em;
-	height: 1em;
+	font-size: 1.25rem;
+	height: 1.8em;
 	border-radius: 8px;
 	box-shadow: none;
 	background: #FBFCFE;
 	border: 1px solid #82858D;
-	padding: 8px 12px;
+	padding: 0 0.6rem;
+	min-width: 60px;
+}
+
+li.name input {
+	width:  auto;
 }
 
 nav ul a {

@@ -19,7 +19,7 @@
 		v-on:submit.prevent="handleSubmit"
 	>
 	<ul>
-		<li>
+		<li class="name">
 			<label for="name">
 				Name
 			</label>
@@ -31,7 +31,7 @@
 				required
 			/>
 		</li>
-		<li>
+		<li class="name">
 			<label for="plural">
 				Plural name
 			</label>
@@ -43,14 +43,28 @@
 			/>
 		</li>
 		<label><p>Forms</p></label>
-		<li v-for="field in fields">
-			<label>{{ field.type }}</label>
+	</ul>
+	<table>
+		<col width="0%">
+		<tr>
+			<th>Type</th>
+			<th>Label</th>
+			<th>Default Value</th>
+			<th>Required</th>
+		</tr>
+		<tr v-for="field in fields">
+			<td>
+				<b>{{ field.type }}</b>
+			</td>
+			<td>
 			<input
 				type="text"
 				v-model="field.name"
 				placeholder="Label"
 				required
 			/>
+			</td>
+			<td>
 			<input
 				v-if="field.type == 'String' || field.type == 'URL'"
 				type="text"
@@ -63,15 +77,19 @@
 				v-model="field.value"
 			/>
 			<span class="tip" v-if="field.type == 'Date'">Creation date</span>
+			</td>
+			<td>
 			<input
 				type="checkbox"
 				v-model="field.required"
 			/>
-
-			<button type="button" v-on:click="removeField(field)">Remove</button>
-		</li>
-		<button>Save</button>
-	</ul>
+			</td>
+			<td>
+				<button type="button" v-on:click="removeField(field)">Remove</button>
+			</td>
+		</tr>
+	</table>
+	<button>Save</button>
 	</form>
 <div class="add-field">
 	<button v-on:click="addField('String')">Text</button>
