@@ -69,7 +69,8 @@ table {
 	font-size: 1.25em;
 }
 
-table b {
+.field-label {
+	font-size: 1.25rem;
 	display: inline-block;
 	min-width: 80px;
 }
@@ -82,7 +83,7 @@ td:not(:first-child) {
 	text-align: center;
 }
 
-td {
+td, div.field {
 	padding: 0.25rem 0.4rem;
 }
 
@@ -153,3 +154,21 @@ label {
 	font-size: 1.25em;
 }
 
+
+/* TODO: actually let's try to use tables */
+.field-container {
+	display: flex;
+	flex-wrap: wrap;
+}
+
+.field-container div.field {
+	flex: 0 0 40%;
+}
+
+div.field {
+	display: flex;
+	flex-wrap: nowrap;
+	align-items: center;
+	font-size: 1rem;
+	min-height: 2rem;
+}

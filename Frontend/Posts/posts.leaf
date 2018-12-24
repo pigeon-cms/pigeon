@@ -1,11 +1,8 @@
 #embed("header")
 #embed("nav")
-<h1>#(plural)</h1>
-
+<h1>#(category.plural)</h1>
 #if(count(items) == 0) {
-<h2>No #lowercase(category.plural) found.</h2>
-} else {
-	<h1>#(category.plural)</h1>
+	<h2>No #lowercase(category.plural) found.</h2>
 }
 
 #for(item in items) {

@@ -1,21 +1,21 @@
 #embed("header")
 #embed("nav")
 <div id="create">
-	<h1>#(category.plural)</h1>
+	<h1>#(category.name)</h1>
 	<ul
 		v-if="errors"
 		class="form-errors"
 	>
 		<li v-for="error in errors">
-			{{ error }}
+			<span class="error" v-text="error"></span>
 		</li>
 	</ul>
 	<form
 		v-on:submit.prevent="handleSubmit"
 	>
-	<ul>
-		<li v-for="field in fields">
-			<span>{{ field.name }}</span>
+	<div class="field-container">
+		<div class="field" v-for="field in fields">
+			<b  class="field-label" v-text="field.name"></b>
 			<input
 				v-if="field.type == 'String' || field.type == 'URL'"
 				type="text"
@@ -27,7 +27,7 @@
 				type="checkbox"
 				v-model="field.value"
 			/>
-		</li>
+		</div>
 		<button
 			type="button"
 			v-on:click="handleCancel"
@@ -35,7 +35,7 @@
 			Cancel
 		</button>
 		<button>Save</button>
-	</ul>
+	</div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/vue"></script>
