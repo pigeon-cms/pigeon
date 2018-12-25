@@ -17,3 +17,5 @@
 }
 
 <p><a href="/content/#(category.plural)/create">Create a #lowercase(category.name)</a></p>
+
+#embed("footer")

@@ -1,0 +1,4 @@
+#embed("header")
+#embed("nav")
+
+#embed("footer")

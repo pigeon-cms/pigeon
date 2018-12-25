@@ -34,7 +34,7 @@ func createTypesView(for req: Request,
         let typesPage = TypesPage(shared: basePage,
                                   currentUser: currentUser,
                                   contentTypes: contentTypes)
-        return try req.view().render("Types/create-types", typesPage)
+        return try req.view().render("Types/create-type", typesPage)
     }
 
 }
@@ -47,6 +47,6 @@ func createSingleTypeView(for req: Request,
         let typePage = TypePage(shared: basePage,
                                 currentUser: currentUser,
                                 contentType: contentType)
-        return try req.view().render("Types/type", typePage)
+        return try req.view().render("Types/edit-type", typePage)
     }
 }

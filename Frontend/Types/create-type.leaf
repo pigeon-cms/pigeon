@@ -7,7 +7,7 @@
 	<h2>Create a new content type</h2>
 }
 <div id="create">
-#embed("Types/type-forms")
+#embed("Types/type-fields")
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/vue"></script>
