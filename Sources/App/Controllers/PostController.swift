@@ -7,7 +7,7 @@ class PostController: PigeonController {
         router.get(["/content", String.parameter], use: postViewController)
         router.get(["/content", String.parameter, "/create"], use: createPostView)
         router.post(ContentItem.self, at: ["/content", String.parameter], use: createPostController)
-//        router.get(["/content", String.parameter, String.parameter], use: editPostView)
+        router.get(["/content", String.parameter, UUID.parameter], use: editPostView)
     }
 
 }
@@ -19,7 +19,7 @@ private extension PostController {
             throw Abort(.notFound)
         }
 
-        return try request.contentCategory(typePluralName: typeName).flatMap { category in
+        return try request.contentCategory(type: typeName).flatMap { category in
             return try category.items.query(on: request).range(..<50).all().flatMap { items in
                 return try self.generatePostListView(for: request,
                                                      category: category,
@@ -34,9 +34,22 @@ private extension PostController {
             throw Abort(.notFound)
         }
 
-        return try request.contentCategory(typePluralName: typeName).flatMap { category in
+        return try request.contentCategory(type: typeName).flatMap { category in
             return try self.generateCreatePostView(for: request,
                                                    category: category)
+        }
+    }
+    
+    func editPostView(_ request: Request) throws -> Future<View> {
+        guard let typeName = try request.parameters.next(String.self).removingPercentEncoding else {
+            throw Abort(.notFound)
+        }
+        
+        let id = try request.parameters.next(UUID.self)
+        
+        return try request.post(type: typeName, post: id).flatMap { post in
+            return try self.generateEditPostView(for: request,
+                                                 post: post)
         }
     }
 
@@ -82,17 +95,41 @@ private extension PostController {
             return try request.view().render("Posts/create-post", createPostPage)
         }
     }
+    
+    struct EditPostPage: Codable {
+        var shared: BasePage
+        var post: ContentItem
+    }
+    
+    func generateEditPostView(for request: Request,
+                              post: ContentItem) throws -> Future<View> {
+        return try request.base().flatMap { basePage in
+            let editPostPage = EditPostPage(shared: basePage, post: post)
+            return try request.view().render("Posts/edit-post", editPostPage)
+        }
+    }
 }
 
 extension Request {
-    func contentCategory(typePluralName: String) throws -> Future<ContentCategory> {
+    func contentCategory(type pluralName: String) throws -> Future<ContentCategory> {
         return ContentCategory.query(on: self)
-                                     .filter(\.plural == typePluralName)
+                                     .filter(\.plural == pluralName)
                                      .first().map { category in
             guard let category = category else {
                 throw Abort(.notFound)
             }
             return category
+        }
+    }
+    
+    func post(type pluralName: String, post id: UUID) throws -> Future<ContentItem> {
+        return try contentCategory(type: pluralName).flatMap { category in
+            return try category.items.query(on: self).filter(\.id == id).first().map { post in
+                guard let post = post else {
+                    throw Abort(.notFound)
+                }
+                return post
+            }
         }
     }
 }
