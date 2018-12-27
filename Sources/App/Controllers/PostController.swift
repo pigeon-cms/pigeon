@@ -47,9 +47,10 @@ private extension PostController {
         
         let id = try request.parameters.next(UUID.self)
         
-        return try request.post(type: typeName, post: id).flatMap { post in
+        return try request.post(type: typeName, post: id).flatMap { (post, category) in
             return try self.generateEditPostView(for: request,
-                                                 post: post)
+                                                 post: post,
+                                                 category: category)
         }
     }
 
@@ -99,12 +100,13 @@ private extension PostController {
     struct EditPostPage: Codable {
         var shared: BasePage
         var post: ContentItem
+        var category: ContentCategory
     }
     
     func generateEditPostView(for request: Request,
-                              post: ContentItem) throws -> Future<View> {
+                              post: ContentItem, category: ContentCategory) throws -> Future<View> {
         return try request.base().flatMap { basePage in
-            let editPostPage = EditPostPage(shared: basePage, post: post)
+            let editPostPage = EditPostPage(shared: basePage, post: post, category: category)
             return try request.view().render("Posts/edit-post", editPostPage)
         }
     }
@@ -122,13 +124,13 @@ extension Request {
         }
     }
     
-    func post(type pluralName: String, post id: UUID) throws -> Future<ContentItem> {
+    func post(type pluralName: String, post id: UUID) throws -> Future<(ContentItem, ContentCategory)> {
         return try contentCategory(type: pluralName).flatMap { category in
             return try category.items.query(on: self).filter(\.id == id).first().map { post in
                 guard let post = post else {
                     throw Abort(.notFound)
                 }
-                return post
+                return (post, category)
             }
         }
     }
