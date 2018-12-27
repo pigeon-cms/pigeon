@@ -6,14 +6,16 @@
 }
 
 #for(item in items) {
-<h2>
-	<a href="/content/#(category.plural)/#(item.id)">
+<a href="/content/#(category.plural)/#(item.id)">
+<div class="posts-container">
+	<span class="post-field">
 	#for(field in item.content) {
 		#if(isFirst) { #(field.value) }
 	}
-	<span class="date">#date(item.created, shared.user.timeZoneName, "h:mm a MMM d, yyyy")</span>
-	</a>
-</h2>
+	</span>
+	<span class="date">#date(item.created, shared.user.timeZoneName, "yyyy/MM/dd")</span>
+</div>
+</a>
 }
 
 <p><a href="/content/#(category.plural)/create">Create a #lowercase(category.name)</a></p>
