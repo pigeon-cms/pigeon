@@ -1,9 +1,10 @@
 import Vapor
 import Leaf
 
-/// Custom leaf tag that escapes Strings for single-quote JavaScript object contexts.
-/// For example, `"I'm a String"` outputs to `"I\'m a String"`.
-public final class JSTag: TagRenderer {
+/// Custom leaf tag that escapes Strings for JavaScript object contexts.
+/// For example, `"I'm a String"` outputs to `"'I\'m a String'"` (with enclosing single-quotes).
+/// Leaves boolean objects without single-quotes.
+public final class JSEscapedFormat: TagRenderer {
     
     public init() { }
 
