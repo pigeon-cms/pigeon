@@ -6,9 +6,9 @@ class PostController: PigeonController {
     override func loginGuardedBoot(router: Router) throws {
         router.get(["/content", String.parameter], use: postViewController)
         router.get(["/content", String.parameter, "/create"], use: createPostView)
+        router.get(["/content", String.parameter, UUID.parameter], use: editPostView)
         router.post(ContentItem.self, at: ["/content", String.parameter], use: createPostController)
         router.patch(ContentItem.self, at: ["/content", String.parameter], use: updatePostController)
-        router.get(["/content", String.parameter, UUID.parameter], use: editPostView)
     }
 
 }
