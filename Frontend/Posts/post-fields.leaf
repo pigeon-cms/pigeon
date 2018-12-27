@@ -1,4 +1,3 @@
-<h1>#(category.name)</h1>
 <ul
 	v-if="errors"
 	class="form-errors"
@@ -10,9 +9,12 @@
 <form
 	v-on:submit.prevent="handleSubmit"
 >
-<div class="field-container">
-	<div class="field" v-for="field in fields">
-		<b  class="field-label" v-text="field.name"></b>
+<table>
+<tr v-cloak v-for="field in fields">
+	<td>
+		<b class="field-label" v-text="field.name"></b>
+	</td>
+	<td>
 		<input
 			v-if="field.type == 'String' || field.type == 'URL'"
 			type="text"
@@ -24,12 +26,13 @@
 			type="checkbox"
 			v-model="field.value"
 		/>
-	</div>
-	<button
-		type="button"
-		v-on:click="handleCancel"
-	>
-		Cancel
-	</button>
-	<button>Save</button>
-</div>
+	</td>
+</tr>
+</table>
+<button
+	type="button"
+	v-on:click="handleCancel"
+>
+	Cancel
+</button>
+<button>Save</button>
