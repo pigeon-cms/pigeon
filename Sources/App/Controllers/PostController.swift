@@ -22,6 +22,7 @@ private extension PostController {
 
         return try request.contentCategory(type: typeName).flatMap { category in
             return try category.items.query(on: request).range(..<50).all().flatMap { items in
+                let items = items.sorted(by: { $0.created ?? Date.distantPast > $1.created ?? Date.distantPast })
                 return try self.generatePostListView(for: request,
                                                      category: category,
                                                      items: items)
