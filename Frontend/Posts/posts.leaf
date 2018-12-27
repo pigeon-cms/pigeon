@@ -5,18 +5,34 @@
 	<h2>No #lowercase(category.plural) found.</h2>
 }
 
+<table>
 #for(item in items) {
-<a href="/content/#(category.plural)/#(item.id)">
-<div class="posts-container">
-	<span class="post-field">
+#if(isFirst) {
+	#for(field in item.content) {
+		#if(isFirst) {
+		<tr>
+			<th>#(field.name)</th>
+			<th>Created</th>
+		</tr>
+		}
+	}
+}
+<tr>
+	<td>
+	<a href="/content/#(category.plural)/#(item.id)">
 	#for(field in item.content) {
 		#if(isFirst) { #(field.value) }
 	}
-	</span>
-	<span class="date">#date(item.created, shared.user.timeZoneName, "yyyy/MM/dd")</span>
-</div>
-</a>
+	</a>
+	</td>
+	<td>
+		<a href="/content/#(category.plural)/#(item.id)">
+		#date(item.created, shared.user.timeZoneName, "yyyy/MM/dd")
+	</a>
+	</td>
+</tr>
 }
+</table>
 
 <p><a href="/content/#(category.plural)/create">Create a #lowercase(category.name)</a></p>
 
