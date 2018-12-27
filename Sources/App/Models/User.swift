@@ -5,14 +5,16 @@ import FluentPostgreSQL
 struct PublicUser: Content {
     var name: String?
     var privileges: UserPrivileges?
-    var timeZone: TimeZone
-    var timeZoneAbbreviation: String?
+    var timeZoneName: String?
+    var timeZoneAbbreviation: String? {
+        let timeZone = TimeZone(identifier: timeZoneName ?? "") ?? TimeZone.autoupdatingCurrent
+        return timeZone.abbreviation(for: Date())
+    }
 
     init(_ user: User) {
         name = user.name
         privileges = user.privileges
-        timeZone = TimeZone(identifier: user.timeZoneName ?? "") ?? TimeZone.autoupdatingCurrent
-        timeZoneAbbreviation = timeZone.abbreviation(for: Date())
+        timeZoneName = user.timeZoneName
     }
 }
 

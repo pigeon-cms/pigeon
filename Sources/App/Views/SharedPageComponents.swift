@@ -3,6 +3,7 @@ import Vapor
 struct BasePage: Codable {
     var links: [Link]
     var administrationLinks: [Link]
+    var user: PublicUser
 }
 
 struct Link: Codable {
@@ -40,7 +41,9 @@ extension Request {
                 links.append(link)
             }
 
-            return BasePage(links: links, administrationLinks: administrationLinks)
+            return try BasePage(links: links,
+                                administrationLinks: administrationLinks,
+                                user: PublicUser(self.user()))
         }
 
     }

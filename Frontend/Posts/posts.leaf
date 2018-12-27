@@ -11,7 +11,7 @@
 	#for(field in item.content) {
 		#if(isFirst) { #(field.value) }
 	}
-	<span class="date">#(item.date)</span>
+	<span class="date">#date(item.created, shared.user.timeZoneName, "h:mm a MMM d, yyyy")</span>
 	</a>
 </h2>
 }

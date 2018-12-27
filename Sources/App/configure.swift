@@ -11,7 +11,7 @@ public func configure(_ config: inout Config, _ env: inout Environment, _ servic
     services.register([TemplateRenderer.self, ViewRenderer.self]) { container -> LeafRenderer in
         var tagConfig = LeafTagConfig.default()
         tagConfig.use(JSEscapedFormat(), as: "js")
-        tagConfig.use(UserDateFormat(), as: "date")
+        tagConfig.use(DateTimeZoneFormat(), as: "date")
         let leafConfig = LeafConfig(tags: tagConfig,
                                     viewsDir: DirectoryConfig.detect().workDir + "Frontend",
                                     shouldCache: container.environment != .development)
