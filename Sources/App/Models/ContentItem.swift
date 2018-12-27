@@ -5,7 +5,8 @@ import FluentPostgreSQL
 final class ContentItem: Content, Paginatable, PostgreSQLUUIDModel, Migration {
     var id: UUID?
     var categoryID: UUID
-    var date: Date?
+    var created: Date?
+    var updated: Date?
 //    var authors: [PublicUser]?
     var content: [ContentField] // All the content for a single item
     var category: Parent<ContentItem, ContentCategory> {
@@ -16,11 +17,13 @@ final class ContentItem: Content, Paginatable, PostgreSQLUUIDModel, Migration {
 /// TODO: instead of this, need to figure out how to structure the actual content this way,
 /// with an 'order' property for the CMS display, and a way to hide props like 'id' and 'order'.
 final class ContentItemPublic: Content {
-    var date: Date?
+    var created: Date?
+    var updated: Date?
     var content: [String: SupportedValue]
 
     init(_ item: ContentItem) {
-        date = item.date
+        created = item.created
+        updated = item.updated
         content = item.content.reduce([String: SupportedValue]()) { dict, field in
             var dict = dict
             dict[field.name.camelCase()] = field.value

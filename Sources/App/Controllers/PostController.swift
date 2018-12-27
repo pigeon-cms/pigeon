@@ -7,6 +7,7 @@ class PostController: PigeonController {
         router.get(["/content", String.parameter], use: postViewController)
         router.get(["/content", String.parameter, "/create"], use: createPostView)
         router.post(ContentItem.self, at: ["/content", String.parameter], use: createPostController)
+        router.patch(ContentItem.self, at: ["/content", String.parameter], use: updatePostController)
         router.get(["/content", String.parameter, UUID.parameter], use: editPostView)
     }
 
@@ -55,13 +56,26 @@ private extension PostController {
     }
 
     func createPostController(_ request: Request, item: ContentItem) throws -> Future<Response> {
-        print(item)
         return item.save(on: request).flatMap { item in
-            print(item.categoryID)
             return item.category.get(on: request).map { category in
                 let response = HTTPResponse(status: .created,
                                             headers: HTTPHeaders([("Location", "/content/\(category.plural)")]))
                 return Response(http: response, using: request.sharedContainer)
+            }
+        }
+    }
+    
+    func updatePostController(_ request: Request, item: ContentItem) throws -> Future<Response> {
+        return item.category.get(on: request).flatMap { category in
+            guard let postID = item.id else { throw Abort(.notFound) }
+            return try request.post(type: category.plural, post: postID).flatMap { (post, category) in
+                post.updated = item.updated
+                post.content = item.content
+                return post.save(on: request).map { _ in
+                    let response = HTTPResponse(status: .created,
+                                                headers: HTTPHeaders([("Location", "/content/\(category.plural)")]))
+                    return Response(http: response, using: request.sharedContainer)
+                }
             }
         }
     }
