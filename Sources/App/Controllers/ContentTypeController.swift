@@ -4,8 +4,8 @@ import Fluent
 class ContentTypeController: PigeonController {
 
     override func loginGuardedBoot(router: Router) throws {
-        router.post(ContentCategory.self, at: "/type/create", use: createTypeHandler)
-        router.post(ContentCategory.self, at: "/type/edit", use: editTypeHandler)
+        router.post(ContentCategory.self, at: "/type", use: createTypeHandler)
+        router.patch(ContentCategory.self, at: "/type", use: editTypeHandler)
     }
 
     private func createTypeHandler(_ request: Request, category: ContentCategory) throws -> Future<Response> {
