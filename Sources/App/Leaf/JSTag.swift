@@ -3,11 +3,11 @@ import Leaf
 
 /// Custom leaf tag that escapes Strings for single-quote JavaScript object contexts.
 /// For example, `"I'm a String"` outputs to `"I\'m a String"`.
-final class JSTag: TagRenderer {
+public final class JSTag: TagRenderer {
     
-    init() { }
+    public init() { }
 
-    func render(tag: TagContext) throws -> EventLoopFuture<TemplateData> {
+    public func render(tag: TagContext) throws -> EventLoopFuture<TemplateData> {
         var enclosingQuotes = true
         if let _ = tag.parameters.first?.bool {
             enclosingQuotes = false
