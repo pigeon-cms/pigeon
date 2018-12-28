@@ -4,7 +4,7 @@
 #if(count(items) == 0) {
 	<h2>No #lowercase(category.plural) found.</h2>
 }
-
+<section class="content">
 <table>
 #for(item in items) {
 #if(isFirst) {
@@ -35,5 +35,6 @@
 </table>
 
 <p><a href="/content/#(category.plural)/create">Create a #lowercase(category.name)</a></p>
+</section>
 
 #embed("footer")

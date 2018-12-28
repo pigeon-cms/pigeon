@@ -3,7 +3,9 @@
 <div id="edit">
 <h1>Content Types</h1>
 <h2 v-text="plural"></h2>
+<section class="content">
 #embed("Types/type-fields")
+</section>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/vue"></script>

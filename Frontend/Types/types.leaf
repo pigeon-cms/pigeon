@@ -1,6 +1,7 @@
 #embed("header")
 #embed("nav")
 <h1>Content Types</h1>
+<section class="content">
 <ul>
 #for(type in contentTypes) {
 	<li>
@@ -10,4 +11,5 @@
 }
 </ul>
 <p><a href="/types/create">Create a new content type</a></p>
+</section>
 #embed("footer")

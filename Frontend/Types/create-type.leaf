@@ -6,9 +6,11 @@
 } else {
 	<h2>Create a new content type</h2>
 }
-<div id="create">
-#embed("Types/type-fields")
-</div>
+<section class="content">
+	<div id="create">
+	#embed("Types/type-fields")
+	</div>
+</section>
 
 <script src="https://cdn.jsdelivr.net/npm/vue"></script>
 <script src="/js/create-content.js"></script>

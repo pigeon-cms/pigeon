@@ -2,9 +2,11 @@
 #embed("nav")
 <h1>#(category.name)</h1>
 <h2>Create</h2>
-<div id="create">
-#embed("Posts/post-fields")
-</div>
+<section class="content">
+	<div id="create">
+	#embed("Posts/post-fields")
+	</div>
+</section>
 #embed("footer")
 
 <script src="https://cdn.jsdelivr.net/npm/vue"></script>
