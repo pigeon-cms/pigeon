@@ -5,7 +5,7 @@
 	<h2>No #lowercase(category.plural) found.</h2>
 }
 <section class="content">
-<table>
+<table class="list">
 #for(item in items) {
 #if(isFirst) {
 	#for(field in item.content) {

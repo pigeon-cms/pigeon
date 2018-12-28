@@ -75,11 +75,14 @@ h3 {
 }
 
 table {
-	width: 100%;
 	max-width: 1000px;
 	border-spacing: 0;
 	font-size: 1.25em;
 	padding-right: 2em;
+}
+
+table.list {
+	width: 100%;
 }
 
 .field-label {
