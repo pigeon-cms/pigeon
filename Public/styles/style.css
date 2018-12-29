@@ -75,16 +75,31 @@ h3 {
 }
 
 table {
-	max-width: 1000px;
-	border-spacing: 0;
 	font-size: 1.25em;
 	padding-right: 2em;
 }
 
 table.list {
 	width: 100%;
+	max-width: 700px;
+	border-collapse: collapse;
 }
 
+table.list th:last-child {
+	text-align: right;
+}
+table.list td:last-child {
+	text-align: right;
+}
+table.list tr:not(:first-child) {
+  border: 2px solid #F3F4F6;
+}
+table.list td {
+	background: #FBFCFE;
+}
+table.list td, table.list th {
+	padding: 0.5rem 0.8rem;
+}
 .field-label {
 	font-size: 1.25rem;
 	display: inline-block;
@@ -99,12 +114,8 @@ td:not(:first-child) {
 	text-align: center;
 }
 
-td, div.field {
+td, th, div.field {
 	padding: 0.25rem 0.4rem;
-}
-
-td:first-child {
-	padding-left: 0;
 }
 
 td input {
