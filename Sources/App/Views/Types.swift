@@ -30,7 +30,7 @@ func createTypesView(for req: Request,
                      currentUser: User,
                      contentTypes: [ContentCategory]) throws -> Future<View> {
 
-    return try req.base().flatMap { basePage in
+    return try req.base(currentPath: "/types").flatMap { basePage in
         let typesPage = TypesPage(shared: basePage,
                                   currentUser: currentUser,
                                   contentTypes: contentTypes)
@@ -43,7 +43,7 @@ func createSingleTypeView(for req: Request,
                           currentUser: User,
                           contentType: ContentCategory) throws -> Future<View> {
 
-    return try req.base().flatMap { basePage in
+    return try req.base(currentPath: "/types").flatMap { basePage in
         let typePage = TypePage(shared: basePage,
                                 currentUser: currentUser,
                                 contentType: contentType)

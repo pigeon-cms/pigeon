@@ -9,6 +9,15 @@ struct BasePage: Codable {
 struct Link: Codable {
     var name: String
     var path: String
+    var current: Bool
+    
+    init(name: String, path: String, currentPath: String) {
+        self.name = name
+        self.path = path
+        self.current = currentPath == path
+        print(currentPath)
+        print(path)
+    }
 }
 
 struct PageAuthorization: Codable {
@@ -23,21 +32,28 @@ struct PageAuthorization: Codable {
 }
 
 extension Request {
-    func base() throws -> Future<BasePage> {
+    func base(currentPath: String? = nil) throws -> Future<BasePage> {
         let pageAuthorization = try PageAuthorization(privileges: privileges())
-
+        
+        /// Provided current path or inferred by URL
+        let currentPath = currentPath ?? http.url.path
+        
         var administrationLinks = [Link]()
         if pageAuthorization.administratorLinks {
-            administrationLinks.append(Link(name: "Content Types", path: "/types"))
-            administrationLinks.append(Link(name: "Users & Roles", path: "/users"))
-            administrationLinks.append(Link(name: "Settings", path: "/settings"))
+            administrationLinks.append(Link(name: "Content Types", path: "/types",
+                                            currentPath: currentPath))
+            administrationLinks.append(Link(name: "Users & Roles", path: "/users",
+                                            currentPath: currentPath))
+            administrationLinks.append(Link(name: "Settings", path: "/settings",
+                                            currentPath: currentPath))
         }
 
         var links = [Link]()
 
         return ContentCategory.query(on: self).all().map { categories in
             categories.forEach {
-                let link = Link(name: $0.plural, path: "/content/\($0.plural)")
+                let link = Link(name: $0.plural, path: "/content/\($0.plural)",
+                                currentPath: currentPath)
                 links.append(link)
             }
 

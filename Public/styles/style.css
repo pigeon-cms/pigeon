@@ -27,7 +27,6 @@ body {
 }
 
 main {
-	margin-left: 1.25em;
 	display: flex;
 }
 
@@ -52,12 +51,6 @@ h1, h2, h3, h4, h5, h6 {
 h1 {
 	font-size: 3em;
 	margin-top: 0;
-}
-
-nav {
-	min-width: 172px;
-	margin-right: 10vw;
-	font-size: 1.25em;
 }
 
 h2, h3, h4, h5, h6, th {
@@ -129,6 +122,13 @@ td a {
 	margin: -0.4em -1em;
 }
 
+nav {
+	min-width: 172px;
+	margin-left: 1.25em;
+	margin-right: 10vw;
+	font-size: 1.25em;
+}
+
 nav ul {
 	margin: 0;
 	margin-bottom: 4em;
@@ -139,11 +139,24 @@ nav ul li {
 	margin-top: 0.5rem;
 	list-style: none;
 	font-weight: 700;
+	height: 100%;
+	position: relative;
 }
 
 nav ul a {
 	color: #1E1E21;
 	text-decoration: none;
+}
+
+nav li.current-link::before {
+	content: "";
+	display: inline-block;
+	background: #1E1E21;
+	width: 0.8em;
+	position: absolute;
+	top: -4px;
+	bottom: -4px;
+	left: -1.25em;
 }
 
 form ul {

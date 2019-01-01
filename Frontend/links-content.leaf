@@ -2,7 +2,13 @@
 <h3>Content</h3>
 <ul>
 	#for(link in shared.links) {
-	<li><a href="#(link.path)"">#(link.name)</a></li>
+	<li
+		#if(link.current) {
+			class="current-link"
+		}
+	>
+		<a href="#(link.path)">#(link.name)</a>
+	</li>
 	}
 </ul>
 }

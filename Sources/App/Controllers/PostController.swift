@@ -106,7 +106,7 @@ private extension PostController {
 
     func generateCreatePostView(for request: Request,
                                 category: ContentCategory) throws -> Future<View> {
-        return try request.base().flatMap { basePage in
+        return try request.base(currentPath: "/content/" + category.plural).flatMap { basePage in
             let createPostPage = CreatePostPage(shared: basePage, category: category)
             return try request.view().render("Posts/create-post", createPostPage)
         }
@@ -120,7 +120,7 @@ private extension PostController {
     
     func generateEditPostView(for request: Request,
                               post: ContentItem, category: ContentCategory) throws -> Future<View> {
-        return try request.base().flatMap { basePage in
+        return try request.base(currentPath: "/content/" + category.plural).flatMap { basePage in
             let editPostPage = EditPostPage(shared: basePage, post: post, category: category)
             return try request.view().render("Posts/edit-post", editPostPage)
         }
