@@ -27,7 +27,7 @@
 	</td>
 	<td>
 		<a href="/content/#(category.plural)/#(item.id)">
-		#date(item.created, shared.user.timeZoneName, "yyyy/MM/dd")
+		#date(item.created, shared.user.timeZoneName, "y/MM/dd")
 	</a>
 	</td>
 </tr>

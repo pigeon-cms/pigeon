@@ -6,7 +6,7 @@ import Leaf
 ///
 ///     dateTimeZoneFormat(<timeIntervalSinceEpoch>, <timeZoneName?>, <dateFormat?>)
 ///
-/// If no date format is supplied, a default will be used. If no user is authenticated,
+/// If no date format is supplied, a default will be used. If no time zone name is given,
 /// the system timezone will be used.
 public final class DateTimeZoneFormat: TagRenderer {
     
@@ -33,7 +33,7 @@ public final class DateTimeZoneFormat: TagRenderer {
         if tag.parameters.count == 3, let param = tag.parameters[2].string {
             formatter.dateFormat = param
         } else {
-            formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+            formatter.dateFormat = "y-MM-dd HH:mm:ss"
         }
         
         /// Return formatted date
