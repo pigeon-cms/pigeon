@@ -41,7 +41,7 @@ enum UserPrivileges: Int, Codable, Equatable {
     case administrator
     /// Full priveleges, an owner account is the origin account
     case owner
-    
+
     func toString() -> String {
         switch self {
         case .user: return "User"

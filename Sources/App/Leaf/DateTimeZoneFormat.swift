@@ -9,9 +9,9 @@ import Leaf
 /// If no date format is supplied, a default will be used. If no time zone name is given,
 /// the system timezone will be used.
 public final class DateTimeZoneFormat: TagRenderer {
-    
+
     public init() {}
-    
+
     public func render(tag: TagContext) throws -> EventLoopFuture<TemplateData> {
         /// Require at least one parameter.
         switch tag.parameters.count {
@@ -21,7 +21,7 @@ public final class DateTimeZoneFormat: TagRenderer {
                 reason: "Invalid parameter count: \(tag.parameters.count). 1 to 3 required."
             )
         }
-        
+
         let formatter = DateFormatter()
         /// Assume the date is a floating point number
         let date = Date(timeIntervalSince1970: tag.parameters[0].double ?? 0)
@@ -35,14 +35,13 @@ public final class DateTimeZoneFormat: TagRenderer {
         } else {
             formatter.dateFormat = "y-MM-dd HH:mm:ss"
         }
-        
+
         /// Return formatted date
         return Future.map(on: tag) { .string(formatter.string(from: date)) }
     }
-    
+
     func timeZone(_ name: String?) -> TimeZone {
         return TimeZone(identifier: name ?? "") ?? TimeZone.autoupdatingCurrent
     }
-    
-}
 
+}
