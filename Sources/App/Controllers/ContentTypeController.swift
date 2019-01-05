@@ -4,8 +4,58 @@ import Fluent
 class ContentTypeController: PigeonController {
 
     override func loginGuardedBoot(router: Router) throws {
+        router.get("/types", use: typesViewHandler)
+        router.get("/types/create", use: createTypesViewHandler)
+        router.get("/type", String.parameter, use: typeViewHandler)
         router.post(ContentCategory.self, at: "/type", use: createTypeHandler)
         router.patch(ContentCategory.self, at: "/type", use: editTypeHandler)
+    }
+
+    private func typesViewHandler(_ request: Request) throws -> Future<View> {
+        let user = try request.user()
+        let privileges = try request.privileges()
+
+        guard privileges.rawValue > UserPrivileges.administrator.rawValue else {
+            throw Abort(.unauthorized)
+        }
+
+        return request.allContentTypes().flatMap { contentTypes in
+            if contentTypes.count > 0 {
+                return try typesView(for: request, currentUser: user, contentTypes: contentTypes)
+            } else {
+                throw Abort.redirect(to: "/types/create")
+            }
+        }
+    }
+
+    private func createTypesViewHandler(_ request: Request) throws -> Future<View> {
+        let user = try request.user()
+        let privileges = try request.privileges()
+
+        guard privileges.rawValue > UserPrivileges.administrator.rawValue else {
+            throw Abort(.unauthorized)
+        }
+
+        return request.allContentTypes().flatMap { contentTypes in
+            return try createTypesView(for: request, currentUser: user, contentTypes: contentTypes)
+        }
+    }
+
+    private func typeViewHandler(_ request: Request) throws -> Future<View> {
+        let user = try request.user()
+
+        guard let typeName = try request.parameters.next(String.self).removingPercentEncoding else {
+            throw Abort(.notFound)
+        }
+
+        return ContentCategory.query(on: request)
+                                     .filter(\.plural == typeName)
+                                     .first().flatMap { category in
+            guard let category = category else {
+                throw Abort(.notFound)
+            }
+            return try createSingleTypeView(for: request, currentUser: user, contentType: category)
+        }
     }
 
     private func createTypeHandler(_ request: Request, category: ContentCategory) throws -> Future<Response> {

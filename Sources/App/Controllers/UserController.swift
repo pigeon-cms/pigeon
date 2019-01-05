@@ -6,6 +6,7 @@ import Crypto
 class UserController: PigeonController {
 
     override func authBoot(router: Router) throws {
+        router.get("/users", use: usersViewHandler)
         router.get("/login", use: handleUnauthenticatedUser)
         router.post("/login", use: loginUserHandler)
         router.post(User.self, at: "/register", use: registerUserHandler)
@@ -14,6 +15,19 @@ class UserController: PigeonController {
 }
 
 private extension UserController {
+
+    func usersViewHandler(_ request: Request) throws -> Future<View> {
+        let user = try request.user()
+        let privileges = try request.privileges()
+
+        guard privileges.rawValue > UserPrivileges.administrator.rawValue else {
+            throw Abort(.unauthorized)
+        }
+
+        return request.allUsers().flatMap { users in
+            return try generateUsers(for: request, currentUser: user, users: users)
+        }
+    }
 
     /// Handles a request from an unauthenticated user.
     /// If any users exist, this generates the login page. If none have been created yet,
