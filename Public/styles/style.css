@@ -72,6 +72,10 @@ table {
 	padding-right: 2em;
 }
 
+table input {
+	font-size: 1rem;
+}
+
 table.list {
 	width: 100%;
 	max-width: 700px;
@@ -174,13 +178,14 @@ form {
 }
 
 input {
-	font-size: 1rem;
-	height: 2rem;
+	font-size: 1em;
+	height: 2em;
 	border-radius: 8px;
 	box-shadow: none;
 	background: #FBFCFE;
 	border: 1px solid #82858D;
-	padding: 0 0.6rem;
+	padding: 0 0.6em;
+	padding-bottom: 0.08em;
 	min-width: 60px;
 }
 
@@ -203,4 +208,48 @@ label {
 	min-width: 140px;
 	font-weight: 700;
 	font-size: 1.25em;
+}
+
+div.row {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+}
+
+main.login {
+	margin-top: 20vh;
+	flex-direction: column;
+}
+form.login {
+	font-size: 1.25em;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	margin: 6vh auto;
+}
+div.login {
+	display: flex;
+	flex-direction: column;
+}
+div.login input {
+	margin: 0.6em;
+	width: 280px;
+}
+button.login {
+	background-color: transparent;
+	background-image: url("/images/sign-in.svg");
+	border: 0;
+	width: 48px;
+	height: 48px;
+	padding: 0.4em;
+	margin: 0.8em;
+	background-position: center;
+	background-repeat: none;
+	cursor: pointer;
+}
+img.login-icon {
+	display: inline-block;
+	width: 26px;
+	height: 26px;
+	pointer-events: none;
 }
