@@ -252,4 +252,6 @@ img.login-icon {
 	width: 26px;
 	height: 26px;
 	pointer-events: none;
+	margin-left: 1em;
+	margin-right: 0.4em;
 }
