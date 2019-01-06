@@ -189,6 +189,10 @@ input {
 	min-width: 60px;
 }
 
+button {
+	outline: none;
+}
+
 input[type=text]:focus, input[type=email]:focus, input[type=password]:focus, textarea:focus {
 	outline: none;
 	border-color: #FBFCFE;
@@ -217,7 +221,7 @@ div.row {
 }
 
 main.login {
-	margin-top: 20vh;
+	margin-top: 15vh;
 	flex-direction: column;
 }
 
@@ -246,6 +250,7 @@ div.login input {
 	width: 280px;
 }
 button.login {
+	outline: none;
 	background-color: transparent;
 	background-image: url("/images/sign-in.svg");
 	border: 0;
@@ -259,7 +264,7 @@ button.login {
 }
 img.login-icon {
 	display: inline-block;
-	width: 26px;
+	width: 34px;
 	height: 26px;
 	pointer-events: none;
 	margin-left: 1em;

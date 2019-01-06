@@ -7,7 +7,7 @@
 	<body>
 		<main class="login">
 <img src="/images/pigeon.svg" alt="Pigeon logo" />
-<h2>Create the first user</h2>
+<h2>Create an account</h2>
 <div id="register">
 <form
 	class="login"
