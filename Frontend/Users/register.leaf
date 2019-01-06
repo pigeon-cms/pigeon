@@ -1,36 +1,62 @@
-#embed("header")
+<!doctype html>
+<html lang="en">
+	<head>
+		<title>Pigeon CMS</title>
+		<link rel="stylesheet" href="/styles/style.css">
+	</head>
+	<body>
+		<main class="login">
+<img src="/images/pigeon.svg" alt="Pigeon logo" />
+<h2>Create the first user</h2>
 <div id="register">
 <form
+	class="login"
 	action="/register"
 	method="POST"
 	v-on:submit.prevent="handleSubmit"
 	>
-	<input
-		type="text"
-		name="name"
-		v-model="user.name"
-	/>
-	<input
-		type="email"
-		name="email"
-		v-model="user.email"
-		autocomplete="user.username"
-		required
-	/>
-	<input
-		type="password"
-		name="password"
-		v-model="user.password"
-		autocomplete="new-password"
-		required
-	/>
-	<input
+	<div class="login">
+		<div class="row">
+		<img class="login-icon" src="/images/name.svg" />
+		<input
+			type="text"
+			name="name"
+			placeholder="name"
+			v-model="user.name"
+		/>
+	</div>
+	<div class="row">
+		<img class="login-icon" src="/images/username.svg" />
+		<input
+			type="email"
+			name="email"
+			placeholder="email"
+			v-model="user.email"
+			autocomplete="user.username"
+			required
+		/>
+	</div>
+	<div class=row>
+		<img class="login-icon" src="/images/key.svg" />
+		<input
+			type="password"
+			name="password"
+			placeholder="password"
+			v-model="user.password"
+			autocomplete="new-password"
+			required
+		/>
+	</div>
+	</div>
+	<button
 		type="submit"
 		value="register"
+		class="login"
 	/>
 </form>
 </div>
-<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+
+ <script src="https://cdn.jsdelivr.net/npm/vue"></script>
 <script>
 	var register = new Vue({
 		el: '#register',

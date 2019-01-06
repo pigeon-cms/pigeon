@@ -10,7 +10,8 @@
 <form
 	class="login"
 	action="/login"
-	method="POST">
+	method="POST"
+>
 	<div class="login">
 	<div class="row">
 		<img class="login-icon" src="/images/username.svg" />
