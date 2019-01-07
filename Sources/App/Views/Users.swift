@@ -25,6 +25,6 @@ func createUserView(for req: Request, currentUser: User) throws -> Future<View> 
         throw Abort(.forbidden)
     }
     return try req.base(currentPath: "/users").flatMap { basePage in
-        return try req.view().render("Users/create-user", CreateUsersPage(shared: basePage)) // TODO: leafy boi
+        return try req.view().render("Users/create-user", CreateUsersPage(shared: basePage))
     }
 }
