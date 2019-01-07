@@ -15,8 +15,6 @@ struct Link: Codable {
         self.name = name
         self.path = path
         self.current = currentPath == path
-        print(currentPath)
-        print(path)
     }
 }
 

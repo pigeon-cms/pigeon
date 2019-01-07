@@ -3,6 +3,7 @@ import Authentication
 import FluentPostgreSQL
 
 struct PublicUser: Content {
+    var id: UUID?
     var name: String?
     var email: String?
     var privileges: String?
@@ -10,6 +11,7 @@ struct PublicUser: Content {
     var timeZoneAbbreviation: String?
 
     init(_ user: User) {
+        id = user.id
         name = user.name
         email = user.email
         privileges = user.privileges?.toString()

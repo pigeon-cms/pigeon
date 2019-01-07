@@ -1,0 +1,8 @@
+#embed("header")
+#embed("nav")
+<h1>Users</h1>
+<h2>Create an account</h2>
+<section class="content">
+	#embed("Users/register-fields")
+</section>
+#embed("footer")

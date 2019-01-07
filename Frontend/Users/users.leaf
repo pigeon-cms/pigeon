@@ -21,5 +21,6 @@
 	</tr>
 }
 </table>
+<p><a href="/users/create">Create a user</a></p>
 </section>
 #embed("footer")
