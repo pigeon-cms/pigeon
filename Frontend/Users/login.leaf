@@ -1,22 +1,43 @@
-#embed("header")
+<!doctype html>
+<html lang="en">
+	<head>
+		<title>Pigeon CMS</title>
+		<link rel="stylesheet" href="/styles/style.css">
+	</head>
+	<body>
+		<main class="login">
+<img src="/images/pigeon.svg" alt="Pigeon logo" />
 <form
+	class="login"
 	action="/login"
-	method="POST">
-	<input
-		type="email"
-		name="email"
-		id="email"
-		autocomplete="username"
-	/>
-	<input
-		type="password"
-		name="password"
-		id="password"
-		autocomplete="current-password"
-	/>
-	<input
+	method="POST"
+>
+	<div class="login">
+	<div class="row">
+		<img class="login-icon" src="/images/username.svg" />
+		<input
+			type="email"
+			name="email"
+			placeholder="email"
+			id="email"
+			autocomplete="username"
+		/>
+	</div>
+	<div class=row>
+		<img class="login-icon" src="/images/key.svg" />
+		<input
+			type="password"
+			name="password"
+			placeholder="password"
+			id="password"
+			autocomplete="current-password"
+		/>
+	</div>
+	</div>
+	<button
 		type="submit"
 		value="login"
+		class="login"
 	/>
 </form>
 #embed("footer")

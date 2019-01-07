@@ -1,0 +1,85 @@
+<div id="register">
+<form
+	class="login"
+	action="/register"
+	method="POST"
+	v-on:submit.prevent="handleSubmit"
+>
+	<div class="login">
+		<div class="row">
+		<img class="login-icon" src="/images/name.svg" />
+		<input
+			type="text"
+			name="name"
+			placeholder="name"
+			v-model="user.name"
+		/>
+	</div>
+	<div class="row">
+		<img class="login-icon" src="/images/username.svg" />
+		<input
+			type="email"
+			name="email"
+			placeholder="email"
+			v-model="user.email"
+			autocomplete="user.username"
+			required
+		/>
+	</div>
+	<div class=row>
+		<img class="login-icon" src="/images/key.svg" />
+		<input
+			type="password"
+			name="password"
+			placeholder="password"
+			v-model="user.password"
+			autocomplete="new-password"
+			required
+		/>
+	</div>
+	</div>
+	<button
+		type="submit"
+		value="register"
+		class="login"
+	/>
+</form>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<script>
+	var register = new Vue({
+		el: '#register',
+		data: function() {
+			return {
+				user: {
+					name: null,
+					email: null,
+					password: null,
+					timeZoneName: Intl.DateTimeFormat().resolvedOptions().timeZone
+				}
+			}
+		},
+		methods: {
+			handleSubmit: function(event) {
+				const self = this
+				self.errors = []
+				var xhr = new XMLHttpRequest()
+				xhr.open('POST', '/register', true)
+				xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8')
+				xhr.send(JSON.stringify(self.$data.user))
+
+				xhr.onloadend = function () {
+					const location = xhr.getResponseHeader('Location')
+					if (location) {
+						window.location.href = location
+					}
+					window.location.reload()
+				}
+			},
+			handleError: function(error) {
+				this.errors.push(error)
+			}
+		}
+	})
+</script>

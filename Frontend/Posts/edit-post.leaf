@@ -1,9 +1,9 @@
 #embed("header")
 #embed("nav")
 <h1>#(category.name)</h1>
-<h2>Create</h2>
+<h2>Edit</h2>
 <section class="content">
-	<div id="create">
+	<div id="edit">
 	#embed("Posts/post-fields")
 	</div>
 </section>
@@ -12,12 +12,12 @@
 <script src="https://cdn.jsdelivr.net/npm/vue"></script>
 <script>
 	var create = new Vue({
-		el: '#create',
+		el: '#edit',
 		data: {
 			name: #js(category.name),
 			plural: #js(category.plural),
 			fields: [
-				#for(field in category.template) {
+				#for(field in post.content) {
 					{
 						name: #js(field.name),
 						type: #js(field.type),
@@ -31,20 +31,19 @@
 		methods: {
 			createItem: function() {
 				return {
-					categoryID: #js(category.id),
-					authors: [],
-					created: new Date().toISOString(),
+					id: #js(post.id),
+					categoryID: #js(post.categoryID),
+					updated: new Date().toISOString(),
 					content: this.fields
 				}
 			},
 			handleSubmit: function(event) {
-				console.log("SUBMIT")
 				const self = this
 				self.errors = []
 				let item = self.createItem()
-
+				console.log(item.id)
 				var xhr = new XMLHttpRequest()
-				xhr.open('POST', '/content/#(category.plural)', true)
+				xhr.open('PATCH', '/content/#(category.plural)', true)
 				xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8')
 				xhr.send(JSON.stringify(item))
 

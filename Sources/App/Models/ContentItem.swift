@@ -5,7 +5,8 @@ import FluentPostgreSQL
 final class ContentItem: Content, Paginatable, PostgreSQLUUIDModel, Migration {
     var id: UUID?
     var categoryID: UUID
-    var date: Date?
+    var created: Date?
+    var updated: Date?
 //    var authors: [PublicUser]?
     var content: [ContentField] // All the content for a single item
     var category: Parent<ContentItem, ContentCategory> {
@@ -16,11 +17,13 @@ final class ContentItem: Content, Paginatable, PostgreSQLUUIDModel, Migration {
 /// TODO: instead of this, need to figure out how to structure the actual content this way,
 /// with an 'order' property for the CMS display, and a way to hide props like 'id' and 'order'.
 final class ContentItemPublic: Content {
-    var date: Date?
+    var created: Date?
+    var updated: Date?
     var content: [String: SupportedValue]
 
     init(_ item: ContentItem) {
-        date = item.date
+        created = item.created
+        updated = item.updated
         content = item.content.reduce([String: SupportedValue]()) { dict, field in
             var dict = dict
             dict[field.name.camelCase()] = field.value
@@ -87,7 +90,7 @@ enum SupportedType: Content, ReflectionDecodable, Equatable, RawRepresentable {
     }
 }
 
-enum SupportedValue: Content, Equatable {
+enum SupportedValue: Content, Equatable, TemplateDataRepresentable {
     case string(String?)
     case int(Int?)
     case float(Float?)
@@ -139,6 +142,43 @@ enum SupportedValue: Content, Equatable {
         case .date(let date): try container.encode(date)
         case .url(let url): try container.encode(url)
         case .array(let array): try container.encode(array)
+        }
+    }
+    
+    func convertToTemplateData() throws -> TemplateData {
+        switch self {
+        case .string(let string):
+            guard let string = string else {
+                return TemplateData.null
+            }
+            return TemplateData.string(string)
+        case .int(let int):
+            guard let int = int else {
+                return TemplateData.null
+            }
+            return TemplateData.int(int)
+        case .float(let float):
+            guard let float = float else {
+                return TemplateData.null
+            }
+            return TemplateData.double(Double(float))
+        case .bool(let bool):
+            guard let bool = bool else {
+                return TemplateData.null
+            }
+            return TemplateData.bool(bool)
+        case .date(let date):
+            guard let date = date else {
+                return TemplateData.null
+            }
+            return TemplateData.null // TODO: template date?
+        case .url(let url):
+            guard let url = url else {
+                return TemplateData.null
+            }
+            return TemplateData.string(url.absoluteString)
+        case .array(let array):
+            return TemplateData.null // TODO: template array
         }
     }
 }

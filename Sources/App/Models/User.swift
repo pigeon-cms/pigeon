@@ -3,12 +3,21 @@ import Authentication
 import FluentPostgreSQL
 
 struct PublicUser: Content {
+    var id: UUID?
     var name: String?
-    var privileges: UserPrivileges?
+    var email: String?
+    var privileges: String?
+    var timeZoneName: String?
+    var timeZoneAbbreviation: String?
 
     init(_ user: User) {
+        id = user.id
         name = user.name
-        privileges = user.privileges
+        email = user.email
+        privileges = user.privileges?.toString()
+        timeZoneName = user.timeZoneName
+        let timeZone = TimeZone(identifier: timeZoneName ?? "") ?? TimeZone.autoupdatingCurrent
+        timeZoneAbbreviation = timeZone.abbreviation(for: Date())
     }
 }
 
@@ -16,6 +25,7 @@ struct User: Content, PostgreSQLUUIDModel, Migration {
     var id: UUID?
     var name: String?
     var privileges: UserPrivileges?
+    var timeZoneName: String?
     private(set) var email: String
     private(set) var password: String
 
@@ -33,6 +43,15 @@ enum UserPrivileges: Int, Codable, Equatable {
     case administrator
     /// Full priveleges, an owner account is the origin account
     case owner
+
+    func toString() -> String {
+        switch self {
+        case .user: return "User"
+        case .editor: return "Editor"
+        case .administrator: return "Administrator"
+        case .owner: return "Owner"
+        }
+    }
 }
 
 extension User: BasicAuthenticatable {

@@ -1,0 +1,95 @@
+<ul
+	v-if="errors"
+	class="form-errors"
+>
+	<li v-for="error in errors">
+		<span class="error" v-text="error"></span>
+	</li>
+</ul>
+<form
+	v-on:submit.prevent="handleSubmit"
+>
+<ul>
+	<li class="name">
+		<label for="name">
+			Name
+		</label>
+		<input
+			type="text"
+			v-model="name"
+			id="name"
+			placeholder="Post"
+			required
+		/>
+	</li>
+	<li class="name">
+		<label for="plural">
+			Plural name
+		</label>
+		<input
+			type="text"
+			v-model="plural"
+			id="plural"
+			v-bind:placeholder="(name || 'Post') + 's'"
+		/>
+	</li>
+	<label><p>Forms</p></label>
+</ul>
+<table>
+	<tr>
+		<th>Type</th>
+		<th>Label</th>
+		<th>Default Value</th>
+		<th>Required</th>
+	</tr>
+	<tr v-if="fields.length === 0">
+		<td><b class="placeholder field-label">—</b></td>
+		<td><input type="text" disabled class="placeholder"></input></td>
+		<td><input type="text" disabled class="placeholder"></input></td>
+		<td><input type="checkbox" disabled class="placeholder"></span></td>
+	</tr>
+	<tr v-cloak v-for="field in fields">
+		<td>
+			<b class="field-label" v-text="field.type"></b>
+		</td>
+		<td>
+		<input
+			type="text"
+			v-model="field.name"
+			placeholder="Label"
+			required
+		/>
+		</td>
+		<td>
+		<input
+			v-if="field.type == 'String' || field.type == 'URL'"
+			type="text"
+			v-model="field.value"
+			placeholder="Default value"
+		/>
+		<input
+			v-if="field.type == 'Bool'"
+			type="checkbox"
+			v-model="field.value"
+		/>
+		<span class="tip" v-if="field.type == 'Date'">Creation date</span>
+		</td>
+		<td>
+		<input
+			type="checkbox"
+			v-model="field.required"
+		/>
+		</td>
+		<td>
+			<button type="button" v-on:click="removeField(field)">Remove</button>
+		</td>
+	</tr>
+</table>
+<button>Save</button>
+</form>
+<div class="add-field">
+	<button v-on:click="addField('String')">Text</button>
+	<button v-on:click="addField('Date')">Date</button>
+	<button v-on:click="addField('URL')">Link</button>
+	<button v-on:click="addField('Bool')">Switch</button>
+</div>

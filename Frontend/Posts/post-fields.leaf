@@ -1,0 +1,38 @@
+<ul
+	v-if="errors"
+	class="form-errors"
+>
+	<li v-for="error in errors">
+		<span class="error" v-text="error"></span>
+	</li>
+</ul>
+<form
+	v-on:submit.prevent="handleSubmit"
+>
+<table>
+<tr v-cloak v-for="field in fields">
+	<td>
+		<b class="field-label" v-text="field.name"></b>
+	</td>
+	<td>
+		<input
+			v-if="field.type == 'String' || field.type == 'URL'"
+			type="text"
+			v-model="field.value"
+			:required="field.required ? true : false"
+		/>
+		<input
+			v-if="field.type == 'Bool'"
+			type="checkbox"
+			v-model="field.value"
+		/>
+	</td>
+</tr>
+</table>
+<button
+	type="button"
+	v-on:click="handleCancel"
+>
+	Cancel
+</button>
+<button>Save</button>

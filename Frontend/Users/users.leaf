@@ -1,12 +1,26 @@
 #embed("header")
 #embed("nav")
 <h1>Users</h1>
-<ul>
+<section class="content">
+<table class="list">
+	<tr>
+		<th>Name</th>
+		<th>Email</th>
+		<th>Time Zone</th>
+		<th>Role</th>
+		<th></th>
+	</tr>
 #for(user in users) {
-	#if(user == currentUser) {
-		<p>It's a me!</p>
-	}
-	<li>#(user.name)  #(user.email)</li>
+	<tr>
+		<td>#(user.name)
+			#if(user == currentUser) { • }</td>
+		<td>#(user.email)</td>
+		<td>#(user.timeZoneAbbreviation)</td>
+		<td>#(user.privileges)</td>
+		<td><button type="button">Remove</button> <!-- TODO --></td>
+	</tr>
 }
-</ul>
+</table>
+<p><a href="/users/create">Create a user</a></p>
+</section>
 #embed("footer")

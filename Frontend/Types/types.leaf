@@ -1,13 +1,19 @@
 #embed("header")
 #embed("nav")
 <h1>Content Types</h1>
-<ul>
+<section class="content">
+<table class="list">
 #for(type in contentTypes) {
-	<li>
+	<tr>
+	<td>
 		<a href="/type/#(type.plural)">#(type.plural)</a>
+	</td>
+	<td>
 		<button type="button">Remove</button> <!-- TODO -->
-	</li>
+	</td>
+	</tr>
 }
-</ul>
-<a href="/types/create">Create a new content type</a>
+</table>
+<p><a href="/types/create">Create a new content type</a></p>
+</section>
 #embed("footer")

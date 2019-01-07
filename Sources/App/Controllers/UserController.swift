@@ -6,14 +6,41 @@ import Crypto
 class UserController: PigeonController {
 
     override func authBoot(router: Router) throws {
+        router.get("/users", use: usersViewHandler)
+        router.get("/users/create", use: createUsersViewHandler)
         router.get("/login", use: handleUnauthenticatedUser)
         router.post("/login", use: loginUserHandler)
         router.post(User.self, at: "/register", use: registerUserHandler)
+        router.delete(["/user", UUID.parameter], use: deleteUserHandler)
     }
 
 }
 
 private extension UserController {
+
+    private func usersViewHandler(_ request: Request) throws -> Future<View> {
+        let user = try request.user()
+        let privileges = try request.privileges()
+
+        guard privileges.rawValue > UserPrivileges.administrator.rawValue else {
+            throw Abort(.unauthorized)
+        }
+
+        return request.allUsers().flatMap { users in
+            return try usersView(for: request, currentUser: user, users: users)
+        }
+    }
+
+    private func createUsersViewHandler(_ request: Request) throws -> Future<View> {
+        let user = try request.user()
+        let privileges = try request.privileges()
+
+        guard privileges.rawValue > UserPrivileges.administrator.rawValue else {
+            throw Abort(.unauthorized)
+        }
+
+        return try createUserView(for: request, currentUser: user)
+    }
 
     /// Handles a request from an unauthenticated user.
     /// If any users exist, this generates the login page. If none have been created yet,
@@ -75,6 +102,7 @@ private extension UserController {
                 let digest = try request.make(BCryptDigest.self)
                 let hashedPassword = try digest.hash(newUser.password)
                 let persistedUser = User(id: nil, name: newUser.name, privileges: privileges,
+                                         timeZoneName: newUser.timeZoneName,
                                          email: newUser.email, password: hashedPassword)
 
                 return persistedUser.save(on: request).flatMap { _ in
@@ -82,6 +110,12 @@ private extension UserController {
                 }
             }
         }
+    }
+
+    private func deleteUserHandler(_ request: Request) throws -> Future<Response> {
+        let id = try request.parameters.next(UUID.self)
+        print(id)
+        throw Abort(.notFound)
     }
 
 }

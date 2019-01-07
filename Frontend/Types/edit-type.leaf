@@ -1,23 +1,23 @@
 #embed("header")
 #embed("nav")
-<h1>#(category.name)</h1>
-<h2>Create</h2>
+<div id="edit">
+<h1>Content Types</h1>
+<h2 v-text="plural"></h2>
 <section class="content">
-	<div id="create">
-	#embed("Posts/post-fields")
-	</div>
+#embed("Types/type-fields")
 </section>
-#embed("footer")
+</div>
 
 <script src="https://cdn.jsdelivr.net/npm/vue"></script>
 <script>
-	var create = new Vue({
-		el: '#create',
+	var edit = new Vue({
+		el: "#edit",
 		data: {
-			name: #js(category.name),
-			plural: #js(category.plural),
+			name: #js(contentType.name),
+			plural: #js(contentType.plural),
+			id: #js(contentType.id),
 			fields: [
-				#for(field in category.template) {
+				#for(field in contentType.template) {
 					{
 						name: #js(field.name),
 						type: #js(field.type),
@@ -29,24 +29,34 @@
 			errors: []
 		},
 		methods: {
-			createItem: function() {
+			addField: function(type) {
+				this.fields.push({
+					name: null,
+					type: type,
+					value: null,
+					required: true
+				})
+			},
+			removeField: function(field, event) {
+				this.fields.splice( this.fields.indexOf(field), 1 )
+			},
+			createCategory: function() {
 				return {
-					categoryID: #js(category.id),
-					authors: [],
-					created: new Date().toISOString(),
-					content: this.fields
+					name: this.name,
+					plural: (this.plural || this.name + 's'),
+					id: this.id,
+					template: this.fields
 				}
 			},
 			handleSubmit: function(event) {
-				console.log("SUBMIT")
 				const self = this
 				self.errors = []
-				let item = self.createItem()
+				let category = self.createCategory()
 
 				var xhr = new XMLHttpRequest()
-				xhr.open('POST', '/content/#(category.plural)', true)
+				xhr.open('PATCH', '/type', true)
 				xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8')
-				xhr.send(JSON.stringify(item))
+				xhr.send(JSON.stringify(category))
 
 				xhr.onloadend = function () {
 					const location = xhr.getResponseHeader('Location')
@@ -62,10 +72,11 @@
 			},
 			handleError: function(error) {
 				this.errors.push(error)
-			},
-			handleCancel: function() {
-				console.log("CANCEL")
+				if (error == 'A type with that name exists') {
+					console.log('Plural error!') // TODO: place a red dot next to "plural" field
+				}
 			}
 		}
 	})
 </script>
+#embed("footer")

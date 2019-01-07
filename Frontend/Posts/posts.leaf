@@ -1,18 +1,40 @@
 #embed("header")
 #embed("nav")
-<h1>#(plural)</h1>
-
+<h1>#(category.plural)</h1>
 #if(count(items) == 0) {
-<h2>No #lowercase(category.plural) found.</h2>
+	<h2>No #lowercase(category.plural) found.</h2>
 }
-
+<section class="content">
+<table class="list">
 #for(item in items) {
-<h2>
-	<a href="/content/#(category.plural)/#(item.id)">
-		<!-- TODO: parse dictionary somewhere to get first property -->
-	#(item.date)
-	</a>
-</h2>
+#if(isFirst) {
+	#for(field in item.content) {
+		#if(isFirst) {
+		<tr>
+			<th>#(field.name)</th>
+			<th>Created</th>
+		</tr>
+		}
+	}
 }
+<tr>
+	<td>
+	<a href="/content/#(category.plural)/#(item.id)">
+	#for(field in item.content) {
+		#if(isFirst) { #(field.value) }
+	}
+	</a>
+	</td>
+	<td>
+		<a href="/content/#(category.plural)/#(item.id)">
+		#date(item.created, shared.user.timeZoneName, "y/MM/dd")
+	</a>
+	</td>
+</tr>
+}
+</table>
 
-<a href="/content/#(category.plural)/create">Create a #lowercase(category.name)</a>
+<p><a href="/content/#(category.plural)/create">Create a #lowercase(category.name)</a></p>
+</section>
+
+#embed("footer")

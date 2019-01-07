@@ -1,29 +1,12 @@
-#embed("header")
-<form
-	action="/register"
-	method="POST">
-	<input
-		type="text"
-		name="name"
-		id="name"
-	/>
-	<input
-		type="email"
-		name="email"
-		id="email"
-		autocomplete="username"
-		required
-	/>
-	<input
-		type="password"
-		name="password"
-		id="password"
-		autocomplete="new-password"
-		required
-	/>
-	<input
-		type="submit"
-		value="register"
-	/>
-</form>
+<!doctype html>
+<html lang="en">
+	<head>
+		<title>Pigeon CMS</title>
+		<link rel="stylesheet" href="/styles/style.css">
+	</head>
+	<body>
+		<main class="login">
+<img src="/images/pigeon.svg" alt="Pigeon logo" />
+<h2>Create an account</h2>
+#embed("Users/register-fields")
 #embed("footer")

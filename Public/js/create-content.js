@@ -31,7 +31,7 @@ var create = new Vue({
 			let category = self.createCategory()
 
 			var xhr = new XMLHttpRequest()
-			xhr.open('POST', '/type/create', true)
+			xhr.open('POST', '/type', true)
 			xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8')
 			xhr.send(JSON.stringify(category))
 
