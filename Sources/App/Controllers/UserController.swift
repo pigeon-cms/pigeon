@@ -121,6 +121,9 @@ private extension UserController {
             guard let user = user else {
                 throw Abort(.notFound)
             }
+            guard user.privileges != .owner else {
+                throw Abort(.forbidden)
+            }
             return user.delete(on: request).map {
                 let response = HTTPResponse(status: .created,
                                             headers: HTTPHeaders([("Location", "/users/")]))
