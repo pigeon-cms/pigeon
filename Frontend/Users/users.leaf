@@ -2,6 +2,7 @@
 #embed("nav")
 <h1>Users</h1>
 <section class="content">
+<div id="users">
 <table class="list">
 	<tr>
 		<th>Name</th>
@@ -17,10 +18,44 @@
 		<td>#(user.email)</td>
 		<td>#(user.timeZoneAbbreviation)</td>
 		<td>#(user.privileges)</td>
-		<td><button type="button">Remove</button> <!-- TODO --></td>
+		<td><button type="button" v-on:click="removeUser(#js(user.id))">Remove</button> <!-- TODO --></td>
 	</tr>
 }
 </table>
 <p><a href="/users/create">Create a user</a></p>
 </section>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<script>
+var create = new Vue({
+	el: '#users',
+	data: { },
+	methods: {
+		removeUser: function(userID) {
+			const self = this
+			self.errors = []
+
+			var xhr = new XMLHttpRequest()
+			xhr.open('DELETE', '/user/' + userID, true)
+			xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8')
+			xhr.send()
+
+			xhr.onloadend = function () {
+				const location = xhr.getResponseHeader('Location')
+				if (location) {
+					window.location.href = location
+				}
+
+				const response = JSON.parse(xhr.responseText)
+				if (response.error) {
+					self.handleError(response.reason)
+				}
+			}
+		},
+		handleError: function(error) {
+			this.errors.push(error)
+		}
+	}
+})
+</script>
 #embed("footer")

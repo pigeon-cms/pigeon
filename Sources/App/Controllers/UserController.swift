@@ -114,8 +114,19 @@ private extension UserController {
 
     private func deleteUserHandler(_ request: Request) throws -> Future<Response> {
         let id = try request.parameters.next(UUID.self)
-        print(id)
-        throw Abort(.notFound)
+        guard try id != request.user().id else {
+            throw Abort(.forbidden)
+        }
+        return User.find(id, on: request).flatMap { user in
+            guard let user = user else {
+                throw Abort(.notFound)
+            }
+            return user.delete(on: request).map {
+                let response = HTTPResponse(status: .created,
+                                            headers: HTTPHeaders([("Location", "/users/")]))
+                return Response(http: response, using: request.sharedContainer)
+            }
+        }
     }
 
 }
