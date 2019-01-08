@@ -6,10 +6,13 @@ import Crypto
 class UserController: PigeonController {
 
     override func authBoot(router: Router) throws {
-        router.get("/users", use: usersViewHandler)
-        router.get("/users/create", use: createUsersViewHandler)
         router.get("/login", use: handleUnauthenticatedUser)
         router.post("/login", use: loginUserHandler)
+    }
+
+    override func loginGuardedBoot(router: Router) throws {
+        router.get("/users", use: usersViewHandler)
+        router.get("/users/create", use: createUsersViewHandler)
         router.post(User.self, at: "/register", use: registerUserHandler)
         router.delete(["/user", UUID.parameter], use: deleteUserHandler)
     }
@@ -114,8 +117,22 @@ private extension UserController {
 
     private func deleteUserHandler(_ request: Request) throws -> Future<Response> {
         let id = try request.parameters.next(UUID.self)
-        print(id)
-        throw Abort(.notFound)
+        guard try id != request.user().id else {
+            throw Abort(.forbidden, reason: "You can't delete the currently logged-in user")
+        }
+        return User.find(id, on: request).flatMap { user in
+            guard let user = user else {
+                throw Abort(.notFound, reason: "That user account wasn't found")
+            }
+            guard user.privileges != .owner else {
+                throw Abort(.forbidden, reason: "You can't delete an owner account")
+            }
+            return user.delete(on: request).map {
+                let response = HTTPResponse(status: .created,
+                                            headers: HTTPHeaders([("Location", "/users/")]))
+                return Response(http: response, using: request.sharedContainer)
+            }
+        }
     }
 
 }
