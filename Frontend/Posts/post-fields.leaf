@@ -1,11 +1,4 @@
-<ul
-	v-if="errors"
-	class="form-errors"
->
-	<li v-for="error in errors">
-		<span class="error" v-text="error"></span>
-	</li>
-</ul>
+#embed("errors")
 <form
 	v-on:submit.prevent="handleSubmit"
 >

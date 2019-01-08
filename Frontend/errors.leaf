@@ -1,0 +1,8 @@
+<ul
+	v-if="errors"
+	class="form-errors"
+>
+	<li v-for="error in errors">
+		<span class="error" v-text="error"></span>
+	</li>
+</ul>

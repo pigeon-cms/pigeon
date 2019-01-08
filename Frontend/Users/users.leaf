@@ -3,6 +3,7 @@
 <h1>Users</h1>
 <section class="content">
 <div id="users">
+#embed("errors")
 <table class="list">
 	<tr>
 		<th>Name</th>
@@ -29,7 +30,9 @@
 <script>
 var create = new Vue({
 	el: '#users',
-	data: { },
+	data: {
+		errors: []
+	},
 	methods: {
 		removeUser: function(userID) {
 			const self = this
