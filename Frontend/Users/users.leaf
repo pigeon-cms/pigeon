@@ -19,7 +19,13 @@
 		<td>#(user.email)</td>
 		<td>#(user.timeZoneAbbreviation)</td>
 		<td>#(user.privileges)</td>
-		<td><button type="button" v-on:click="removeUser(#js(user.id))">Remove</button> <!-- TODO --></td>
+		<td>
+		#if(user != currentUser) {
+			#if(user.privileges != "Owner") {
+				<button type="button" v-on:click="removeUser(#js(user.id))">Remove</button>
+			}
+		}
+		</td>
 	</tr>
 }
 </table>
