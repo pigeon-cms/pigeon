@@ -49,6 +49,9 @@
 					content: this.fields
 				}
 			},
+			addAuthor: function() {
+
+			},
 			handleSubmit: function(event) {
 				const self = this
 				self.errors = []
