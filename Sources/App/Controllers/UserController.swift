@@ -8,12 +8,12 @@ class UserController: PigeonController {
     override func authBoot(router: Router) throws {
         router.get("/login", use: handleUnauthenticatedUser)
         router.post("/login", use: loginUserHandler)
+        router.post(User.self, at: "/register", use: registerUserHandler)
     }
 
     override func loginGuardedBoot(router: Router) throws {
         router.get("/users", use: usersViewHandler)
         router.get("/users/create", use: createUsersViewHandler)
-        router.post(User.self, at: "/register", use: registerUserHandler)
         router.delete(["/user", UUID.parameter], use: deleteUserHandler)
     }
 

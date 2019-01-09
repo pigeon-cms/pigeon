@@ -7,7 +7,7 @@ final class ContentItem: Content, Paginatable, PostgreSQLUUIDModel, Migration {
     var categoryID: UUID
     var created: Date?
     var updated: Date?
-//    var authors: [PublicUser]?
+    var authors: [PublicUser]?
     var content: [ContentField] // All the content for a single item
     var category: Parent<ContentItem, ContentCategory> {
         return parent(\.categoryID)
@@ -34,7 +34,7 @@ final class ContentItemPublic: Content {
 
 enum SupportedType: Content, ReflectionDecodable, Equatable, RawRepresentable {
     typealias RawValue = String
-    
+
     case String
     case Int
     case Float
@@ -42,7 +42,7 @@ enum SupportedType: Content, ReflectionDecodable, Equatable, RawRepresentable {
     case Date
     case URL
     indirect case Array(SupportedType)
-    
+
     init?(rawValue: RawValue) {
         switch rawValue {
         case "String": self = .String
@@ -144,7 +144,7 @@ enum SupportedValue: Content, Equatable, TemplateDataRepresentable {
         case .array(let array): try container.encode(array)
         }
     }
-    
+
     func convertToTemplateData() throws -> TemplateData {
         switch self {
         case .string(let string):
