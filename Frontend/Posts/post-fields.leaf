@@ -3,6 +3,11 @@
 	v-on:submit.prevent="handleSubmit"
 >
 <table>
+<tr v-if="authors">
+	<td><b class="field-label">Author</b>
+	<td v-for="author in authors"><span class="author" v-text="author.name"></span></td>
+	<!-- TODO: remove / add buttons, or edit button w/ modal -->
+</tr>
 <tr v-cloak v-for="field in fields">
 	<td>
 		<b class="field-label" v-text="field.name"></b>

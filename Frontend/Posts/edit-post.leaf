@@ -26,6 +26,18 @@
 					\},
 				}
 			],
+			authors: [
+				#for(author in post.authors) {
+					{
+						id: #js(author.id),
+						name: #js(author.name),
+						email: #js(author.email),
+						privileges: #js(author.privileges),
+						timeZoneName: #js(author.timeZoneName),
+						timeZoneAbbreviation: #js(author.timeZoneAbbreviation)
+					\},
+				}
+			],
 			errors: []
 		},
 		methods: {
