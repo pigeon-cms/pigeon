@@ -28,9 +28,11 @@
 	</td>
 	<td>
 		<a href="/content/#(category.plural)/#(item.id)">
-		#for(author in item.authors) {
-			#(author.name)
-		}
+			#if(item.authors) {
+				#for(author in item.authors) {
+					#(author.name)
+				}
+			}
 		</a>
 	</td>
 	<td>

@@ -9,7 +9,6 @@ class PostController: PigeonController {
         router.get(["/content", String.parameter, UUID.parameter], use: editPostView)
         router.post(ContentItem.self, at: ["/content", String.parameter], use: createPostController)
         router.patch(ContentItem.self, at: ["/content", String.parameter], use: updatePostController)
-        router.patch([PublicUser].self, at: ["/content", String.parameter, "/authors"], use: updatePostAuthorsController)
     }
 
 }
@@ -74,6 +73,7 @@ private extension PostController {
             return try request.post(type: category.plural, post: postID).flatMap { (post, category) in
                 post.updated = item.updated
                 post.content = item.content
+                post.authors = item.authors
                 return post.save(on: request).map { _ in
                     let response = HTTPResponse(status: .created,
                                                 headers: HTTPHeaders([("Location", "/content/\(category.plural)")]))
@@ -81,11 +81,6 @@ private extension PostController {
                 }
             }
         }
-    }
-
-    func updatePostAuthorsController(_ request: Request, authors: [PublicUser]) throws -> Future<Response> {
-        print(authors)
-        throw Abort(.notModified)
     }
 
     struct PostListPage: Codable {

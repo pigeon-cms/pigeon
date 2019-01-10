@@ -27,15 +27,17 @@
 				}
 			],
 			authors: [
-				#for(author in post.authors) {
-					{
-						id: #js(author.id),
-						name: #js(author.name),
-						email: #js(author.email),
-						privileges: #js(author.privileges),
-						timeZoneName: #js(author.timeZoneName),
-						timeZoneAbbreviation: #js(author.timeZoneAbbreviation)
-					\},
+				#if(post.authors) {
+					#for(author in post.authors) {
+						{
+							id: #js(author.id),
+							name: #js(author.name),
+							email: #js(author.email),
+							privileges: #js(author.privileges),
+							timeZoneName: #js(author.timeZoneName),
+							timeZoneAbbreviation: #js(author.timeZoneAbbreviation)
+						\},
+					}
 				}
 			],
 			errors: []
@@ -46,11 +48,15 @@
 					id: #js(post.id),
 					categoryID: #js(post.categoryID),
 					updated: new Date().toISOString(),
-					content: this.fields
+					content: this.fields,
+					authors: this.authors.length != 0 ? this.authors : null
 				}
 			},
 			addAuthor: function() {
-
+				// TODO: Modal with user list?
+			},
+			removeAuthor: function(author) {
+				this.authors = this.authors.filter(user => user.id !== author.id)
 			},
 			handleSubmit: function(event) {
 				const self = this
