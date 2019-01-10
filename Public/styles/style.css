@@ -306,6 +306,7 @@ span.author {
 	align-items: center;
 }
 span.author span {
+	font-size: 1rem;
 	background: #FBFCFE;
 	padding: 0.4rem 0.6rem;
 	border-radius: 8px;
