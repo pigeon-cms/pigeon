@@ -22,27 +22,23 @@ class UserController: PigeonController {
 private extension UserController {
 
     private func usersViewHandler(_ request: Request) throws -> Future<View> {
-        let user = try request.user()
         let privileges = try request.privileges()
 
         guard privileges.rawValue > UserPrivileges.administrator.rawValue else {
             throw Abort(.unauthorized)
         }
 
-        return request.allUsers().flatMap { users in
-            return try usersView(for: request, currentUser: user, users: users)
-        }
+        return try usersView(for: request)
     }
 
     private func createUsersViewHandler(_ request: Request) throws -> Future<View> {
-        let user = try request.user()
         let privileges = try request.privileges()
 
         guard privileges.rawValue > UserPrivileges.administrator.rawValue else {
             throw Abort(.unauthorized)
         }
 
-        return try createUserView(for: request, currentUser: user)
+        return try createUserView(for: request)
     }
 
     /// Handles a request from an unauthenticated user.

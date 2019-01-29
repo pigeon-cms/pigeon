@@ -13,15 +13,15 @@
 		<th>Role</th>
 		<th></th>
 	</tr>
-#for(user in users) {
+#for(user in shared.users) {
 	<tr>
 		<td>#(user.name)
-			#if(user == currentUser) { • }</td>
+			#if(user == shared.user) { • }</td>
 		<td>#(user.email)</td>
 		<td>#(user.timeZoneAbbreviation)</td>
 		<td>#(user.privileges)</td>
 		<td>
-		#if(user != currentUser) {
+		#if(user != shared.user) {
 			#if(user.privileges != "Owner") {
 				<button type="button" v-on:click="confirmRemoveUser(#js(user.id))">Remove</button>
 			}
