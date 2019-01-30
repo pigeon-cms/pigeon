@@ -20,6 +20,7 @@ final class ContentItemPublic: Content {
     var created: Date?
     var updated: Date?
     var content: [String: SupportedValue]
+    var authors: [[String: String?]]
 
     init(_ item: ContentItem) {
         created = item.created
@@ -29,6 +30,7 @@ final class ContentItemPublic: Content {
             dict[field.name.camelCase()] = field.value
             return dict
         }
+        authors = item.authors?.compactMap { ["name": $0.name] } ?? []
     }
 }
 

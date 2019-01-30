@@ -9,7 +9,7 @@
 		<button
 			class="add"
 			type="button"
-			v-on:click="addAuthor"
+			v-on:click="editAuthors"
 		>
 			Add
 		</button>
