@@ -3,6 +3,29 @@
 	v-on:submit.prevent="handleSubmit"
 >
 <table>
+<tr v-if="authors">
+	<td><b class="field-label">Author</b></td>
+	<td class="author">
+		<button
+			class="add"
+			type="button"
+			v-on:click="editAuthors"
+		>
+			Add
+		</button>
+		<span class="author" v-for="author in authors">
+			<span v-text="author.name"></span>
+			<button
+				class="remove"
+				type="button"
+				v-on:click="removeAuthor(author)"
+			>
+				Remove
+			</button>
+		</span>
+	</td>
+	<!-- TODO: remove / add buttons, or edit button w/ modal -->
+</tr>
 <tr v-cloak v-for="field in fields">
 	<td>
 		<b class="field-label" v-text="field.name"></b>
@@ -29,3 +52,4 @@
 	Cancel
 </button>
 <button>Save</button>
+</form>

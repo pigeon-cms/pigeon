@@ -4,6 +4,7 @@ struct BasePage: Codable {
     var links: [Link]
     var administrationLinks: [Link]
     var user: PublicUser
+    var users: [PublicUser]
 }
 
 struct Link: Codable {
@@ -46,19 +47,23 @@ extension Request {
                                             currentPath: currentPath))
         }
 
-        var links = [Link]()
+        return allContentTypes().then { categories in
+            var links = [Link]()
 
-        return ContentCategory.query(on: self).all().map { categories in
             categories.forEach {
                 let link = Link(name: $0.plural, path: "/content/\($0.plural)",
                                 currentPath: currentPath)
                 links.append(link)
             }
 
-            return try BasePage(links: links,
-                                administrationLinks: administrationLinks,
-                                user: PublicUser(self.user()))
-        }
+            return self.allUsers().map { users in
+                let users = users.map { PublicUser($0) }
+                return try BasePage(links: links,
+                                    administrationLinks: administrationLinks,
+                                    user: PublicUser(self.user()),
+                                    users: users)
+            }
 
+        }
     }
 }

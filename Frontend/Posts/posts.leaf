@@ -12,6 +12,7 @@
 		#if(isFirst) {
 		<tr>
 			<th>#(field.name)</th>
+			<th>Author</th>
 			<th>Created</th>
 		</tr>
 		}
@@ -27,8 +28,17 @@
 	</td>
 	<td>
 		<a href="/content/#(category.plural)/#(item.id)">
+			#if(item.authors) {
+				#for(author in item.authors) {
+					#(author.name)
+				}
+			}
+		</a>
+	</td>
+	<td>
+		<a href="/content/#(category.plural)/#(item.id)">
 		#date(item.created, shared.user.timeZoneName, "y/MM/dd")
-	</a>
+		</a>
 	</td>
 </tr>
 }

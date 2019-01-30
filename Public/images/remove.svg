@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="32px" height="32px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 51.3 (57544) - http://www.bohemiancoding.com/sketch -->
+    <title>remove</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="remove" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <path d="M15.84,31.68 C7.09180956,31.68 1.17239551e-15,24.5881904 0,15.84 C-1.17239551e-15,7.09180956 7.09180956,1.75859327e-15 15.84,0 C24.5881904,-1.75859327e-15 31.68,7.09180956 31.68,15.84 C31.68,20.0410292 30.0111476,24.0699952 27.0405714,27.0405714 C24.0699952,30.0111476 20.0410292,31.68 15.84,31.68 Z M5.94,15.84 C5.94,16.5690159 6.53098413,17.16 7.26,17.16 L24.42,17.16 C25.1490159,17.16 25.74,16.5690159 25.74,15.84 C25.74,15.1109841 25.1490159,14.52 24.42,14.52 L7.26,14.52 C6.53098413,14.52 5.94,15.1109841 5.94,15.84 Z" id="Shape" fill="#82858D" fill-rule="nonzero"></path>
+    </g>
+</svg>

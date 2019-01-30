@@ -57,6 +57,7 @@ private extension PostController {
     }
 
     func createPostController(_ request: Request, item: ContentItem) throws -> Future<Response> {
+        item.authors = try [request.user().publicUser]
         return item.save(on: request).flatMap { item in
             return item.category.get(on: request).map { category in
                 let response = HTTPResponse(status: .created,
@@ -72,6 +73,7 @@ private extension PostController {
             return try request.post(type: category.plural, post: postID).flatMap { (post, category) in
                 post.updated = item.updated
                 post.content = item.content
+                post.authors = item.authors
                 return post.save(on: request).map { _ in
                     let response = HTTPResponse(status: .created,
                                                 headers: HTTPHeaders([("Location", "/content/\(category.plural)")]))

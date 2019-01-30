@@ -256,17 +256,9 @@ div.login input {
 	width: 280px;
 }
 button.login {
-	outline: none;
-	background-color: transparent;
 	background-image: url("/images/sign-in.svg");
-	border: 0;
 	width: 48px;
 	height: 48px;
-	padding: 0.4em;
-	margin: 0.8em;
-	background-position: center;
-	background-repeat: none;
-	cursor: pointer;
 }
 img.login-icon {
 	display: inline-block;
@@ -275,6 +267,49 @@ img.login-icon {
 	pointer-events: none;
 	margin-left: 1em;
 	margin-right: 0.4em;
+}
+
+button {
+	cursor: pointer;
+	outline: none;
+	border: 0;
+	padding: 0.4rem;
+	background-position: center;
+	background-repeat: no-repeat;
+	background-color: transparent;
+}
+button.add {
+	text-indent: -999px;
+	background-image: url("/images/add.svg");
+	width: 28px;
+	height: 28px;
+	background-size: 28px 28px;
+	margin: 0 1rem;
+}
+button.remove {
+	text-indent: -999px;
+	background-image: url("/images/remove.svg");
+	width: 28px;
+	height: 28px;
+	background-size: 28px 28px;
+}
+.author button.remove {
+	margin-left: 0.5rem;
+	margin-right: 2rem;
+
+}
+td.author {
+	text-align: left;
+}
+span.author {
+	display: inline-flex;
+	align-items: center;
+}
+span.author span {
+	font-size: 1rem;
+	background: #FBFCFE;
+	padding: 0.4rem 0.6rem;
+	border-radius: 8px;
 }
 
 .modal-mask {
@@ -300,7 +335,7 @@ img.login-icon {
   margin: 0px auto;
   padding: 2em;
   background-color: #fff;
-  border-radius: 2px;
+  border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, .33);
   transition: all .3s ease;
 }

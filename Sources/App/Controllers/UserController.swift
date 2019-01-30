@@ -8,12 +8,12 @@ class UserController: PigeonController {
     override func authBoot(router: Router) throws {
         router.get("/login", use: handleUnauthenticatedUser)
         router.post("/login", use: loginUserHandler)
+        router.post(User.self, at: "/register", use: registerUserHandler)
     }
 
     override func loginGuardedBoot(router: Router) throws {
         router.get("/users", use: usersViewHandler)
         router.get("/users/create", use: createUsersViewHandler)
-        router.post(User.self, at: "/register", use: registerUserHandler)
         router.delete(["/user", UUID.parameter], use: deleteUserHandler)
     }
 
@@ -22,27 +22,23 @@ class UserController: PigeonController {
 private extension UserController {
 
     private func usersViewHandler(_ request: Request) throws -> Future<View> {
-        let user = try request.user()
         let privileges = try request.privileges()
 
         guard privileges.rawValue > UserPrivileges.administrator.rawValue else {
             throw Abort(.unauthorized)
         }
 
-        return request.allUsers().flatMap { users in
-            return try usersView(for: request, currentUser: user, users: users)
-        }
+        return try usersView(for: request)
     }
 
     private func createUsersViewHandler(_ request: Request) throws -> Future<View> {
-        let user = try request.user()
         let privileges = try request.privileges()
 
         guard privileges.rawValue > UserPrivileges.administrator.rawValue else {
             throw Abort(.unauthorized)
         }
 
-        return try createUserView(for: request, currentUser: user)
+        return try createUserView(for: request)
     }
 
     /// Handles a request from an unauthenticated user.
