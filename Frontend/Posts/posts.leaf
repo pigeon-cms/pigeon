@@ -5,6 +5,8 @@
 	<h2>No #lowercase(category.plural) found.</h2>
 }
 <section class="content">
+<div id="posts">
+#embed("errors")
 <table class="list">
 #for(item in items) {
 #if(isFirst) {
@@ -14,6 +16,7 @@
 			<th>#(field.name)</th>
 			<th>Author</th>
 			<th>Created</th>
+			<th></th>
 		</tr>
 		}
 	}
@@ -40,11 +43,62 @@
 		#date(item.created, shared.user.timeZoneName, "y/MM/dd")
 		</a>
 	</td>
+	<td>
+		<button
+			type="button"
+			v-on:click="deletePost(#js(item.id))"
+		>
+			Remove
+		</button>
+	</td>
 </tr>
 }
 </table>
 
 <p><a href="/content/#(category.plural)/create">Create a #lowercase(category.name)</a></p>
+</div>
 </section>
 
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<script>
+	var create = new Vue({
+		el: '#posts',
+		data: {
+			errors: []
+		},
+		methods: {
+			deletePost: function(id) {
+				const self = this
+				self.errors = []
+				var xhr = new XMLHttpRequest()
+				console.log(`/content/#(category.plural)/${id}`)
+				xhr.open('DELETE', `/content/#(category.plural)/${id}`, true)
+				xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8')
+				xhr.send()
+
+				xhr.onloadend = function () {
+					if ( xhr.status === 200 ) {
+						window.location.reload()
+						return
+					}
+
+					if ( xhr.responseText ) {
+						try {
+							const response = JSON.parse(xhr.responseText)
+							if (response.error) {
+								self.handleError(response.reason)
+							}
+						} catch(e) {
+							self.handleError(xhr.responseText)
+						}
+					}
+				}
+			},
+			handleError: function(error) {
+				this.errors.push(error)
+			}
+		}
+	})
+</script>
 #embed("footer")
+
