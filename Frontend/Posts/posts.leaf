@@ -1,10 +1,14 @@
 #embed("header")
 #embed("nav")
+#embed("modal")
+
 <h1>#(category.plural)</h1>
 #if(count(items) == 0) {
 	<h2>No #lowercase(category.plural) found.</h2>
 }
 <section class="content">
+<div id="posts">
+#embed("errors")
 <table class="list">
 #for(item in items) {
 #if(isFirst) {
@@ -14,6 +18,7 @@
 			<th>#(field.name)</th>
 			<th>Author</th>
 			<th>Created</th>
+			<th></th>
 		</tr>
 		}
 	}
@@ -40,11 +45,89 @@
 		#date(item.created, shared.user.timeZoneName, "y/MM/dd")
 		</a>
 	</td>
+	<td>
+		<button
+			type="button"
+			v-on:click="confirmDeletion(#js(item.id))"
+		>
+			Remove
+		</button>
+	</td>
 </tr>
 }
 </table>
 
 <p><a href="/content/#(category.plural)/create">Create a #lowercase(category.name)</a></p>
+
+
+<modal v-if="showModal">
+	<h3 slot="header">Are you sure?</h3>
+	<div slot="body">
+		<p>Deleting a #lowercase(category.name) is permanent</p>
+	</div>
+	<div slot="footer">
+		<button class="modal-default-button" v-on:click="showModal = false">
+			Cancel
+		</button>
+		<button class="modal-default-button" v-on:click="deletePost(postID)">
+			Delete
+		</button>
+	</div>
+</modal>
+
+</div>
 </section>
 
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<script>
+	Vue.component('modal', {
+		template: '#modal-template'
+	})
+	var create = new Vue({
+		el: '#posts',
+		data: {
+			postID: null,
+			showModal: false,
+			errors: []
+		},
+		methods: {
+			confirmDeletion: function(id) {
+				this.postID = id
+				this.showModal = true
+			},
+			deletePost: function(id) {
+				const self = this
+				self.errors = []
+				self.showModal = false
+
+				var xhr = new XMLHttpRequest()
+				console.log(`/content/#(category.plural)/${id}`)
+				xhr.open('DELETE', `/content/#(category.plural)/${id}`, true)
+				xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8')
+				xhr.send()
+
+				xhr.onloadend = function () {
+					if ( xhr.status === 200 ) {
+						window.location.reload()
+						return
+					}
+
+					if ( xhr.responseText ) {
+						try {
+							const response = JSON.parse(xhr.responseText)
+							if (response.error) {
+								self.handleError(response.reason)
+							}
+						} catch(e) {
+							self.handleError(xhr.responseText)
+						}
+					}
+				}
+			},
+			handleError: function(error) {
+				this.errors.push(error)
+			}
+		}
+	})
+</script>
 #embed("footer")

@@ -9,6 +9,7 @@ class PostController: PigeonController {
         router.get(["/content", String.parameter, UUID.parameter], use: editPostView)
         router.post(ContentItem.self, at: ["/content", String.parameter], use: createPostController)
         router.patch(ContentItem.self, at: ["/content", String.parameter], use: updatePostController)
+        router.delete(["/content", String.parameter, UUID.parameter], use: deletePostController)
     }
 
 }
@@ -79,6 +80,26 @@ private extension PostController {
                                                 headers: HTTPHeaders([("Location", "/content/\(category.plural)")]))
                     return Response(http: response, using: request.sharedContainer)
                 }
+            }
+        }
+    }
+
+    func deletePostController(_ request: Request) throws -> Future<HTTPStatus> {
+        let privileges = try request.privileges()
+
+        guard privileges.rawValue > UserPrivileges.administrator.rawValue else {
+            throw Abort(.unauthorized)
+        }
+
+        guard let typeName = try request.parameters.next(String.self).removingPercentEncoding else {
+            throw Abort(.notFound)
+        }
+
+        let id = try request.parameters.next(UUID.self)
+
+        return try request.post(type: typeName, post: id).flatMap { (post, _) in
+            return post.delete(on: request).map {
+                return .ok
             }
         }
     }
