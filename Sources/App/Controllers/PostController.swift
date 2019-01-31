@@ -85,6 +85,12 @@ private extension PostController {
     }
 
     func deletePostController(_ request: Request) throws -> Future<HTTPStatus> {
+        let privileges = try request.privileges()
+
+        guard privileges.rawValue > UserPrivileges.administrator.rawValue else {
+            throw Abort(.unauthorized)
+        }
+
         guard let typeName = try request.parameters.next(String.self).removingPercentEncoding else {
             throw Abort(.notFound)
         }
