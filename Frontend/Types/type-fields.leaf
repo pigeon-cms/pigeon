@@ -79,7 +79,13 @@
 		</label>
 		</td>
 		<td>
-			<button type="button" v-on:click="removeField(field)">Remove</button>
+			<button
+				class="destructive"
+				type="button"
+				v-on:click="removeField(field)"
+			>
+				Remove
+			</button>
 		</td>
 	</tr>
 </table>

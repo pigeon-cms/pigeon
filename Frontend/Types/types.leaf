@@ -9,7 +9,12 @@
 		<a href="/type/#(type.plural)">#(type.plural)</a>
 	</td>
 	<td>
-		<button type="button">Remove</button> <!-- TODO -->
+		<button
+			class="destructive"
+			type="button"
+		>
+			Remove
+		</button> <!-- TODO -->
 	</td>
 	</tr>
 }

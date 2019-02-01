@@ -53,5 +53,5 @@
 >
 	Cancel
 </button>
-<button>Save</button>
+<button class="action">Save</button>
 </form>
