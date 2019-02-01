@@ -269,6 +269,51 @@ img.login-icon {
 	margin-right: 0.4em;
 }
 
+label {
+	cursor: pointer;
+}
+input[type="checkbox"] {
+	position: absolute;
+	width: 0;
+	height: 0;
+	opacity: 0;
+}
+input[type="checkbox"] + span {
+	display: inline-block;
+	width: 34px;
+	height: 34px;
+	border-radius: 50%;
+	border: 1px solid #82858D;
+	background: #FBFCFE;
+	margin: 0 auto;
+	padding: 0;
+	-webkit-user-select: none;
+	user-select: none;
+	cursor: pointer;
+}
+input[type="checkbox"].placeholder + span {
+	opacity: 0.2;
+}
+input[type="checkbox"] + span:before {
+	content: "";
+	display: inline-block;
+	width: 30px;
+	height: 30px;
+	background: url("/images/check.svg") center no-repeat;
+	background-size: cover;
+	margin: 2px auto;
+	padding: 0;
+	opacity: 0;
+	-webkit-user-select: none;
+	user-select: none;
+	transform: scale(0.8);
+	transition: opacity .2s, transform .2s cubic-bezier(0.175, 0.9, 0.32, 1.6);
+}
+input[type="checkbox"]:checked + span:before {
+	opacity: 1;
+	transform: scale(1);
+}
+
 button {
 	cursor: pointer;
 	outline: none;
@@ -296,7 +341,6 @@ button.remove {
 .author button.remove {
 	margin-left: 0.5rem;
 	margin-right: 2rem;
-
 }
 td.author {
 	text-align: left;
