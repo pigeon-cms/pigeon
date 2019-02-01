@@ -37,22 +37,22 @@ final class ContentItemPublic: Content {
 enum SupportedType: Content, ReflectionDecodable, Equatable, RawRepresentable {
     typealias RawValue = String
 
-    case String
-    case Int
-    case Float
-    case Bool
-    case Date
-    case URL
-    indirect case Array(SupportedType)
+    case string
+    case int
+    case float
+    case bool
+    case date
+    case url
+    indirect case array(SupportedType)
 
     init?(rawValue: RawValue) {
         switch rawValue {
-        case "String": self = .String
-        case "Int": self = .Int
-        case "Float": self = .Float
-        case "Bool": self = .Bool
-        case "Date": self = .Date
-        case "URL": self = .URL
+        case "String": self = .string
+        case "Int": self = .int
+        case "Float": self = .float
+        case "Bool": self = .bool
+        case "Date": self = .date
+        case "URL": self = .url
         default:
             if let arrayType = SupportedType.parseArrayType(rawValue) {
                 self = arrayType
@@ -64,12 +64,12 @@ enum SupportedType: Content, ReflectionDecodable, Equatable, RawRepresentable {
 
     private static func parseArrayType(_ rawValue: RawValue) -> SupportedType? {
         switch rawValue {
-        case "Array<String>": return .Array(.String)
-        case "Array<Int>": return .Array(.Int)
-        case "Array<Float>": return .Array(.Float)
-        case "Array<Bool>": return .Array(.Bool)
-        case "Array<Date>": return .Array(.Date)
-        case "Array<URL>": return .Array(.URL)
+        case "Array<String>": return .array(.string)
+        case "Array<Int>": return .array(.int)
+        case "Array<Float>": return .array(.float)
+        case "Array<Bool>": return .array(.bool)
+        case "Array<Date>": return .array(.date)
+        case "Array<URL>": return .array(.url)
         default:
             return nil
         }
@@ -77,18 +77,18 @@ enum SupportedType: Content, ReflectionDecodable, Equatable, RawRepresentable {
 
     var rawValue: RawValue {
         switch self {
-        case .String: return "String"
-        case .Int: return "Int"
-        case .Float: return "Float"
-        case .Bool: return "Bool"
-        case .Date: return "Date"
-        case .URL: return "URL"
-        case .Array(let type): return "Array<" + type.rawValue + ">"
+        case .string: return "String"
+        case .int: return "Int"
+        case .float: return "Float"
+        case .bool: return "Bool"
+        case .date: return "Date"
+        case .url: return "URL"
+        case .array(let type): return "Array<" + type.rawValue + ">"
         }
     }
 
     static func reflectDecoded() throws -> (SupportedType, SupportedType) {
-        return (.String, .Int)
+        return (.string, .int)
     }
 }
 

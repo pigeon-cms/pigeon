@@ -11,7 +11,7 @@ struct Link: Codable {
     var name: String
     var path: String
     var current: Bool
-    
+
     init(name: String, path: String, currentPath: String) {
         self.name = name
         self.path = path
@@ -33,10 +33,10 @@ struct PageAuthorization: Codable {
 extension Request {
     func base(currentPath: String? = nil) throws -> Future<BasePage> {
         let pageAuthorization = try PageAuthorization(privileges: privileges())
-        
+
         /// Provided current path or inferred by URL
         let currentPath = currentPath ?? http.url.path
-        
+
         var administrationLinks = [Link]()
         if pageAuthorization.administratorLinks {
             administrationLinks.append(Link(name: "Content Types", path: "/types",

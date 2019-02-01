@@ -2,7 +2,7 @@ import Vapor
 import Pagination
 
 class EndpointController: PigeonController {
-    
+
     override func authBoot(router: Router) throws {
         router.get(["/json", String.parameter], use: jsonHandler)
         router.get("/graphql") { _ in
@@ -10,7 +10,7 @@ class EndpointController: PigeonController {
             return "graphql"
         }
     }
-    
+
 }
 
 private extension EndpointController {

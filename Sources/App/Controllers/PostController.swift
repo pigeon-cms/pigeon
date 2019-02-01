@@ -42,14 +42,14 @@ private extension PostController {
                                                    category: category)
         }
     }
-    
+
     func editPostView(_ request: Request) throws -> Future<View> {
         guard let typeName = try request.parameters.next(String.self).removingPercentEncoding else {
             throw Abort(.notFound)
         }
-        
+
         let id = try request.parameters.next(UUID.self)
-        
+
         return try request.post(type: typeName, post: id).flatMap { (post, category) in
             return try self.generateEditPostView(for: request,
                                                  post: post,
@@ -67,7 +67,7 @@ private extension PostController {
             }
         }
     }
-    
+
     func updatePostController(_ request: Request, item: ContentItem) throws -> Future<Response> {
         return item.category.get(on: request).flatMap { category in
             guard let postID = item.id else { throw Abort(.notFound) }
@@ -134,13 +134,13 @@ private extension PostController {
             return try request.view().render("Posts/create-post", createPostPage)
         }
     }
-    
+
     struct EditPostPage: Codable {
         var shared: BasePage
         var post: ContentItem
         var category: ContentCategory
     }
-    
+
     func generateEditPostView(for request: Request,
                               post: ContentItem, category: ContentCategory) throws -> Future<View> {
         return try request.base(currentPath: "/content/" + category.plural).flatMap { basePage in
@@ -161,7 +161,7 @@ extension Request {
             return category
         }
     }
-    
+
     func post(type pluralName: String, post id: UUID) throws -> Future<(ContentItem, ContentCategory)> {
         return try contentCategory(type: pluralName).flatMap { category in
             return try category.items.query(on: self).filter(\.id == id).first().map { post in
