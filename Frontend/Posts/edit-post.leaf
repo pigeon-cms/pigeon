@@ -12,11 +12,14 @@
 		#for(user in shared.users) {
 			<div>
 				<span>#(user.name)</span>
-				<input
-					type="checkbox"
-					:checked="authors.map(u => u.id).includes(#js(user.id))"
-					v-on:click="modifyAuthor(#js(user.id), $event.target.checked)"
-				/>
+				<label>
+					<input
+						type="checkbox"
+						:checked="authors.map(u => u.id).includes(#js(user.id))"
+						v-on:click="modifyAuthor(#js(user.id), $event.target.checked)"
+					/>
+					<span></span>
+				</label>
 			</div>
 		}
 	</div>

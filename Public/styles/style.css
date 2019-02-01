@@ -290,6 +290,7 @@ input[type="checkbox"] + span {
 	-webkit-user-select: none;
 	user-select: none;
 	cursor: pointer;
+	text-align: center;
 }
 input[type="checkbox"].placeholder + span {
 	opacity: 0.2;
