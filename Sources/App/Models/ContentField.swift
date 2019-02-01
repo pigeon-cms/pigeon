@@ -12,13 +12,13 @@ struct ContentField: Content {
         type = try container.decode(SupportedType.self, forKey: .type)
         required = try container.decode(Bool.self, forKey: .required)
         switch type {
-        case .String: value = SupportedValue.string(try? container.decode(String.self, forKey: .value))
-        case .Int: value = SupportedValue.int(try? container.decode(Int.self, forKey: .value))
-        case .Float: value = SupportedValue.float(try? container.decode(Float.self, forKey: .value))
-        case .Bool: value = SupportedValue.bool(try? container.decode(Bool.self, forKey: .value))
-        case .Date: value = SupportedValue.date(try? container.decode(Date.self, forKey: .value))
-        case .URL: value = SupportedValue.url(try? container.decode(URL.self, forKey: .value))
-        case .Array:
+        case .string: value = SupportedValue.string(try? container.decode(String.self, forKey: .value))
+        case .int: value = SupportedValue.int(try? container.decode(Int.self, forKey: .value))
+        case .float: value = SupportedValue.float(try? container.decode(Float.self, forKey: .value))
+        case .bool: value = SupportedValue.bool(try? container.decode(Bool.self, forKey: .value))
+        case .date: value = SupportedValue.date(try? container.decode(Date.self, forKey: .value))
+        case .url: value = SupportedValue.url(try? container.decode(URL.self, forKey: .value))
+        case .array:
             fatalError() // TODO
         }
     }
