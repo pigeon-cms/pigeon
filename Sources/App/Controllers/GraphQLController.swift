@@ -21,8 +21,9 @@ private extension GraphQLController {
         return request.allContentTypes().map { contentTypes in
             var rootFields = [String: GraphQLField]()
             for type in contentTypes {
-                rootFields[type.plural.camelCase()] = GraphQLField(type: try type.graphQLType(), resolve: { (source, args, context, eventLoopGroup, info) -> EventLoopFuture<Any?> in
-                    return eventLoopGroup.next().newSucceededFuture(result: try type.graphQLType())
+                let graphQLType = try type.graphQLType(request)
+                rootFields[type.plural.camelCase()] = GraphQLField(type: graphQLType, resolve: { (source, args, context, eventLoopGroup, info) -> EventLoopFuture<Any?> in
+                    return eventLoopGroup.next().newSucceededFuture(result: graphQLType)
                 })
             }
             let schema = try GraphQLSchema(
