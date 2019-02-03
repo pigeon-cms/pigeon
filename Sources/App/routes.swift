@@ -14,6 +14,9 @@ public func routes(_ router: Router) throws {
     let postController = PostController()
     try router.register(collection: postController)
 
-    let endpointController = EndpointController()
-    try router.register(collection: endpointController)
+    let jsonController = JSONController()
+    try router.register(collection: jsonController)
+
+    let graphQLController = GraphQLController()
+    try router.register(collection: graphQLController)
 }
