@@ -15,7 +15,11 @@ final class ContentCategory: Content, PostgreSQLUUIDModel, Migration {
     func graphQLFields() -> [String: GraphQLField] {
         var fields = [String: GraphQLField]()
         for field in template {
-            fields[field.name.camelCase()] = GraphQLField(type: field.type.graphQL, resolve: { (source, args, context, eventLoopGroup, info) -> EventLoopFuture<Any?> in
+            var type = field.type.graphQL
+            if field.required {
+                type = GraphQLNonNull(type.debugDescription)
+            }
+            fields[field.name.camelCase()] = GraphQLField(type: type, resolve: { (source, args, context, eventLoopGroup, info) -> EventLoopFuture<Any?> in
                 // TODO: actually fetch stuff
                 return eventLoopGroup.next().newSucceededFuture(result: "Hello world")
             })

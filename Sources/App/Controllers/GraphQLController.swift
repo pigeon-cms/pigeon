@@ -34,21 +34,25 @@ private extension GraphQLController {
         }
     }
 
+    func graphQLResponse(for query: GraphQLHTTPBody, _ request: Request) throws -> Future<Response> {
+        return try self.schema(request).flatMap { schema in
+            let eventLoopGroup = MultiThreadedEventLoopGroup(numberOfThreads: 1) // TODO: is this necessary
+            return try graphql(schema: schema, request: query.query, eventLoopGroup: eventLoopGroup).map { map in
+                let map = try map.asMap()
+                let data = "\(map)".data(using: .utf8)
+                return Response(http: HTTPResponse.init(status: .ok, body: data!),
+                                using: request.sharedContainer)
+            }
+        }
+    }
+
     func graphQLPostQueryHandler(_ request: Request) throws -> Future<Response> {
         guard let json = try? request.content.decode(json: GraphQLHTTPBody.self, using: JSONDecoder()) else {
             throw Abort(.badRequest)
         }
 
         return json.flatMap { query in
-            return try self.schema(request).flatMap { schema in
-                let eventLoopGroup = MultiThreadedEventLoopGroup(numberOfThreads: 1) // TODO: is this necessary
-                return try graphql(schema: schema, request: query.query, eventLoopGroup: eventLoopGroup).map { map in
-                    let map = try map.asMap()
-                    let data = "\(map)".data(using: .utf8)
-                    return Response(http: HTTPResponse.init(status: .ok, body: data!),
-                                    using: request.sharedContainer)
-                }
-            }
+            return try self.graphQLResponse(for: query, request)
         }
     }
 
