@@ -1,7 +1,7 @@
 import GraphQL
 
 extension SupportedType {
-    var graphQL: GraphQLType {
+    var graphQL: GraphQLOutputType {
         switch self {
         case .string: return GraphQLString
         case .int: return GraphQLInt
