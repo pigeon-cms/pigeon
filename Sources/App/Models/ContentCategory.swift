@@ -12,7 +12,20 @@ final class ContentCategory: Content, PostgreSQLUUIDModel, Migration {
     var template: [ContentField]
     // var accessLevel: SomeEnum // TODO: access level for api content
 
-    func graphQLFields() -> [String: GraphQLField] {
+    func graphQLType() throws -> GraphQLOutputType {
+        let type = try GraphQLObjectType(name: plural.pascalCase(), fields: graphQLFields())
+        return type
+    }
+
+    /// GraphQL fields including nodes and TODO: edges
+    func graphQLFields() throws -> [String: GraphQLField] {
+        let node = try GraphQLObjectType(name: name.pascalCase(), fields: graphQLSingleItemFields())
+        let fields = ["nodes": GraphQLField(type: GraphQLList(node))]
+        return fields
+    }
+
+    /// The fields for a single item of this type.
+    func graphQLSingleItemFields() -> [String: GraphQLField] {
         var fields = [String: GraphQLField]()
         for field in template {
             var type = field.type.graphQL
@@ -27,8 +40,4 @@ final class ContentCategory: Content, PostgreSQLUUIDModel, Migration {
         return fields
     }
 
-    func graphQLType() throws -> GraphQLOutputType {
-        let type = try GraphQLObjectType(name: plural.pascalCase(), fields: graphQLFields())
-        return type
-    }
 }
