@@ -19,7 +19,7 @@ final class ContentCategory: Content, PostgreSQLUUIDModel, Migration {
 
     /// GraphQL fields including nodes and TODO: edges
     func graphQLFields(_ request: Request) throws -> [String: GraphQLField] {
-        let node = try GraphQLObjectType(name: name.pascalCase(), fields: graphQLSingleItemFields())
+        let node = try GraphQLObjectType(name: name.pascalCase(), fields: graphQLSingleItemFields(request))
         let fields = ["nodes": GraphQLField(type: GraphQLList(node), resolve: try graphQLNodesResolver(request))]
         return fields
     }
@@ -37,7 +37,7 @@ final class ContentCategory: Content, PostgreSQLUUIDModel, Migration {
     }
 
     /// The fields for a single item of this type.
-    func graphQLSingleItemFields() -> [String: GraphQLField] {
+    func graphQLSingleItemFields(_ request: Request) -> [String: GraphQLField] {
         var fields = [String: GraphQLField]()
         for field in template {
             var type = field.type.graphQL
@@ -47,6 +47,15 @@ final class ContentCategory: Content, PostgreSQLUUIDModel, Migration {
             fields[field.name.camelCase()] = GraphQLField(type: type, resolve: { (source, args, context, eventLoopGroup, info) -> EventLoopFuture<Any?> in
                 // TODO: actually fetch stuff
                 return eventLoopGroup.next().newSucceededFuture(result: "Hello world")
+                /// hmm, infinite loop below
+                return try request.contentCategory(type: self.plural).flatMap { category in
+                    return try category.items.query(on: request).range(..<25).all().map { items in
+                        // TODO: post limit from settings instead of hardcoded
+                        return eventLoopGroup.next().newSucceededFuture(result: "Hello world")
+
+//                        return items.map { self.graphQLSingleItemFields(item: $0) }
+                    }
+                }
             })
         }
         return fields
