@@ -20,7 +20,7 @@ final class ContentCategory: Content, PostgreSQLUUIDModel, Migration {
     /// GraphQL fields including nodes and TODO: edges
     func graphQLFields(_ request: Request) throws -> [String: GraphQLField] {
         let node = try GraphQLObjectType(name: name.pascalCase(), fields: graphQLSingleItemFields())
-        let fields = ["nodes": GraphQLField(type: node, resolve: try graphQLNodesResolver(request))]
+        let fields = ["nodes": GraphQLField(type: GraphQLList(node), resolve: try graphQLNodesResolver(request))]
         return fields
     }
 
