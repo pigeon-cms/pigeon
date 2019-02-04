@@ -37,8 +37,7 @@ private extension GraphQLController {
 
     func graphQLResponse(for query: GraphQLHTTPBody, _ request: Request) throws -> Future<Response> {
         return try self.schema(request).flatMap { schema in
-            let eventLoopGroup = MultiThreadedEventLoopGroup(numberOfThreads: 1) // TODO: is this necessary
-            return try graphql(schema: schema, request: query.query, eventLoopGroup: eventLoopGroup).map { map in
+            return try graphql(schema: schema, request: query.query, eventLoopGroup: request.eventLoop).map { map in
                 let map = try map.asMap()
                 let data = "\(map)".data(using: .utf8)
                 return Response(http: HTTPResponse.init(status: .ok, body: data!),
