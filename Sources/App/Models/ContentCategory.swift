@@ -20,20 +20,10 @@ final class ContentCategory: Content, PostgreSQLUUIDModel, Migration {
     /// GraphQL fields including nodes and TODO: edges
     func graphQLFields(_ request: Request) throws -> [String: GraphQLField] {
         let node = try GraphQLObjectType(name: name.pascalCase(), fields: graphQLSingleItemFields(request))
-        let fields = ["nodes": GraphQLField(type: GraphQLList(node), resolve: try graphQLNodesResolver(request))]
+        let fields = ["nodes": GraphQLField(type: GraphQLList(node), resolve: { (source, args, context, eventLoopGroup, info) -> EventLoopFuture<Any?> in
+            return eventLoopGroup.next().newSucceededFuture(result: [node, node, node, node])
+        })]
         return fields
-    }
-
-    func graphQLNodesResolver(_ request: Request) throws -> GraphQLFieldResolve {
-        return { (source, args, context, eventLoopGroup, info) -> EventLoopFuture<Any?> in
-            return try request.contentCategory(type: self.plural).flatMap { category in
-                return try category.items.query(on: request).range(..<25).all().map { items in
-                    print("QUERY 2")
-                    // TODO: post limit from settings instead of hardcoded
-                    return items.map { self.graphQLSingleItemFields(item: $0) }
-                }
-            }
-        }
     }
 
     /// The fields for a single item of this type.
@@ -49,7 +39,7 @@ final class ContentCategory: Content, PostgreSQLUUIDModel, Migration {
                     return try category.items.query(on: request).range(..<25).all().flatMap { items in
                         print("QUERY 1")
                         // TODO: post limit from settings instead of hardcoded
-                        guard let index = info.path[2].indexValue else {
+                        guard let index = info.path[2].indexValue, index < items.count else {
                             return eventLoopGroup.next().newFailedFuture(error: GraphQLError(message: "Not found"))
                         }
 

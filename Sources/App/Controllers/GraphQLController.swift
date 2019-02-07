@@ -39,8 +39,8 @@ private extension GraphQLController {
         return try self.schema(request).flatMap { schema in
             return try graphql(schema: schema, request: query.query, eventLoopGroup: request.eventLoop).map { map in
                 let map = try map.asMap()
-                let data = "\(map)".data(using: .utf8)
-                return Response(http: HTTPResponse.init(status: .ok, body: data!),
+                guard let data = "\(map)".data(using: .utf8) else { throw Abort(.badRequest) }
+                return Response(http: HTTPResponse.init(status: .ok, body: data),
                                 using: request.sharedContainer)
             }
         }
