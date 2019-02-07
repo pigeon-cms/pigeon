@@ -19,6 +19,7 @@ extension SupportedValue {
     var rawValue: Any {
         switch self {
         case .string(let value): return value
+        case .bool(let value): return value
         default:
             fatalError()
         }

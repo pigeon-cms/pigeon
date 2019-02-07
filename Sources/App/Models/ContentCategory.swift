@@ -45,15 +45,18 @@ final class ContentCategory: Content, PostgreSQLUUIDModel, Migration {
                 type = GraphQLNonNull(type.debugDescription)
             }
             fields[field.name.camelCase()] = GraphQLField(type: type, resolve: { (source, args, context, eventLoopGroup, info) -> EventLoopFuture<Any?> in
-                // TODO: actually fetch stuff
-                return eventLoopGroup.next().newSucceededFuture(result: "Hello world")
-                /// hmm, infinite loop below
                 return try request.contentCategory(type: self.plural).flatMap { category in
-                    return try category.items.query(on: request).range(..<25).all().map { items in
+                    return try category.items.query(on: request).range(..<25).all().flatMap { items in
                         // TODO: post limit from settings instead of hardcoded
-                        return eventLoopGroup.next().newSucceededFuture(result: "Hello world")
+                        guard let index = info.path[2].indexValue else {
+                            return eventLoopGroup.next().newFailedFuture(error: GraphQLError(message: "Not found"))
+                        }
 
-//                        return items.map { self.graphQLSingleItemFields(item: $0) }
+                        let item = items[index]
+                        let contentValue = item.content.first(where: { $0.name == field.name })?.value
+                        let value = contentValue?.rawValue
+
+                        return eventLoopGroup.next().newSucceededFuture(result: value)
                     }
                 }
             })
