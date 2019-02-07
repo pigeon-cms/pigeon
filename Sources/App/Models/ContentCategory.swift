@@ -12,33 +12,39 @@ final class ContentCategory: Content, PostgreSQLUUIDModel, Migration {
     var template: [ContentField]
     // var accessLevel: SomeEnum // TODO: access level for api content
 
-    func graphQLType(_ request: Request) throws -> GraphQLOutputType {
-        let type = try GraphQLObjectType(name: plural.pascalCase(), fields: graphQLFields(request))
-        return type
+    func graphQLType(_ request: Request) throws -> Future<GraphQLOutputType> {
+        return try graphQLFields(request).map { fields in
+            let type = try GraphQLObjectType(name: self.plural.pascalCase(), fields: fields)
+            return type
+        }
     }
 
     /// GraphQL fields including nodes and TODO: edges
-    func graphQLFields(_ request: Request) throws -> [String: GraphQLField] {
-        let node = try GraphQLObjectType(name: name.pascalCase(), fields: graphQLSingleItemFields(request))
-        let fields = ["nodes": GraphQLField(type: GraphQLList(node), resolve: { (source, args, context, eventLoopGroup, info) -> EventLoopFuture<Any?> in
-            return eventLoopGroup.next().newSucceededFuture(result: [node, node, node, node])
-        })]
-        return fields
+    func graphQLFields(_ request: Request) throws -> Future<[String: GraphQLField]> {
+        return try graphQLSingleItemFields(request).map { singleItemFields in
+            let node = try GraphQLObjectType(name: self.name.pascalCase(), fields: singleItemFields)
+            let fields = ["nodes": GraphQLField(type: GraphQLList(node), resolve: { (source, args, context, eventLoopGroup, info) -> EventLoopFuture<Any?> in
+                return eventLoopGroup.next().newSucceededFuture(result: ["hmm", "hmm", "hmm", "hmm", "hmm"])
+            })]
+            return fields
+        }
+
     }
 
     /// The fields for a single item of this type.
-    func graphQLSingleItemFields(_ request: Request) -> [String: GraphQLField] {
-        var fields = [String: GraphQLField]()
-        for field in template {
-            var type = field.type.graphQL
-            if field.required {
-                type = GraphQLNonNull(type.debugDescription)
-            }
-            fields[field.name.camelCase()] = GraphQLField(type: type, resolve: { (source, args, context, eventLoopGroup, info) -> EventLoopFuture<Any?> in
-                return try request.contentCategory(type: self.plural).flatMap { category in
-                    return try category.items.query(on: request).range(..<25).all().flatMap { items in
-                        print("QUERY 1")
-                        // TODO: post limit from settings instead of hardcoded
+    func graphQLSingleItemFields(_ request: Request) throws -> Future<[String: GraphQLField]> {
+        return try request.contentCategory(type: self.plural).flatMap { category in
+            return try category.items.query(on: request).range(..<25).all().map { items in
+                // TODO: post limit from settings instead of hardcoded
+                print("QUERY 1")
+
+                var fields = [String: GraphQLField]()
+                for field in self.template {
+                    var type = field.type.graphQL
+                    if field.required {
+                        type = GraphQLNonNull(type.debugDescription)
+                    }
+                    fields[field.name.camelCase()] = GraphQLField(type: type, resolve: { (source, args, context, eventLoopGroup, info) -> EventLoopFuture<Any?> in
                         guard let index = info.path[2].indexValue, index < items.count else {
                             return eventLoopGroup.next().newFailedFuture(error: GraphQLError(message: "Not found"))
                         }
@@ -48,26 +54,11 @@ final class ContentCategory: Content, PostgreSQLUUIDModel, Migration {
                         let value = contentValue?.rawValue
 
                         return eventLoopGroup.next().newSucceededFuture(result: value)
-                    }
+                    })
                 }
-            })
-        }
-        return fields
-    }
-
-    /// The fields for a single item of this type.
-    func graphQLSingleItemFields(item: ContentItem) -> [String: GraphQLField] {
-        var fields = [String: GraphQLField]()
-        for field in item.content {
-            var type = field.type.graphQL
-            if field.required {
-                type = GraphQLNonNull(type.debugDescription)
+                return fields
             }
-            fields[field.name.camelCase()] = GraphQLField(type: type, resolve: { (source, args, context, eventLoopGroup, info) -> EventLoopFuture<Any?> in
-                return eventLoopGroup.next().newSucceededFuture(result: field.value.rawValue)
-            })
         }
-        return fields
     }
 
 }

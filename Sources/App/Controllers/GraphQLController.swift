@@ -18,20 +18,21 @@ private extension GraphQLController {
     }
 
     func schema(_ request: Request) throws -> Future<GraphQLSchema> {
-        return request.allContentTypes().map { contentTypes in
-            var rootFields = [String: GraphQLField]()
-            for type in contentTypes {
-                let graphQLType = try type.graphQLType(request)
-                rootFields[type.plural.camelCase()] = GraphQLField(type: graphQLType, resolve: { (source, args, context, eventLoopGroup, info) -> EventLoopFuture<Any?> in
-                    return eventLoopGroup.next().newSucceededFuture(result: graphQLType)
-                })
-            }
-            let schema = try GraphQLSchema(
-                query: GraphQLObjectType(
+        return request.allContentTypes().flatMap { contentTypes in
+            return try contentTypes.compactMap { try $0.graphQLType(request) }.flatten(on: request.eventLoop).map { graphQLTypes in
+                var rootFields = [String: GraphQLField]()
+                for type in graphQLTypes {
+                    rootFields[type.debugDescription] = GraphQLField(type: type, resolve: { (source, args, context, eventLoopGroup, info) -> EventLoopFuture<Any?> in
+                        return eventLoopGroup.next().newSucceededFuture(result: type)
+                    })
+                }
+                let schema = try GraphQLSchema(
+                    query: GraphQLObjectType(
                         name: "RootQueryType",
                         fields: rootFields)
-            )
-            return schema
+                )
+                return schema
+            }
         }
     }
 
