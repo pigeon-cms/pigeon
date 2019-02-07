@@ -18,8 +18,8 @@ extension SupportedType {
 extension SupportedValue {
     var rawValue: Any {
         switch self {
-        case .string(let value): return value
-        case .bool(let value): return value
+        case .string(let value): return value as Any
+        case .bool(let value): return value as Any
         default:
             fatalError()
         }

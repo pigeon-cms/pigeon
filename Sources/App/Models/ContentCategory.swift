@@ -28,9 +28,9 @@ final class ContentCategory: Content, PostgreSQLUUIDModel, Migration {
         return { (source, args, context, eventLoopGroup, info) -> EventLoopFuture<Any?> in
             return try request.contentCategory(type: self.plural).flatMap { category in
                 return try category.items.query(on: request).range(..<25).all().map { items in
+                    print("QUERY 2")
                     // TODO: post limit from settings instead of hardcoded
                     return items.map { self.graphQLSingleItemFields(item: $0) }
-                    // TODO: why aren't values used from this
                 }
             }
         }
@@ -47,6 +47,7 @@ final class ContentCategory: Content, PostgreSQLUUIDModel, Migration {
             fields[field.name.camelCase()] = GraphQLField(type: type, resolve: { (source, args, context, eventLoopGroup, info) -> EventLoopFuture<Any?> in
                 return try request.contentCategory(type: self.plural).flatMap { category in
                     return try category.items.query(on: request).range(..<25).all().flatMap { items in
+                        print("QUERY 1")
                         // TODO: post limit from settings instead of hardcoded
                         guard let index = info.path[2].indexValue else {
                             return eventLoopGroup.next().newFailedFuture(error: GraphQLError(message: "Not found"))
