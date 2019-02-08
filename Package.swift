@@ -10,11 +10,11 @@ let package = Package(
         .package(url: "https://github.com/vapor/fluent-postgresql.git", from: "1.0.0"),
         .package(url: "https://github.com/vapor/fluent-mysql.git", from: "3.0.0"),
         .package(url: "https://github.com/vapor-community/pagination.git", from: "1.0.0"),
-        .package(url: "https://github.com/GraphQLSwift/GraphQL.git", from: "0.8.0")
+        .package(url: "https://github.com/GraphQLSwift/Graphiti.git", from: "0.7.0")
     ],
     targets: [
         .target(name: "App", dependencies: ["Vapor", "Leaf", "Authentication", "Pagination",
-                                            "FluentPostgreSQL", "GraphQL"]),
+                                            "FluentPostgreSQL", "Graphiti"]),
         .target(name: "Run", dependencies: ["App"])
     ]
 )
