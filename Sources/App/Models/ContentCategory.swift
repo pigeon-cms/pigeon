@@ -36,6 +36,7 @@ final class ContentCategory: Content, PostgreSQLUUIDModel, Migration {
     func graphQLNodesResolver(_ request: Request) -> GraphQLFieldResolve {
         return { (source, args, context, eventLoopGroup, info) -> EventLoopFuture<Any?> in
             return try self.items.query(on: request).range(..<25).all().map { items in
+                print("Query 1")
                 return items
             }
         }
@@ -44,7 +45,17 @@ final class ContentCategory: Content, PostgreSQLUUIDModel, Migration {
     func graphQLSingleItemResolver(_ field: ContentField, _ request: Request) -> GraphQLFieldResolve {
         return { (source, args, context, eventLoopGroup, info) -> EventLoopFuture<Any?> in
             return try self.items.query(on: request).range(..<25).all().map { items in
-                return items
+                guard let index = info.path[2].indexValue, index < items.count else {
+                    throw GraphQLError(message: "Not found")
+                }
+                print("Query 2")
+                /// TODO: This is way cleaner, but lots more requests coming in.
+                /// Maybe there's a way to cache a database query per-request? And just fetch request.items for instance
+                let item = items[index]
+                let contentValue = item.content.first(where: { $0.name == field.name })?.value
+                let value = contentValue?.rawValue
+
+                return value
             }
         }
     }
