@@ -22,7 +22,9 @@ private extension GraphQLController {
             var rootFields = [String: GraphQLField]()
 
             for type in contentTypes {
-                rootFields[type.plural.camelCase()] = try GraphQLField(type: type.graphQLType())
+                rootFields[type.plural.camelCase()] = try GraphQLField(type: type.graphQLType(request), resolve: { (source, args, context, eventLoopGroup, info) -> EventLoopFuture<Any?> in
+                    return eventLoopGroup.next().newSucceededFuture(result: type)
+                })
             }
 
             let schema = try GraphQLSchema(

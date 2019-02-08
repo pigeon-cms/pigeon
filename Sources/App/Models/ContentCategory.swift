@@ -12,25 +12,41 @@ final class ContentCategory: Content, PostgreSQLUUIDModel, Migration {
     var template: [ContentField]
     // var accessLevel: SomeEnum // TODO: access level for api content
 
-    func graphQLType() throws -> GraphQLOutputType {
-        let node = try GraphQLObjectType(name: name.pascalCase(), fields: graphQLSingleItemFieldsType())
+    func graphQLType(_ request: Request) throws -> GraphQLOutputType {
+        let node = try GraphQLObjectType(name: name.pascalCase(), fields: graphQLSingleItemFieldsType(request))
         let nodes = GraphQLList(node)
 
-        let fields = ["nodes": GraphQLField(type: nodes)]
+        let fields = ["nodes": GraphQLField(type: nodes, resolve: graphQLNodesResolver(request))]
         return try GraphQLObjectType(name: plural.pascalCase(), fields: fields)
     }
 
-    func graphQLSingleItemFieldsType() -> [String: GraphQLField] {
+    func graphQLSingleItemFieldsType(_ request: Request) -> [String: GraphQLField] {
         var fields = [String: GraphQLField]()
         for field in self.template {
             var type = field.type.graphQL
             if field.required {
                 type = GraphQLNonNull(type.debugDescription)
             }
-            fields[field.name.camelCase()] = GraphQLField(type: type)
+            fields[field.name.camelCase()] = GraphQLField(type: type, resolve: graphQLSingleItemResolver(field, request))
         }
 
         return fields
+    }
+
+    func graphQLNodesResolver(_ request: Request) -> GraphQLFieldResolve {
+        return { (source, args, context, eventLoopGroup, info) -> EventLoopFuture<Any?> in
+            return try self.items.query(on: request).range(..<25).all().map { items in
+                return items
+            }
+        }
+    }
+
+    func graphQLSingleItemResolver(_ field: ContentField, _ request: Request) -> GraphQLFieldResolve {
+        return { (source, args, context, eventLoopGroup, info) -> EventLoopFuture<Any?> in
+            return try self.items.query(on: request).range(..<25).all().map { items in
+                return items
+            }
+        }
     }
 //    func graphQLType(_ request: Request) throws -> Future<GraphQLOutputType> {
 //        return try graphQLFields(request).map { fields in
