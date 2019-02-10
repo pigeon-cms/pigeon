@@ -22,8 +22,9 @@ private extension GraphQLController {
             var rootFields = [String: GraphQLField]()
 
             for type in contentTypes {
-                rootFields[type.plural.camelCase()] = try GraphQLField(type: type.graphQLType(request), resolve: { (source, args, context, eventLoopGroup, info) -> EventLoopFuture<Any?> in
-                    return eventLoopGroup.next().newSucceededFuture(result: type)
+                rootFields[type.plural.camelCase()] = try GraphQLField(type: type.graphQLType(),
+                                                                       resolve: { (source, args, context, eventLoopGroup, info) -> EventLoopFuture<Any?> in
+                    return eventLoopGroup.next().newSucceededFuture(result: source)
                 })
             }
 
@@ -38,7 +39,7 @@ private extension GraphQLController {
 
     func graphQLResponse(for query: GraphQLHTTPBody, _ request: Request) throws -> Future<Response> {
         return try self.schema(request).flatMap { schema in
-            return try graphql(schema: schema, request: query.query, eventLoopGroup: request.eventLoop).map { map in
+            return try graphql(schema: schema, request: query.query, eventLoopGroup: request).map { map in
                 let map = try map.asMap()
                 guard let data = "\(map)".data(using: .utf8) else { throw Abort(.badRequest) }
                 return Response(http: HTTPResponse.init(status: .ok, body: data),

@@ -12,30 +12,30 @@ final class ContentCategory: Content, PostgreSQLUUIDModel, Migration {
     var template: [ContentField]
     // var accessLevel: SomeEnum // TODO: access level for api content
 
-    func graphQLType(_ request: Request) throws -> GraphQLOutputType {
-        let node = try graphQLNodeType(request)
+    func graphQLType() throws -> GraphQLOutputType {
+        let node = try graphQLNodeType()
         let nodes = GraphQLList(node)
 
-        let edge = try graphQLEdgeType(request, node)
+        let edge = try graphQLEdgeType(node)
         let edges = GraphQLList(edge)
 
-        let fields = ["nodes": GraphQLField(type: nodes, resolve: graphQLNodesResolver(request)),
+        let fields = ["nodes": GraphQLField(type: nodes, resolve: graphQLNodesResolver()),
                       "edges": GraphQLField(type: edges)]
         return try GraphQLObjectType(name: plural.pascalCase(), fields: fields)
     }
 
-    func graphQLNodeType(_ request: Request) throws -> GraphQLOutputType {
-        let node = try GraphQLObjectType(name: name.pascalCase(), fields: graphQLSingleItemFieldsType(request))
+    func graphQLNodeType() throws -> GraphQLOutputType {
+        let node = try GraphQLObjectType(name: name.pascalCase(), fields: graphQLSingleItemFieldsType())
         return node
     }
 
-    func graphQLEdgeType(_ request: Request, _ nodeType: GraphQLOutputType) throws -> GraphQLOutputType {
+    func graphQLEdgeType(_ nodeType: GraphQLOutputType) throws -> GraphQLOutputType {
         let edge = try GraphQLObjectType(name: name.pascalCase() + "Edge",
-                                         fields: try graphQLEdgeFields(request, nodeType))
+                                         fields: try graphQLEdgeFields(nodeType))
         return edge
     }
 
-    func graphQLEdgeFields(_ request: Request, _ nodeType: GraphQLOutputType) throws -> [String: GraphQLField] {
+    func graphQLEdgeFields(_ nodeType: GraphQLOutputType) throws -> [String: GraphQLField] {
         var fields = [String: GraphQLField]()
         fields["cursor"] = GraphQLField(type: GraphQLString) // TODO: cursor calculation
         fields["node"] = GraphQLField(type: nodeType) // TODO: resolver
@@ -43,21 +43,24 @@ final class ContentCategory: Content, PostgreSQLUUIDModel, Migration {
         return fields
     }
 
-    func graphQLSingleItemFieldsType(_ request: Request) -> [String: GraphQLField] {
+    func graphQLSingleItemFieldsType() -> [String: GraphQLField] {
         var fields = [String: GraphQLField]()
         for field in self.template {
             var type = field.type.graphQL
             if field.required {
                 type = GraphQLNonNull(type.debugDescription)
             }
-            fields[field.name.camelCase()] = GraphQLField(type: type, resolve: graphQLSingleItemResolver(field, request))
+            fields[field.name.camelCase()] = GraphQLField(type: type, resolve: graphQLSingleItemResolver(field))
         }
 
         return fields
     }
 
-    func graphQLNodesResolver(_ request: Request) -> GraphQLFieldResolve {
+    func graphQLNodesResolver() -> GraphQLFieldResolve {
         return { (source, args, context, eventLoopGroup, info) -> EventLoopFuture<Any?> in
+            guard let request = eventLoopGroup as? Request else {
+                fatalError()
+            }
             return try self.items.query(on: request).range(..<25).all().map { items in
                 print("Query 1")
                 return items
@@ -65,8 +68,11 @@ final class ContentCategory: Content, PostgreSQLUUIDModel, Migration {
         }
     }
 
-    func graphQLSingleItemResolver(_ field: ContentField, _ request: Request) -> GraphQLFieldResolve {
+    func graphQLSingleItemResolver(_ field: ContentField) -> GraphQLFieldResolve {
         return { (source, args, context, eventLoopGroup, info) -> EventLoopFuture<Any?> in
+            guard let request = eventLoopGroup as? Request else {
+                fatalError()
+            }
             return try self.items.query(on: request).range(..<25).all().map { items in
                 guard let index = info.path[2].indexValue, index < items.count else {
                     throw GraphQLError(message: "Not found")
