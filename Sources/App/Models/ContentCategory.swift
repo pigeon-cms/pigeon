@@ -16,8 +16,11 @@ final class ContentCategory: Content, PostgreSQLUUIDModel, Migration {
         let node = try graphQLNodeType(request)
         let nodes = GraphQLList(node)
 
+        let edge = try graphQLEdgeType(request, node)
+        let edges = GraphQLList(edge)
+
         let fields = ["nodes": GraphQLField(type: nodes, resolve: graphQLNodesResolver(request)),
-                      "edges": GraphQLField(type: try graphQLEdgeType(request, node))]
+                      "edges": GraphQLField(type: edges)]
         return try GraphQLObjectType(name: plural.pascalCase(), fields: fields)
     }
 
