@@ -12,8 +12,14 @@ let package = Package(
         .package(url: "https://github.com/GraphQLSwift/GraphQL.git", from: "0.8.0")
     ],
     targets: [
-        .target(name: "App", dependencies: ["Vapor", "Leaf", "Authentication", "Pagination",
-                                            "FluentPostgreSQL", "GraphQL"]),
+        .target(name: "App", dependencies: [
+            "Vapor",
+            "Leaf",
+            "Authentication",
+            "Pagination",
+            "FluentPostgreSQL",
+            "GraphQL"
+        ]),
         .target(name: "Run", dependencies: ["App"])
     ]
 )
