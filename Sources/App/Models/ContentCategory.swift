@@ -20,7 +20,9 @@ final class ContentCategory: Content, PostgreSQLUUIDModel, Migration {
         let edges = GraphQLList(edge)
 
         let fields = ["nodes": GraphQLField(type: nodes, resolve: graphQLNodesResolver()),
-                      "edges": GraphQLField(type: edges)]
+                      "edges": GraphQLField(type: edges,
+                                            args: graphQLFirstAfterArgs(),
+                                            resolve: graphQLEdgesResolver())]
         return try GraphQLObjectType(name: plural.pascalCase(), fields: fields)
     }
 
@@ -35,10 +37,24 @@ final class ContentCategory: Content, PostgreSQLUUIDModel, Migration {
         return edge
     }
 
+    func graphQLFirstAfterArgs() -> GraphQLArgumentConfigMap {
+        let first = GraphQLArgument(
+            type: GraphQLInt,
+            description: "The number of items to return after the referenced “after” cursor"
+//            defaultValue: Map(integerLiteral: (20)) // TODO: this breaks GraphiQL schema parsing
+        )
+        let after = GraphQLArgument(
+            type: GraphQLString,
+            description: "Cursor used along with the “first” argument to reference where in the dataset to get data"
+        )
+        return ["first": first,
+                "after": after]
+    }
+
     func graphQLEdgeFields(_ nodeType: GraphQLOutputType) throws -> [String: GraphQLField] {
         var fields = [String: GraphQLField]()
-        fields["cursor"] = GraphQLField(type: GraphQLString) // TODO: cursor calculation
-        fields["node"] = GraphQLField(type: nodeType) // TODO: resolver
+        fields["cursor"] = GraphQLField(type: GraphQLString, resolve: graphQLEdgeCursorResolver())
+        fields["node"] = GraphQLField(type: nodeType, resolve: graphQLEdgeNodeResolver())
 
         return fields
     }
@@ -61,11 +77,48 @@ final class ContentCategory: Content, PostgreSQLUUIDModel, Migration {
             guard let request = eventLoopGroup as? Request else {
                 throw Abort(.serviceUnavailable)
             }
+             /// TODO: not hardcoded
             return try self.items.query(on: request).range(..<25).all().map { items in
                 return items
             }
         }
     }
+
+    func graphQLEdgesResolver() -> GraphQLFieldResolve {
+        return { (source, args, context, eventLoopGroup, info) -> EventLoopFuture<Any?> in
+            guard let request = eventLoopGroup as? Request else {
+                throw Abort(.serviceUnavailable)
+            }
+            var range = 20 /// TODO: not hardcoded
+            if let first = args["first"].int {
+                range = min(range, first)
+            }
+            /// TODO: cursor
+            return try self.items.query(on: request).range(..<range).all().map { items in
+                return items
+            }
+        }
+    }
+
+    func graphQLEdgeNodeResolver() -> GraphQLFieldResolve {
+        return { (source, args, context, eventLoopGroup, info) -> EventLoopFuture<Any?> in
+            guard let item = source as? ContentItem else {
+                throw Abort(.serviceUnavailable)
+            }
+            return eventLoopGroup.next().newSucceededFuture(result: item)
+        }
+    }
+
+    func graphQLEdgeCursorResolver() -> GraphQLFieldResolve {
+        return { (source, args, context, eventLoopGroup, info) -> EventLoopFuture<Any?> in
+            guard let item = source as? ContentItem else {
+                throw Abort(.serviceUnavailable)
+            }
+            /// TODO: cursor calculation from item
+            return eventLoopGroup.next().newSucceededFuture(result: "SADKFNSDKFJN")
+        }
+    }
+
 
     func graphQLSingleItemResolver(_ field: ContentField) -> GraphQLFieldResolve {
         return { (source, args, context, eventLoopGroup, info) -> EventLoopFuture<Any?> in
