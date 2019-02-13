@@ -40,8 +40,8 @@ final class ContentCategory: Content, PostgreSQLUUIDModel, Migration {
     func graphQLFirstAfterArgs() -> GraphQLArgumentConfigMap {
         let first = GraphQLArgument(
             type: GraphQLInt,
-            description: "The number of items to return after the referenced “after” cursor"
-//            defaultValue: Map(integerLiteral: (20)) // TODO: this breaks GraphiQL schema parsing
+            description: "The number of items to return after the referenced “after” cursor",
+            defaultValue: "20"
         )
         let after = GraphQLArgument(
             type: GraphQLString,
