@@ -22,7 +22,7 @@ final class ContentCategory: Content, PostgreSQLUUIDModel, Migration {
 
         let fields = ["nodes": GraphQLField(type: nodes, resolve: graphQLNodesResolver()),
                       "edges": GraphQLField(type: edges,
-                                            args: graphQLFirstAfterArgs(),
+                                            args: graphQLPaginationArgs(),
                                             resolve: graphQLEdgesResolver())]
         return try GraphQLObjectType(name: plural.pascalCase(), fields: fields)
     }
@@ -38,7 +38,7 @@ final class ContentCategory: Content, PostgreSQLUUIDModel, Migration {
         return edge
     }
 
-    func graphQLFirstAfterArgs() -> GraphQLArgumentConfigMap {
+    func graphQLPaginationArgs() -> GraphQLArgumentConfigMap {
         let first = GraphQLArgument(
             type: GraphQLInt,
             description: "The number of items to return after the referenced “after” cursor",
@@ -50,6 +50,7 @@ final class ContentCategory: Content, PostgreSQLUUIDModel, Migration {
         )
         return ["first": first,
                 "after": after]
+        // TODO: pagination arguments for non-cursor based pagination
     }
 
     func graphQLEdgeFields(_ nodeType: GraphQLOutputType) throws -> [String: GraphQLField] {
@@ -92,16 +93,16 @@ final class ContentCategory: Content, PostgreSQLUUIDModel, Migration {
             }
 
             let first = min(args["first"].int ?? 20, 20) /// TODO: not hardcoded upper limit
-            let cursor = args["cursor"].string
-        
-            return try self.items.query(on: request).paginate(cursor: cursor,
-                                                              sorts: [.descending(\.fluentID)]).map { items in
-                print(items)
-                return items.data
-            }.mapIfError { error in
-                print(error)
-                return nil
+//            let cursor = args["cursor"].string
+
+            return try self.items.query(on: request).paginate(
+                page: 0,
+                per: first,
+                ContentItem.defaultPageSorts
+            ).map { page in
+                return page.data
             }
+
         }
     }
 
