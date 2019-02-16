@@ -90,13 +90,17 @@ final class ContentCategory: Content, PostgreSQLUUIDModel, Migration {
             guard let request = eventLoopGroup as? Request else {
                 throw Abort(.serviceUnavailable)
             }
-            var range = 20 /// TODO: not hardcoded
-            if let first = args["first"].int {
-                range = min(range, first)
-            }
-            /// TODO: cursor
-            return try self.items.query(on: request).range(..<range).all().map { items in
-                return items
+
+            let first = min(args["first"].int ?? 20, 20) /// TODO: not hardcoded upper limit
+            let cursor = args["cursor"].string
+        
+            return try self.items.query(on: request).paginate(cursor: cursor,
+                                                              sorts: [.descending(\.fluentID)]).map { items in
+                print(items)
+                return items.data
+            }.mapIfError { error in
+                print(error)
+                return nil
             }
         }
     }
