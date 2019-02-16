@@ -6,8 +6,35 @@
         "repositoryURL": "https://github.com/vapor/auth.git",
         "state": {
           "branch": null,
-          "revision": "90868627c7587ea207c0b6d4054265e68f6a33ef",
-          "version": "2.0.1"
+          "revision": "9c71c8a6c021601d981305987e8e95fd36fd0c56",
+          "version": "2.0.2"
+        }
+      },
+      {
+        "package": "Avatars",
+        "repositoryURL": "https://github.com/Appsaurus/Avatars",
+        "state": {
+          "branch": null,
+          "revision": "f9d00e4cc330dfc86c0bf92092249ab84ef82287",
+          "version": "1.0.1"
+        }
+      },
+      {
+        "package": "Codability",
+        "repositoryURL": "https://github.com/yonaskolb/Codability.git",
+        "state": {
+          "branch": null,
+          "revision": "eb5bac78e0679f521c3f058c1eb9be0dd657dadd",
+          "version": "0.2.1"
+        }
+      },
+      {
+        "package": "CodableExtensions",
+        "repositoryURL": "https://github.com/Appsaurus/CodableExtensions",
+        "state": {
+          "branch": null,
+          "revision": "4b8e1fafe94ac99fa53118d63a1ce8b7f075fa67",
+          "version": "1.0.0"
         }
       },
       {
@@ -42,8 +69,17 @@
         "repositoryURL": "https://github.com/vapor/crypto.git",
         "state": {
           "branch": null,
-          "revision": "bce9ac891c9b33fc045deda713e0d976d13b749a",
-          "version": "3.3.1"
+          "revision": "45bb12d13cdec80dbd1cc0685ea002e51ab83439",
+          "version": "3.3.2"
+        }
+      },
+      {
+        "package": "CursorPagination",
+        "repositoryURL": "https://github.com/hallee/CursorPagination",
+        "state": {
+          "branch": "pagination-coexistence",
+          "revision": "d6b3233a715152b1f11e671f39a8a79c732a5c11",
+          "version": null
         }
       },
       {
@@ -53,6 +89,15 @@
           "branch": null,
           "revision": "8f352c8e66dab301ab9bfef912a01ce1361ba1e4",
           "version": "1.3.3"
+        }
+      },
+      {
+        "package": "Fakery",
+        "repositoryURL": "https://github.com/Appsaurus/Fakery",
+        "state": {
+          "branch": null,
+          "revision": "9b14ce3bf57ce0d2c872edc5a1fc0c306e414388",
+          "version": "3.4.0"
         }
       },
       {
@@ -80,6 +125,51 @@
           "branch": null,
           "revision": "c32f5bda84bf4ea691d19afe183d40044f579e11",
           "version": "3.0.0"
+        }
+      },
+      {
+        "package": "FluentExtensions",
+        "repositoryURL": "https://github.com/Appsaurus/FluentExtensions",
+        "state": {
+          "branch": null,
+          "revision": "af78a05ca2e1cf32b773b6956bc32566178f7d6c",
+          "version": "0.2.2"
+        }
+      },
+      {
+        "package": "FluentSeeder",
+        "repositoryURL": "https://github.com/Appsaurus/FluentSeeder",
+        "state": {
+          "branch": null,
+          "revision": "b72c28c88155b7f6e5a96f3baf3affa41539a060",
+          "version": "0.1.1"
+        }
+      },
+      {
+        "package": "FluentTestApp",
+        "repositoryURL": "https://github.com/Appsaurus/FluentTestApp",
+        "state": {
+          "branch": null,
+          "revision": "fb0279f41aa4a998a443ec0f4422e5145991d31e",
+          "version": "0.1.0"
+        }
+      },
+      {
+        "package": "FluentTestModels",
+        "repositoryURL": "https://github.com/Appsaurus/FluentTestModels",
+        "state": {
+          "branch": null,
+          "revision": "8896aadab3bd3f00fd4871df41a29e98e9f44706",
+          "version": "0.1.0"
+        }
+      },
+      {
+        "package": "FluentTestUtils",
+        "repositoryURL": "https://github.com/Appsaurus/FluentTestUtils",
+        "state": {
+          "branch": null,
+          "revision": "4864251820ddc89645797121fa1d3ffadf09484f",
+          "version": "0.1.1"
         }
       },
       {
@@ -128,12 +218,30 @@
         }
       },
       {
+        "package": "PlaceholderImages",
+        "repositoryURL": "https://github.com/Appsaurus/PlaceholderImages",
+        "state": {
+          "branch": null,
+          "revision": "f04b9a60eff34432c4edaa082dad8de316d1a60b",
+          "version": "1.0.1"
+        }
+      },
+      {
         "package": "PostgreSQL",
         "repositoryURL": "https://github.com/vapor/postgresql.git",
         "state": {
           "branch": null,
-          "revision": "870c4b72af8366a32e807fa7a234b87c500fd1b5",
-          "version": "1.2.0"
+          "revision": "cbe5505f6f15c69f569ec939cf7e7cc8be61857c",
+          "version": "1.2.1"
+        }
+      },
+      {
+        "package": "RandomFactory",
+        "repositoryURL": "https://github.com/Appsaurus/RandomFactory",
+        "state": {
+          "branch": null,
+          "revision": "1a0797c7c21ba090bb7a465c90b250ecacdeed3b",
+          "version": "1.0.0"
         }
       },
       {
@@ -155,12 +263,21 @@
         }
       },
       {
+        "package": "RuntimeExtensions",
+        "repositoryURL": "https://github.com/hallee/RuntimeExtensions",
+        "state": {
+          "branch": null,
+          "revision": "8115711d8c22afb5a7612bbbe6ff4a14d75475b6",
+          "version": "0.1.3"
+        }
+      },
+      {
         "package": "Service",
         "repositoryURL": "https://github.com/vapor/service.git",
         "state": {
           "branch": null,
-          "revision": "281a70b69783891900be31a9e70051b6fe19e146",
-          "version": "1.0.0"
+          "revision": "4907311d7d7f609365982fa302b8b17ffdeb46da",
+          "version": "1.0.1"
         }
       },
       {
@@ -218,6 +335,15 @@
         }
       },
       {
+        "package": "SwiftTestUtils",
+        "repositoryURL": "https://github.com/Appsaurus/SwiftTestUtils",
+        "state": {
+          "branch": null,
+          "revision": "76b498f338b4249898656947fa2713747fa429f7",
+          "version": "1.0.1"
+        }
+      },
+      {
         "package": "TemplateKit",
         "repositoryURL": "https://github.com/vapor/template-kit.git",
         "state": {
@@ -249,8 +375,17 @@
         "repositoryURL": "https://github.com/vapor/vapor.git",
         "state": {
           "branch": null,
-          "revision": "26d68063358fe73a37df371ebb6edf93e6f0c3ad",
-          "version": "3.1.3"
+          "revision": "6c7284681c3432fee29c268babf954be6816cbfb",
+          "version": "3.2.2"
+        }
+      },
+      {
+        "package": "VaporTestUtils",
+        "repositoryURL": "https://github.com/Appsaurus/VaporTestUtils",
+        "state": {
+          "branch": null,
+          "revision": "b8fd962ddf24871da71db95e23175a969df1f246",
+          "version": "0.1.2"
         }
       },
       {

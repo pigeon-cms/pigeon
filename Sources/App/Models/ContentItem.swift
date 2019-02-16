@@ -1,8 +1,9 @@
 import Vapor
 import Pagination
+import CursorPagination
 import FluentPostgreSQL
 
-final class ContentItem: Content, Paginatable, PostgreSQLUUIDModel, Migration {
+final class ContentItem: Content, Paginatable, CursorPaginatable, PostgreSQLUUIDModel, Migration {
     var id: UUID?
     var categoryID: UUID
     var created: Date?

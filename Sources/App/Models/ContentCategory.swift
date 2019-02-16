@@ -1,5 +1,6 @@
 import Vapor
 import FluentPostgreSQL
+import CursorPagination
 import GraphQL
 
 final class ContentCategory: Content, PostgreSQLUUIDModel, Migration {
