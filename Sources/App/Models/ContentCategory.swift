@@ -10,4 +10,5 @@ final class ContentCategory: Content, PostgreSQLUUIDModel, Migration {
     }
     var template: [ContentField]
     // var accessLevel: SomeEnum // TODO: access level for api content
+
 }

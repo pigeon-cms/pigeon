@@ -75,7 +75,7 @@ private extension PostController {
                 post.updated = item.updated
                 post.content = item.content
                 post.authors = item.authors
-                return post.save(on: request).map { _ in
+                return post.update(on: request).map { _ in
                     let response = HTTPResponse(status: .created,
                                                 headers: HTTPHeaders([("Location", "/content/\(category.plural)")]))
                     return Response(http: response, using: request.sharedContainer)

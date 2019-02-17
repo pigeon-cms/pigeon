@@ -15,7 +15,6 @@ class PigeonController: RouteCollection {
         let redirectMiddleware = RedirectMiddleware<User>.login()
         let loggedInRouter = authRouter.grouped(redirectMiddleware)
         try loginGuardedBoot(router: loggedInRouter)
-
     }
 
     /// Routes registered to this router have access to authentication and session middlewares.

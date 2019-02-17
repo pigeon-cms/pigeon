@@ -1,19 +1,15 @@
 import Vapor
 import Pagination
 
-class EndpointController: PigeonController {
+class JSONController: PigeonController {
 
     override func authBoot(router: Router) throws {
         router.get(["/json", String.parameter], use: jsonHandler)
-        router.get("/graphql") { _ in
-            // TODO
-            return "graphql"
-        }
     }
 
 }
 
-private extension EndpointController {
+private extension JSONController {
 
     func jsonHandler(_ request: Request) throws -> Future<Paginated<ContentItemPublic>> {
         guard let typeName = try request.parameters.next(String.self).removingPercentEncoding else {
