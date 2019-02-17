@@ -2,13 +2,13 @@ import Foundation
 
 extension String {
 
-    /// Converts this string to camelCase. Can convert sentence formatted, snake_case, and pascal-case.
+    /// Converts this string to camelCase. Can convert sentence formatted, snake_case, and kebab-case.
     /// Only alphanumerics are allowed.
     func camelCase() -> String {
         let allowedCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
         let whiteSpaceSplit = self.split(omittingEmptySubsequences: true) { char -> Bool in
             switch char {
-            case " ", "_", "-", "–", "—", ".", ",":
+            case " ", " ", " ", " ", "​", "_", "-", "–", "—", ".", ",":
                 return true
             default:
                 return false
@@ -32,10 +32,10 @@ extension String {
 
     }
 
-    /// Converts this string to PascalCase. Can convert sentence formatted, snake_case, and pascal-case.
+    /// Converts this string to PascalCase. Can convert sentence formatted, snake_case, and kebab-case.
     /// Only alphanumerics are allowed.
     func pascalCase() -> String {
-        var camelCase = self.camelCase()
+        let camelCase = self.camelCase()
         guard let first = camelCase.first else { return camelCase }
         return String(first).uppercased() + camelCase.dropFirst()
     }
