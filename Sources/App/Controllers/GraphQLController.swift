@@ -102,15 +102,10 @@ private extension GraphQLController {
     }
 
     func graphQLGetQueryHandler(_ request: Request) throws -> Future<View> {
-        struct GraphQLPage: Codable {
-            var path: String
-        }
         if request.http.accept.contains(where: { $0.mediaType.type == "text" && $0.mediaType.subType == "html" }) {
-            return try request.view().render("GraphQL/graphql-playground", GraphQLPage(path: "/graphql")) // TODO: query path not hardcoded
+            return try request.view().render("GraphQL/graphql-playground") // TODO: query path not hardcoded
         }
         throw Abort(.notFound) // TODO: GraphQL GET queries
     }
 
-
-    
 }
