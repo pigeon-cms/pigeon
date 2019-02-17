@@ -18,8 +18,7 @@ let package = Package(
             "Authentication",
             "Pagination",
             "FluentPostgreSQL",
-            "GraphQL",
-            "CursorPagination"
+            "GraphQL"
         ]),
         .target(name: "Run", dependencies: ["App"])
     ]

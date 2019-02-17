@@ -1,6 +1,6 @@
 import Vapor
 import FluentPostgreSQL
-import CursorPagination
+import Pagination
 import GraphQL
 
 final class ContentCategory: Content, PostgreSQLUUIDModel, Migration {
@@ -13,18 +13,39 @@ final class ContentCategory: Content, PostgreSQLUUIDModel, Migration {
     var template: [ContentField]
     // var accessLevel: SomeEnum // TODO: access level for api content
 
-    func graphQLType() throws -> GraphQLOutputType {
+    func graphQLType(_ pageInfo: GraphQLOutputType) throws -> GraphQLOutputType {
         let node = try graphQLNodeType()
         let nodes = GraphQLList(node)
 
         let edge = try graphQLEdgeType(node)
         let edges = GraphQLList(edge)
 
-        let fields = ["nodes": GraphQLField(type: nodes, resolve: graphQLNodesResolver()),
-                      "edges": GraphQLField(type: edges,
-                                            args: graphQLPaginationArgs(),
-                                            resolve: graphQLEdgesResolver())]
+        let fields = [
+            "nodes": GraphQLField(type: nodes, resolve: graphQLNodesResolver()),
+            "edges": GraphQLField(type: edges, resolve: graphQLNodesResolver()),
+            "pageInfo": GraphQLField(type: pageInfo, resolve: graphQLEdgePageResolver())
+        ]
         return try GraphQLObjectType(name: plural.pascalCase(), fields: fields)
+    }
+
+    func rootResolver() -> GraphQLFieldResolve {
+        return { (source, args, context, eventLoopGroup, info) -> EventLoopFuture<Any?> in
+            guard let request = eventLoopGroup as? Request else {
+                throw Abort(.serviceUnavailable)
+            }
+    //        let first = min(args["first"].int ?? 20, 20)
+    //        let cursor = args["cursor"].string
+            let page = args["page"].int
+            let per = min(args["per"].int ?? 20, 20) /// TODO: non hardcoded upper limit
+            print("QUERY")
+            return try self.items.query(on: request).paginate(
+                page: page ?? 1,
+                per: per,
+                ContentItem.defaultPageSorts
+            ).map { page in
+                return page
+            }
+        }
     }
 
     func graphQLNodeType() throws -> GraphQLOutputType {
@@ -39,23 +60,36 @@ final class ContentCategory: Content, PostgreSQLUUIDModel, Migration {
     }
 
     func graphQLPaginationArgs() -> GraphQLArgumentConfigMap {
-        let first = GraphQLArgument(
+//        let first = GraphQLArgument(
+//            type: GraphQLInt,
+//            description: "The number of items to return after the referenced “after” cursor",
+//            defaultValue: "20" // TODO: not hardcoded
+//        )
+//        let after = GraphQLArgument(
+//            type: GraphQLString,
+//            description: "Cursor used along with the “first” argument to reference where in the dataset to get data"
+//        )
+        let page = GraphQLArgument(
             type: GraphQLInt,
-            description: "The number of items to return after the referenced “after” cursor",
-            defaultValue: "20"
+            description: "The page number to return",
+            defaultValue: "1"
         )
-        let after = GraphQLArgument(
-            type: GraphQLString,
-            description: "Cursor used along with the “first” argument to reference where in the dataset to get data"
+        let per = GraphQLArgument(
+            type: GraphQLInt,
+            description: "The number of items to return per page",
+            defaultValue: "20" // TODO: not hardcoded
         )
-        return ["first": first,
-                "after": after]
-        // TODO: pagination arguments for non-cursor based pagination
+        return [
+//            "first": first,
+//            "after": after,
+            "page": page,
+            "per": per
+        ]
     }
 
     func graphQLEdgeFields(_ nodeType: GraphQLOutputType) throws -> [String: GraphQLField] {
         var fields = [String: GraphQLField]()
-        fields["cursor"] = GraphQLField(type: GraphQLString, resolve: graphQLEdgeCursorResolver())
+//        fields["cursor"] = GraphQLField(type: GraphQLString, resolve: graphQLEdgeCursorResolver())
         fields["node"] = GraphQLField(type: nodeType, resolve: graphQLEdgeNodeResolver())
 
         return fields
@@ -76,33 +110,10 @@ final class ContentCategory: Content, PostgreSQLUUIDModel, Migration {
 
     func graphQLNodesResolver() -> GraphQLFieldResolve {
         return { (source, args, context, eventLoopGroup, info) -> EventLoopFuture<Any?> in
-            guard let request = eventLoopGroup as? Request else {
+            guard let page = source as? Page<ContentItem> else {
                 throw Abort(.serviceUnavailable)
             }
-             /// TODO: not hardcoded
-            return try self.items.query(on: request).range(..<25).all().map { items in
-                return items
-            }
-        }
-    }
-
-    func graphQLEdgesResolver() -> GraphQLFieldResolve {
-        return { (source, args, context, eventLoopGroup, info) -> EventLoopFuture<Any?> in
-            guard let request = eventLoopGroup as? Request else {
-                throw Abort(.serviceUnavailable)
-            }
-
-            let first = min(args["first"].int ?? 20, 20) /// TODO: not hardcoded upper limit
-//            let cursor = args["cursor"].string
-
-            return try self.items.query(on: request).paginate(
-                page: 0,
-                per: first,
-                ContentItem.defaultPageSorts
-            ).map { page in
-                return page.data
-            }
-
+            return eventLoopGroup.next().newSucceededFuture(result: page.data)
         }
     }
 
@@ -115,13 +126,18 @@ final class ContentCategory: Content, PostgreSQLUUIDModel, Migration {
         }
     }
 
-    func graphQLEdgeCursorResolver() -> GraphQLFieldResolve {
+//    func graphQLEdgeCursorResolver() -> GraphQLFieldResolve {
+//        return { (source, args, context, eventLoopGroup, info) -> EventLoopFuture<Any?> in
+//            guard let item = source as? ContentItem else {
+//                throw Abort(.serviceUnavailable)
+//            }
+//            /// TODO: cursor calculation from item
+//        }
+//    }
+
+    func graphQLEdgePageResolver() -> GraphQLFieldResolve {
         return { (source, args, context, eventLoopGroup, info) -> EventLoopFuture<Any?> in
-            guard let item = source as? ContentItem else {
-                throw Abort(.serviceUnavailable)
-            }
-            /// TODO: cursor calculation from item
-            return eventLoopGroup.next().newSucceededFuture(result: "SADKFNSDKFJN")
+            return eventLoopGroup.next().newSucceededFuture(result: source)
         }
     }
 

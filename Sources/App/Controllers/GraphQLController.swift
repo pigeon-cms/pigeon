@@ -1,5 +1,6 @@
 import Vapor
 import GraphQL
+import Pagination
 
 class GraphQLController: PigeonController {
 
@@ -21,11 +22,14 @@ private extension GraphQLController {
         return request.allContentTypes().map { contentTypes in
             var rootFields = [String: GraphQLField]()
 
+            let pageInfo = try self.graphQLPageInfoType()
+
             for type in contentTypes {
-                rootFields[type.plural.camelCase()] = try GraphQLField(type: type.graphQLType(),
-                                                                       resolve: { (source, args, context, eventLoopGroup, info) -> EventLoopFuture<Any?> in
-                    return eventLoopGroup.next().newSucceededFuture(result: source)
-                })
+                rootFields[type.plural.camelCase()] = try GraphQLField(
+                    type: type.graphQLType(pageInfo),
+                    args: type.graphQLPaginationArgs(),
+                    resolve: type.rootResolver()
+                )
             }
 
             let schema = try GraphQLSchema(
@@ -34,6 +38,38 @@ private extension GraphQLController {
                     fields: rootFields)
             )
             return schema
+        }
+    }
+
+    func graphQLPageInfoType() throws -> GraphQLOutputType {
+        var fields = [String: GraphQLField]()
+        fields["current"] = GraphQLField(type: GraphQLInt, resolve: paginationResolver())
+        fields["size"] = GraphQLField(type: GraphQLInt, resolve: paginationResolver())
+        fields["total"] = GraphQLField(type: GraphQLInt, resolve: paginationResolver())
+
+        let pageInfo = try GraphQLObjectType(name: "PageInfo",
+                                             fields: fields)
+        return pageInfo
+    }
+
+    func paginationResolver() -> GraphQLFieldResolve {
+        return { (source, args, context, eventLoopGroup, info) -> EventLoopFuture<Any?> in
+            guard let page = source as? Page<ContentItem> else {
+                throw Abort(.serviceUnavailable)
+            }
+            guard info.path.count > 2 else {
+                throw Abort(.serviceUnavailable)
+            }
+            switch info.path[2].keyValue {
+            case "current":
+                return eventLoopGroup.next().newSucceededFuture(result: page.number)
+            case "total":
+                return eventLoopGroup.next().newSucceededFuture(result: Int(ceil(Float(page.total) / Float(page.size))))
+            case "size":
+                return eventLoopGroup.next().newSucceededFuture(result: page.size)
+            default:
+                throw Abort(.serviceUnavailable)
+            }
         }
     }
 
@@ -68,5 +104,7 @@ private extension GraphQLController {
         }
         fatalError("TODO: Need to implement GET GraphQL queries")
     }
+
+
     
 }
