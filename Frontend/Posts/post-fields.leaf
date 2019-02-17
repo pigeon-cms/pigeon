@@ -37,11 +37,13 @@
 			v-model="field.value"
 			:required="field.required ? true : false"
 		/>
-		<input
-			v-if="field.type == 'Bool'"
-			type="checkbox"
-			v-model="field.value"
-		/>
+		<label v-if="field.type == 'Bool'">
+			<input
+				type="checkbox"
+				v-model="field.value"
+			/>
+			<span></span>
+		</label>
 	</td>
 </tr>
 </table>
@@ -51,5 +53,5 @@
 >
 	Cancel
 </button>
-<button>Save</button>
+<button class="action">Save</button>
 </form>

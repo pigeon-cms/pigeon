@@ -39,7 +39,7 @@
 		<td><b class="placeholder field-label">—</b></td>
 		<td><input type="text" disabled class="placeholder"></input></td>
 		<td><input type="text" disabled class="placeholder"></input></td>
-		<td><input type="checkbox" disabled class="placeholder"></span></td>
+		<td><label><input type="checkbox" disabled class="placeholder"><span></span></label></span></td>
 	</tr>
 	<tr v-cloak v-for="field in fields">
 		<td>
@@ -60,21 +60,32 @@
 			v-model="field.value"
 			placeholder="Default value"
 		/>
-		<input
-			v-if="field.type == 'Bool'"
-			type="checkbox"
-			v-model="field.value"
-		/>
+		<label v-if="field.type == 'Bool'">
+			<input
+				type="checkbox"
+				v-model="field.value"
+			/>
+			<span></span>
+		</label>
 		<span class="tip" v-if="field.type == 'Date'">Creation date</span>
 		</td>
 		<td>
-		<input
-			type="checkbox"
-			v-model="field.required"
-		/>
+		<label>
+			<input
+				type="checkbox"
+				v-model="field.required"
+			/>
+			<span></span>
+		</label>
 		</td>
 		<td>
-			<button type="button" v-on:click="removeField(field)">Remove</button>
+			<button
+				class="destructive"
+				type="button"
+				v-on:click="removeField(field)"
+			>
+				Remove
+			</button>
 		</td>
 	</tr>
 </table>
