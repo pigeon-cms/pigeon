@@ -14,8 +14,6 @@ final class ContentItem: Content, Paginatable, PostgreSQLUUIDModel, Migration {
     }
 }
 
-/// TODO: instead of this, need to figure out how to structure the actual content this way,
-/// with an 'order' property for the CMS display, and a way to hide props like 'id' and 'order'.
 final class ContentItemPublic: Content {
     var created: Date?
     var updated: Date?

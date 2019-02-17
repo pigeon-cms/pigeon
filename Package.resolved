@@ -2,6 +2,15 @@
   "object": {
     "pins": [
       {
+        "package": "AnyCodable",
+        "repositoryURL": "https://github.com/Flight-School/AnyCodable.git",
+        "state": {
+          "branch": "master",
+          "revision": "e38c4bb939ec3d2d44cb868d86de37c046273b22",
+          "version": null
+        }
+      },
+      {
         "package": "Auth",
         "repositoryURL": "https://github.com/vapor/auth.git",
         "state": {

@@ -1,6 +1,7 @@
 import Vapor
 import GraphQL
 import Pagination
+import AnyCodable
 
 class GraphQLController: PigeonController {
 
@@ -15,7 +16,7 @@ private extension GraphQLController {
 
     struct GraphQLHTTPBody: Codable {
         var query: String
-        var variables: [String: SupportedValue]? // TODO: codable representation of "any" json type
+        var variables: [String: AnyCodable]? // TODO: codable representation of "any" json type
     }
 
     func schema(_ request: Request) throws -> Future<GraphQLSchema> {
@@ -75,7 +76,12 @@ private extension GraphQLController {
 
     func graphQLResponse(for query: GraphQLHTTPBody, _ request: Request) throws -> Future<Response> {
         return try self.schema(request).flatMap { schema in
-            return try graphql(schema: schema, request: query.query, eventLoopGroup: request).map { map in
+            return try graphql(
+                schema: schema,
+                request: query.query,
+                eventLoopGroup: request,
+                variableValues: try (query.variables?.mapValues({ $0.value }) ?? [:]).asMap().asDictionary()
+            ).map { map in
                 let map = try map.asMap()
                 guard let data = "\(map)".data(using: .utf8) else { throw Abort(.badRequest) }
                 return Response(http: HTTPResponse.init(status: .ok, body: data),

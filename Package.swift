@@ -10,6 +10,7 @@ let package = Package(
         .package(url: "https://github.com/vapor/fluent-postgresql.git", from: "1.0.0"),
         .package(url: "https://github.com/vapor-community/pagination.git", from: "1.0.0"),
         .package(url: "https://github.com/GraphQLSwift/GraphQL.git", from: "0.8.0"),
+        .package(url: "https://github.com/Flight-School/AnyCodable.git", .branch("master"))
     ],
     targets: [
         .target(name: "App", dependencies: [
@@ -18,7 +19,8 @@ let package = Package(
             "Authentication",
             "Pagination",
             "FluentPostgreSQL",
-            "GraphQL"
+            "GraphQL",
+            "AnyCodable"
         ]),
         .target(name: "Run", dependencies: ["App"])
     ]
