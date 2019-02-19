@@ -6,6 +6,7 @@ import AnyCodable
 class GraphQLController: PigeonController {
 
     override func authBoot(router: Router) throws {
+         // TODO: query path not hardcoded
         router.post(["/graphql"], use: graphQLPostQueryHandler)
         router.get(["/graphql"], use: graphQLGetQueryHandler)
     }
@@ -20,25 +21,27 @@ private extension GraphQLController {
     }
 
     func schema(_ request: Request) throws -> Future<GraphQLSchema> {
-        return request.allContentTypes().map { contentTypes in
-            var rootFields = [String: GraphQLField]()
+        return request.allContentTypes().flatMap { contentTypes in
+            return try request.defaultPageSize().map { pageSize in
+                var rootFields = [String: GraphQLField]()
 
-            let pageInfo = try self.graphQLPageInfoType()
+                let pageInfo = try self.graphQLPageInfoType()
 
-            for type in contentTypes {
-                rootFields[type.plural.camelCase()] = try GraphQLField(
-                    type: type.graphQLType(pageInfo),
-                    args: type.graphQLPaginationArgs(),
-                    resolve: type.rootResolver()
+                for type in contentTypes {
+                    rootFields[type.plural.camelCase()] = try GraphQLField(
+                        type: type.graphQLType(pageInfo),
+                        args: type.graphQLPaginationArgs(pageSize),
+                        resolve: type.rootResolver(pageSize)
+                    )
+                }
+
+                let schema = try GraphQLSchema(
+                    query: GraphQLObjectType(
+                        name: "RootQueryType",
+                        fields: rootFields)
                 )
+                return schema
             }
-
-            let schema = try GraphQLSchema(
-                query: GraphQLObjectType(
-                    name: "RootQueryType",
-                    fields: rootFields)
-            )
-            return schema
         }
     }
 
@@ -114,7 +117,7 @@ private extension GraphQLController {
             }
 
             if request.http.accept.contains(where: { $0.mediaType.type == "text" && $0.mediaType.subType == "html" }) {
-                return try request.view().render("GraphQL/graphql-playground") // TODO: query path not hardcoded
+                return try request.view().render("GraphQL/graphql-playground")
             }
             throw Abort(.notFound) // TODO: GraphQL GET queries
         }

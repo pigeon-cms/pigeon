@@ -19,22 +19,22 @@ extension ContentCategory {
         return try GraphQLObjectType(name: plural.pascalCase(), fields: fields)
     }
 
-    func rootResolver() -> GraphQLFieldResolve {
+    func rootResolver(_ pageSize: Int) -> GraphQLFieldResolve {
         return { (source, args, context, eventLoopGroup, info) -> EventLoopFuture<Any?> in
             guard let request = eventLoopGroup as? Request else {
                 throw Abort(.serviceUnavailable)
             }
-//        let first = min(args["first"].int ?? 20, 20)
+//        let first = min(args["first"].int ?? pageSize, pageSize)
 //        let cursor = args["cursor"].string
             let page = args["page"].int
-            let per = min(args["per"].int ?? 20, 20) /// TODO: non hardcoded upper limit
+            let per = min(args["per"].int ?? pageSize, pageSize)
 
             return try self.items.query(on: request).paginate(
                 page: page ?? 1,
                 per: per,
                 ContentItem.defaultPageSorts
-                ).map { page in
-                    return page
+            ).map { page in
+                return page
             }
         }
     }
@@ -50,11 +50,11 @@ extension ContentCategory {
         return edge
     }
 
-    func graphQLPaginationArgs() -> GraphQLArgumentConfigMap {
+    func graphQLPaginationArgs(_ pageSize: Int) -> GraphQLArgumentConfigMap {
 //        let first = GraphQLArgument(
 //            type: GraphQLInt,
 //            description: "The number of items to return after the referenced “after” cursor",
-//            defaultValue: "20" // TODO: not hardcoded
+//            defaultValue: "\(pageSize)"
 //        )
 //        let after = GraphQLArgument(
 //            type: GraphQLString,
@@ -68,7 +68,7 @@ extension ContentCategory {
         let per = GraphQLArgument(
             type: GraphQLInt,
             description: "The number of items to return per page",
-            defaultValue: "20" // TODO: not hardcoded
+            defaultValue: String(pageSize).map
         )
         return [
 //            "first": first,
