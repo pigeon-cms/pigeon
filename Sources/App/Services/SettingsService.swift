@@ -8,9 +8,9 @@ enum Endpoint: String, Codable {
 final class SettingsService: Service {
 
     /// TODO: thread safety
-    var enabledEndpoints: [Endpoint]?
-    var defaultPageSize: Int?
-    var maxPageSize: Int?
+    fileprivate var enabledEndpoints: [Endpoint]?
+    fileprivate var defaultPageSize: Int?
+    fileprivate var maxPageSize: Int?
 
     func setting<T: Codable>(request: Request,
                              _ setting: ReferenceWritableKeyPath<SettingsService, T?>) throws -> Future<T> {
