@@ -8,11 +8,11 @@ public func configure(_ config: inout Config, _ env: inout Environment, _ servic
     try services.register(FluentPostgreSQLProvider())
     try services.register(AuthenticationProvider())
 
-    /// CMS global settings
-    services.register { container in
-        /// TODO: `Services.singleton`
-        return SettingsService(container: container)
-    }
+//    /// CMS global settings
+//    services.register { container in
+//        /// TODO: `Services.singleton`
+//        return SettingsService()
+//    }
 
     services.register([TemplateRenderer.self, ViewRenderer.self]) { container -> LeafRenderer in
         var tagConfig = LeafTagConfig.default()

@@ -7,6 +7,11 @@ enum Endpoint: String, Codable {
 
 final class SettingsService: Service {
 
+    /// Honestly a singleton is gross and completely antithetical to Vapor style.
+    /// But, this can take >500 requests per second, while a Service could barely take 100.
+    /// Until Vapor supports services.singleton, this'll do.
+    static var shared = SettingsService()
+
     /// TODO: thread safety
     fileprivate var enabledEndpoints: [Endpoint]?
     fileprivate var defaultPageSize: Int?
@@ -18,19 +23,20 @@ final class SettingsService: Service {
             /// by default, return the in-memory setting
             return request.eventLoop.newSucceededFuture(result: setting)
         } else {
-            let cache = try request.make(KeyedCache.self)
-            return try self.setting(request: request, setting, from: cache)
+            let cache = try request.sharedContainer.make(KeyedCache.self)
+            return try self.setting(eventLoop: request.eventLoop, setting, from: cache)
         }
     }
 
-    private func setting<T: Codable>(request: Request,
+    private func setting<T: Codable>(eventLoop: EventLoop,
                                      _ setting: ReferenceWritableKeyPath<SettingsService, T?>,
                                      from cache: KeyedCache) throws -> Future<T> {
         return cache.get(try setting.string(), as: T.self).flatMap { cached  in
             guard let cached = cached else {
                 return try self.createDefaultSettings(setting, cache)
             }
-            return request.eventLoop.newSucceededFuture(result: cached)
+            self[keyPath: setting] = cached
+            return eventLoop.newSucceededFuture(result: cached)
         }
     }
 
@@ -59,7 +65,7 @@ final class SettingsService: Service {
         }
     }
 
-    init(container: Container) {
+    private init() {
         print("INIT")
     }
 
@@ -79,15 +85,15 @@ private extension ReferenceWritableKeyPath where Root == SettingsService {
 extension Request {
 
     func enabledEndpoints() throws -> Future<[Endpoint]> {
-        return try make(SettingsService.self).setting(request: self, \.enabledEndpoints)
+        return try SettingsService.shared.setting(request: self, \.enabledEndpoints)
     }
 
     func defaultPageSize() throws -> Future<Int> {
-        return try make(SettingsService.self).setting(request: self, \.defaultPageSize)
+        return try SettingsService.shared.setting(request: self, \.defaultPageSize)
     }
 
     func maxPageSize() throws -> Future<Int> {
-        return try make(SettingsService.self).setting(request: self, \.maxPageSize)
+        return try SettingsService.shared.setting(request: self, \.maxPageSize)
     }
 
 }
