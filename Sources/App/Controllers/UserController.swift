@@ -48,11 +48,13 @@ private extension UserController {
         guard try !request.isAuthenticated(User.self) else {
             throw Abort.redirect(to: "/")
         }
-        return User.query(on: request).count().flatMap { count -> Future<View> in
-            if count > 0 {
-                return try generateLoginPage(for: request)
-            } else {
-                return try generateFirstTimeRegistrationPage(for: request)
+        return request.withPooledConnection(to: .psql) { conn in
+            User.query(on: conn).count().flatMap { count -> Future<View> in
+                if count > 0 {
+                    return try generateLoginPage(for: request)
+                } else {
+                    return try generateFirstTimeRegistrationPage(for: request)
+                }
             }
         }
     }
