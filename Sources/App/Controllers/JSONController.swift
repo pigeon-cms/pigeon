@@ -16,7 +16,7 @@ private extension JSONController {
             throw Abort(.notFound)
         }
         return try request.enabledEndpoints().flatMap { endpoints in
-            guard endpoints.contains(.json) else {
+            guard endpoints[.json] ?? false else {
                 throw Abort(.notFound)
             }
             return try request.defaultPageSize().flatMap { pageSize in

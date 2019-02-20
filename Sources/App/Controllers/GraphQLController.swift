@@ -96,7 +96,7 @@ private extension GraphQLController {
 
     func graphQLPostQueryHandler(_ request: Request) throws -> Future<Response> {
         return try request.enabledEndpoints().flatMap { endpoints in
-            guard endpoints.contains(.graphQL) else {
+            guard endpoints[.graphQL] ?? false else {
                 throw Abort(.notFound)
             }
 
@@ -112,7 +112,7 @@ private extension GraphQLController {
 
     func graphQLGetQueryHandler(_ request: Request) throws -> Future<View> {
         return try request.enabledEndpoints().flatMap { endpoints in
-            guard endpoints.contains(.graphQL) else {
+            guard endpoints[.graphQL] ?? false else {
                 throw Abort(.notFound)
             }
 
