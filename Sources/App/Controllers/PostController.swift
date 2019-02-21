@@ -1,7 +1,7 @@
 import Vapor
 import Fluent
 
-class PostController: PigeonController {
+final class PostController: PigeonController {
 
     override func loginGuardedBoot(router: Router) throws {
         router.get(["/content", String.parameter], use: postViewController)

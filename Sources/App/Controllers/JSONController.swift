@@ -1,7 +1,7 @@
 import Vapor
 import Pagination
 
-class JSONController: PigeonController {
+final class JSONController: PigeonController {
 
     override func authBoot(router: Router) throws {
         router.get(["/json", String.parameter], use: jsonHandler)

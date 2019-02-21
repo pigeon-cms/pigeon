@@ -3,7 +3,7 @@ import GraphQL
 import Pagination
 import AnyCodable
 
-class GraphQLController: PigeonController {
+final class GraphQLController: PigeonController {
 
     override func authBoot(router: Router) throws {
          // TODO: query path not hardcoded

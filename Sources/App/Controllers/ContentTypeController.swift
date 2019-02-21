@@ -1,7 +1,7 @@
 import Vapor
 import Fluent
 
-class ContentTypeController: PigeonController {
+final class ContentTypeController: PigeonController {
 
     override func loginGuardedBoot(router: Router) throws {
         router.get("/types", use: typesViewHandler)

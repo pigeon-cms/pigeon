@@ -1,7 +1,7 @@
 import Vapor
 import Fluent
 
-class RootViewController: PigeonController {
+final class RootViewController: PigeonController {
 
     override func loginGuardedBoot(router: Router) throws {
         router.get("/", use: rootViewHandler)
