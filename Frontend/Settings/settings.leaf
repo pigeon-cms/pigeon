@@ -1,0 +1,5 @@
+#embed("header")
+#embed("nav")
+#embed("modal")
+<h1>Settings</h1>
+#embed("footer")

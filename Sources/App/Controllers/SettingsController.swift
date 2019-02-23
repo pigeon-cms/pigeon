@@ -14,10 +14,10 @@ private extension SettingsController {
         let privileges = try request.privileges()
 
         guard privileges.rawValue > UserPrivileges.administrator.rawValue else {
-        throw Abort(.unauthorized)
+            throw Abort(.unauthorized)
         }
 
-        return try usersView(for: request)
+        return try settingsView(for: request)
     }
 
 }
