@@ -14,6 +14,14 @@
 		<td>GraphQL API</td>
 		<td>#(settings.graphQLEndpointEnabled)</td>
 	</tr>
+	<tr>
+		<td>Default page size</td>
+		<td>#(settings.defaultPageSize)</td>
+	</tr>
+	<tr>
+		<td>Maximum page size</td>
+		<td>#(settings.maxPageSize)</td>
+	</tr>
 </table>
 </section>
 </div>
