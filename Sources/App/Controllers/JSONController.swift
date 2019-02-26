@@ -15,8 +15,8 @@ private extension JSONController {
         guard let typeName = try request.parameters.next(String.self).removingPercentEncoding else {
             throw Abort(.notFound)
         }
-        return try request.enabledEndpoints().flatMap { endpoints in
-            guard endpoints[.json] ?? false else {
+        return try request.jsonEnabled().flatMap { enabled in
+            guard enabled else {
                 throw Abort(.notFound)
             }
             return try request.defaultPageSize().flatMap { pageSize in

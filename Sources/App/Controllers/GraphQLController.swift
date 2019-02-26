@@ -95,8 +95,8 @@ private extension GraphQLController {
     }
 
     func graphQLPostQueryHandler(_ request: Request) throws -> Future<Response> {
-        return try request.enabledEndpoints().flatMap { endpoints in
-            guard endpoints[.graphQL] ?? false else {
+        return try request.graphQLEnabled().flatMap { enabled in
+            guard enabled else {
                 throw Abort(.notFound)
             }
 
@@ -111,8 +111,8 @@ private extension GraphQLController {
     }
 
     func graphQLGetQueryHandler(_ request: Request) throws -> Future<View> {
-        return try request.enabledEndpoints().flatMap { endpoints in
-            guard endpoints[.graphQL] ?? false else {
+        return try request.graphQLEnabled().flatMap { enabled in
+            guard enabled else {
                 throw Abort(.notFound)
             }
 

@@ -77,8 +77,12 @@ extension Request {
         return try SettingsService.shared.allSettings(self)
     }
 
-    func enabledEndpoints() throws -> Future<[Endpoint: Bool]> {
-        return try SettingsService.shared.get(setting: \.enabledEndpoints, self)
+    func jsonEnabled() throws -> Future<Bool> {
+        return try SettingsService.shared.get(setting: \.jsonEndpointEnabled, self)
+    }
+
+    func graphQLEnabled() throws -> Future<Bool> {
+        return try SettingsService.shared.get(setting: \.graphQLEndpointEnabled, self)
     }
 
     func defaultPageSize() throws -> Future<Int> {

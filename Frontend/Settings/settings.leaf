@@ -2,4 +2,21 @@
 #embed("nav")
 #embed("modal")
 <h1>Settings</h1>
+<section class="content">
+<div id="settings">
+
+<table class="list">
+	<tr>
+		<td>JSON API</td>
+		<td>#(settings.jsonEndpointEnabled)</td>
+	</tr>
+	<tr>
+		<td>GraphQL API</td>
+		<td>#(settings.graphQLEndpointEnabled)</td>
+	</tr>
+</table>
+</section>
+</div>
+
+
 #embed("footer")
