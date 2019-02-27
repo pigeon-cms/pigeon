@@ -5,24 +5,58 @@
 <section class="content">
 <div id="settings">
 
+#embed("errors")
+
+<form
+	v-on:submit.prevent="handleSubmit"
+>
 <table class="list">
 	<tr>
 		<td>JSON API</td>
-		<td>#(settings.jsonEndpointEnabled)</td>
+		<td>/json</td>
+		<td>
+			<label>
+				<input
+					type="checkbox"
+					v-model="jsonEndpointEnabled"
+					#if(settings.jsonEndpointEnabled) {
+						checked
+					}
+				/>
+				<span></span>
+			</label>
+		</td>
 	</tr>
 	<tr>
 		<td>GraphQL API</td>
-		<td>#(settings.graphQLEndpointEnabled)</td>
+		<td>/graphql</td>
+		<td>
+			<label>
+				<input
+					type="checkbox"
+					v-model="graphQLEndpointEnabled"
+					#if(settings.graphQLEndpointEnabled) {
+						checked
+					}
+				/>
+				<span></span>
+			</label>
+		</td>
 	</tr>
 	<tr>
 		<td>Default page size</td>
 		<td>#(settings.defaultPageSize)</td>
+		<td></td>
 	</tr>
 	<tr>
 		<td>Maximum page size</td>
 		<td>#(settings.maxPageSize)</td>
+		<td></td>
 	</tr>
 </table>
+<button>Save</button>
+</form>
+
 </section>
 </div>
 
