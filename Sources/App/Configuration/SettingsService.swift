@@ -12,6 +12,14 @@ final class SettingsService: Service {
 
     private static let cacheKey = "PigeonCMSSettings"
 
+    func save(_ request: Request, settings: CMSSettings) throws -> Future<HTTPStatus> {
+        self.settings = settings
+        let cache = try request.sharedContainer.make(KeyedCache.self)
+        return cache.set(SettingsService.cacheKey, to: settings).map {
+            return .ok
+        }
+    }
+
     func get<T: Codable>(setting: WritableKeyPath<CMSSettings, T>,
                          _ request: Request) throws -> Future<T> {
         if let setting = settings?[keyPath: setting] {

@@ -1,6 +1,6 @@
-import Foundation
+import Vapor
 
-struct CMSSettings: Codable {
+struct CMSSettings: Content {
     var jsonEndpointEnabled: Bool
     var graphQLEndpointEnabled: Bool
     var defaultPageSize: Int
