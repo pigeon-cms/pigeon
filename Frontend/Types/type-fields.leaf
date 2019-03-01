@@ -1,4 +1,17 @@
 #embed("errors")
+
+<link rel="stylesheet" href="https://unpkg.com/easymde/dist/easymde.min.css">
+<script src="https://unpkg.com/easymde/dist/easymde.min.js"></script>
+
+<textarea>
+</textarea>
+<script>
+	var easyMDE = new EasyMDE({
+		autofocus: true,
+    initialValue: '# EasyMDE \n Go ahead, play around with the editor! Be sure to check out **bold**, *italic* and ~~strikethrough~~ styling, [links](https://google.com) and all the other features. You can type the Markdown syntax, use the toolbar, or use shortcuts like `ctrl-b` or `cmd-b`.'
+	});
+</script>
+
 <form
 	v-on:submit.prevent="handleSubmit"
 >
@@ -60,6 +73,16 @@
 			v-model="field.value"
 			placeholder="Default value"
 		/>
+		<textarea
+			v-if="field.type == 'Markdown'"
+		>
+		</textarea>
+<!-- 		<script>
+			var easyMDE = new EasyMDE({
+				autofocus: true,
+        initialValue: '# EasyMDE \n Go ahead, play around with the editor! Be sure to check out **bold**, *italic* and ~~strikethrough~~ styling, [links](https://google.com) and all the other features. You can type the Markdown syntax, use the toolbar, or use shortcuts like `ctrl-b` or `cmd-b`.'
+			});
+		</script> -->
 		<label v-if="field.type == 'Bool'">
 			<input
 				type="checkbox"
@@ -93,6 +116,7 @@
 </form>
 <div class="add-field">
 	<button v-on:click="addField('String')">Text</button>
+	<button v-on:click="addField('Markdown')">Rich text</button>
 	<button v-on:click="addField('Date')">Date</button>
 	<button v-on:click="addField('URL')">Link</button>
 	<button v-on:click="addField('Bool')">Switch</button>
