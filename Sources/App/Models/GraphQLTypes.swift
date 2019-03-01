@@ -3,7 +3,7 @@ import GraphQL
 extension SupportedType {
     var graphQL: GraphQLOutputType {
         switch self {
-        case .string: return GraphQLString
+        case .string, .markdown: return GraphQLString
         case .int: return GraphQLInt
         case .float: return GraphQLFloat
         case .bool: return GraphQLBoolean
