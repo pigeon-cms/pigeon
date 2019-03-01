@@ -20,7 +20,14 @@ var create = new Vue({
 		name: null,
 		plural: null,
 		fields: [],
-		errors: []
+		errors: [],
+		easyMDE: null
+	},
+	updated: function() {
+		this.easyMDE = new EasyMDE({
+				autofocus: true,
+		    initialValue: '# EasyMDE \n Go ahead, play around with the editor! Be sure to check out **bold**, *italic* and ~~strikethrough~~ styling, [links](https://google.com) and all the other features. You can type the Markdown syntax, use the toolbar, or use shortcuts like `ctrl-b` or `cmd-b`.'
+			});
 	},
 	methods: {
 		addField: function(type) {
