@@ -18,6 +18,8 @@ public final class JSEscapedFormat: TagRenderer {
             return tag.container.future(TemplateData.string("''"))
         }
 
+        escaped = escaped.replacingOccurrences(of: "\n", with: "\\n")
+
         if enclosingQuotes {
             escaped = "'\(escaped)'"
         }

@@ -36,11 +36,15 @@ var create = new Vue({
 						className: 'fa fab fa-question-circle',
 						title: 'Help',
 					}],
+					forceSync: true,
 					autosave: {
-	            enabled: true,
-	            delay: 1000,
-	            uniqueId: `mde-autosave-${index}`
-	        }
+							enabled: true,
+							delay: 1000,
+							uniqueId: `mde-type-autosave-${index}`
+					},
+					renderingConfig: {
+						codeSyntaxHighlighting: true
+					},
 				});
 			}
 		})

@@ -1,4 +1,11 @@
 #embed("errors")
+
+<link rel="stylesheet" href="https://unpkg.com/easymde/dist/easymde.min.css">
+<script src="https://unpkg.com/easymde/dist/easymde.min.js"></script>
+<link rel="stylesheet"
+      href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/default.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/highlight.min.js"></script>
+
 <form
 	v-on:submit.prevent="handleSubmit"
 >
@@ -26,7 +33,7 @@
 	</td>
 	<!-- TODO: remove / add buttons, or edit button w/ modal -->
 </tr>
-<tr v-cloak v-for="field in fields">
+<tr v-cloak v-for="(field, index) in fields">
 	<td>
 		<b class="field-label" v-text="field.name"></b>
 	</td>
@@ -37,6 +44,12 @@
 			v-model="field.value"
 			:required="field.required ? true : false"
 		/>
+		<textarea
+			v-if="field.type == 'Markdown'"
+			v-model="field.value"
+			v-bind:id=`textarea${index}`
+		>
+		</textarea>
 		<label v-if="field.type == 'Bool'">
 			<input
 				type="checkbox"
