@@ -60,7 +60,12 @@
 				this.fields.forEach( (field, index) => {
 					const textareaID = `textarea${index}`
 					if (field.type === 'Markdown') {
-						field.value = this.easyMDE[textareaID].value()
+						const markdown = this.easyMDE[textareaID].value()
+						const html = this.easyMDE[textareaID].markdown( markdown )
+						field.value = {
+							'markdown': markdown,
+							'html': html
+						}
 					}
 				})
 
