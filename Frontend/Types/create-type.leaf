@@ -21,19 +21,29 @@ var create = new Vue({
 		plural: null,
 		fields: [],
 		errors: [],
-		easyMDE: null
+		easyMDE: {}
 	},
 	updated: function() {
-		this.easyMDE = new EasyMDE({
-				toolbar: ['bold', 'italic', 'strikethrough', 'heading', '|', 'code', 'quote', 'unordered-list', 'ordered-list', '|', 'link', 'image', 'horizontal-rule', '|', 'preview', '|', 'redo', 'undo', '|', {
-					name: 'help',
-					action: 'https://daringfireball.net/projects/markdown/basics',
-					className: 'fa fab fa-question',
-					title: 'Help',
-				}],
-				autofocus: true,
-				initialValue: '# EasyMDE \n Go ahead, play around with the editor! Be sure to check out **bold**, *italic* and ~~strikethrough~~ styling, [links](https://google.com) and all the other features. You can type the Markdown syntax, use the toolbar, or use shortcuts like `ctrl-b` or `cmd-b`.'
-			});
+		this.fields.forEach( (field, index) => {
+			const textareaID = `textarea${index}`
+			if (field.type === 'Markdown' && this.easyMDE[textareaID] == null) {
+				console.log(textareaID)
+				this.easyMDE[textareaID] = new EasyMDE({
+					element: document.getElementById(textareaID),
+					toolbar: ['bold', 'italic', 'strikethrough', 'heading', '|', 'code', 'quote', 'unordered-list', 'ordered-list', '|', 'link', 'image', 'horizontal-rule', '|', 'preview', '|', 'redo', 'undo', '|', {
+						name: 'help',
+						action: 'https://daringfireball.net/projects/markdown/basics',
+						className: 'fa fab fa-question-circle',
+						title: 'Help',
+					}],
+					autosave: {
+	            enabled: true,
+	            delay: 1000,
+	            uniqueId: `mde-autosave-${index}`
+	        }
+				});
+			}
+		})
 	},
 	methods: {
 		addField: function(type) {
