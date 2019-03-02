@@ -42,11 +42,6 @@
 							className: 'fa fab fa-question-circle',
 							title: 'Help',
 						}],
-						autosave: {
-								enabled: true,
-								delay: 1000,
-								uniqueId: `mde-post-autosave-${index}` // TODO: unique id to this specific post
-						},
 						renderingConfig: {
 							codeSyntaxHighlighting: true
 						},
@@ -57,17 +52,7 @@
 		},
 		methods: {
 			createItem: function() {
-				this.fields.forEach( (field, index) => {
-					const textareaID = `textarea${index}`
-					if (field.type === 'Markdown') {
-						const markdown = this.easyMDE[textareaID].value()
-						const html = this.easyMDE[textareaID].markdown( markdown )
-						field.value = {
-							'markdown': markdown,
-							'html': html
-						}
-					}
-				})
+				#embed("Helpers/fields-markdown-conversion")
 
 				return {
 					categoryID: #js(category.id),

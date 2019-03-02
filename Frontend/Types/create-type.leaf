@@ -27,7 +27,6 @@ var create = new Vue({
 		this.fields.forEach( (field, index) => {
 			const textareaID = `textarea${index}`
 			if (field.type === 'Markdown' && this.easyMDE[textareaID] == null) {
-				console.log(textareaID)
 				this.easyMDE[textareaID] = new EasyMDE({
 					element: document.getElementById(textareaID),
 					toolbar: ['bold', 'italic', 'strikethrough', 'heading', '|', 'code', 'quote', 'unordered-list', 'ordered-list', '|', 'link', 'image', 'horizontal-rule', '|', 'preview', '|', 'redo', 'undo', '|', {
@@ -36,7 +35,6 @@ var create = new Vue({
 						className: 'fa fab fa-question-circle',
 						title: 'Help',
 					}],
-					forceSync: true,
 					autosave: {
 							enabled: true,
 							delay: 1000,
@@ -44,7 +42,7 @@ var create = new Vue({
 					},
 					renderingConfig: {
 						codeSyntaxHighlighting: true
-					},
+					}
 				});
 			}
 		})
@@ -62,6 +60,8 @@ var create = new Vue({
 			this.fields.splice( this.fields.indexOf(field), 1 )
 		},
 		createCategory: function() {
+			#embed("Helpers/fields-markdown-conversion")
+
 			return {
 				name: this.name,
 				plural: (this.plural || this.name + 's'),

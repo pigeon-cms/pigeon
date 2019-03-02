@@ -41,6 +41,8 @@
 				this.fields.splice( this.fields.indexOf(field), 1 )
 			},
 			createCategory: function() {
+				#embed("Helpers/fields-markdown-conversion")
+
 				return {
 					name: this.name,
 					plural: (this.plural || this.name + 's'),

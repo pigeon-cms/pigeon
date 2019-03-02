@@ -74,6 +74,8 @@
 		},
 		methods: {
 			createItem: function() {
+				#embed("Helpers/fields-markdown-conversion")
+
 				return {
 					id: #js(post.id),
 					categoryID: #js(post.categoryID),
