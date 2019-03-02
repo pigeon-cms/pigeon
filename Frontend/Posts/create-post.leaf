@@ -42,10 +42,15 @@
 							className: 'fa fab fa-question-circle',
 							title: 'Help',
 						}],
+						autosave: {
+								enabled: true,
+								delay: 1000,
+								uniqueId: `mde-post-autosave-${index}` // TODO: unique id to this specific post
+						},
 						renderingConfig: {
 							codeSyntaxHighlighting: true
 						},
-						initialValue: field.value
+						initialValue: field.value.markdown
 					});
 				}
 			})
