@@ -14,17 +14,32 @@ public final class JSEscapedFormat: TagRenderer {
             enclosingQuotes = false
         }
 
-        guard var escaped = tag.parameters.first?.string?.replacingOccurrences(of: "'", with: "\\'") else {
-            return tag.container.future(TemplateData.string("''"))
+        if let object = tag.parameters.first?.dictionary {
+            var objectString = "{"
+            for (key, value) in object {
+                objectString.append("""
+                    \(escape(string: key, enclosingQuotes: true)): \(escape(string: value.string ?? "null", enclosingQuotes: true)),
+                  """)
+            }
+            objectString.append(" }")
+            return tag.container.future(TemplateData.string(objectString))
         }
 
-        escaped = escaped.replacingOccurrences(of: "\n", with: "\\n")
+        guard let string = tag.parameters.first?.string else { return tag.container.future(TemplateData.string("''")) }
+
+        return tag.container.future(TemplateData.string(escape(string: string, enclosingQuotes: enclosingQuotes)))
+    }
+
+    private func escape(string: String, enclosingQuotes: Bool) -> String {
+        var string = string
+        string = string.replacingOccurrences(of: "'", with: "\\'")
+        string = string.replacingOccurrences(of: "\n", with: "\\n")
 
         if enclosingQuotes {
-            escaped = "'\(escaped)'"
+            string = "'\(string)'"
         }
 
-        return tag.container.future(TemplateData.string(escaped))
+        return string
     }
 
 }
