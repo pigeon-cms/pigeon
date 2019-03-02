@@ -1,7 +1,7 @@
 #embed("errors")
 
-<link v-pre rel="stylesheet" href="https://unpkg.com/easymde/dist/easymde.min.css">
-<script v-pre src="https://unpkg.com/easymde/dist/easymde.min.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/easymde/dist/easymde.min.css">
+<script src="https://unpkg.com/easymde/dist/easymde.min.js"></script>
 
 <form
 	v-on:submit.prevent="handleSubmit"
