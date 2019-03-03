@@ -12,6 +12,7 @@ struct ContentField: Content {
         type = try container.decode(SupportedType.self, forKey: .type)
         required = try container.decode(Bool.self, forKey: .required)
         switch type {
+        case .markdown: value = SupportedValue.markdown(try? container.decode(Markdown.self, forKey: .value))
         case .string: value = SupportedValue.string(try? container.decode(String.self, forKey: .value))
         case .int: value = SupportedValue.int(try? container.decode(Int.self, forKey: .value))
         case .float: value = SupportedValue.float(try? container.decode(Float.self, forKey: .value))

@@ -20,7 +20,11 @@ var create = new Vue({
 		name: null,
 		plural: null,
 		fields: [],
-		errors: []
+		errors: [],
+		easyMDE: {}
+	},
+	updated: function() {
+		#embed("Helpers/easymde-factory")
 	},
 	methods: {
 		addField: function(type) {
@@ -35,6 +39,8 @@ var create = new Vue({
 			this.fields.splice( this.fields.indexOf(field), 1 )
 		},
 		createCategory: function() {
+			#embed("Helpers/fields-markdown-conversion")
+
 			return {
 				name: this.name,
 				plural: (this.plural || this.name + 's'),

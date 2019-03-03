@@ -70,10 +70,16 @@
 				}
 			],
 			modifiedAuthors: [],
-			errors: []
+			errors: [],
+			easyMDE: {}
+		},
+		mounted: function() {
+			#embed("Helpers/easymde-factory")
 		},
 		methods: {
 			createItem: function() {
+				#embed("Helpers/fields-markdown-conversion")
+
 				return {
 					id: #js(post.id),
 					categoryID: #js(post.categoryID),
