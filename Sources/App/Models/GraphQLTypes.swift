@@ -16,6 +16,14 @@ extension SupportedType {
         }
     }
 
+    static var graphQLNamedTypes: [GraphQLNamedType] {
+        var types = [GraphQLNamedType]()
+        if let markdown = SupportedType.markdown.graphQL as? GraphQLNamedType {
+            types.append(markdown)
+        }
+        return types
+    }
+
     private static var graphQLMarkdownType: GraphQLOutputType {
         let fields = [
             "html": GraphQLField(type: GraphQLString, resolve: { (source, args, context, eventLoopGroup, info) -> EventLoopFuture<Any?> in

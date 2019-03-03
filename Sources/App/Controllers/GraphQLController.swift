@@ -36,7 +36,8 @@ private extension GraphQLController {
             let schema = try GraphQLSchema(
                 query: GraphQLObjectType(
                     name: "RootQueryType",
-                    fields: rootFields)
+                    fields: rootFields),
+                types: SupportedType.graphQLNamedTypes
             )
             return schema
         }
