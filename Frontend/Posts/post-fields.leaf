@@ -1,11 +1,9 @@
 #embed("errors")
 
 <link rel="stylesheet" href="https://unpkg.com/easymde/dist/easymde.min.css">
-<script src="https://unpkg.com/easymde/dist/easymde.min.js"></script>
+<script src="https://s3.amazonaws.com/f.hal.codes/easymde.min.js"></script>
 <link rel="stylesheet"
       href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/default.min.css">
-<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/highlight.min.js"></script>
-
 <form
 	v-on:submit.prevent="handleSubmit"
 >

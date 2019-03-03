@@ -3,6 +3,8 @@
 	<head>
 		<title>Pigeon CMS</title>
 		<link rel="stylesheet" href="/styles/style.css">
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.15.0/prism.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.15.0/components/prism-swift.min.js"></script>
 	</head>
 	<body>
 		<img src="/images/pigeon.svg" alt="Pigeon logo" />
