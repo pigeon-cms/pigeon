@@ -1,5 +1,6 @@
 this.fields.forEach( (field, index) => {
 	const textareaID = `textarea${index}`
+
 	if (field.type === 'Markdown' && this.easyMDE[textareaID] == null) {
 		this.easyMDE[textareaID] = new EasyMDE({
 			element: document.getElementById(textareaID),
@@ -12,7 +13,7 @@ this.fields.forEach( (field, index) => {
 			renderingConfig: {
 				codeSyntaxHighlighting: true
 			},
-			initialValue: field.value.markdown
+			initialValue: field.value ? field.value.markdown : ''
 		});
 	}
 })
