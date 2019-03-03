@@ -70,7 +70,11 @@
 				}
 			],
 			modifiedAuthors: [],
-			errors: []
+			errors: [],
+			easyMDE: {}
+		},
+		mounted: function() {
+			#embed("Helpers/easymde-factory")
 		},
 		methods: {
 			createItem: function() {

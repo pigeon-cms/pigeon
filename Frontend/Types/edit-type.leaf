@@ -26,7 +26,14 @@
 					\},
 				}
 			],
-			errors: []
+			errors: [],
+			easyMDE: {}
+		},
+		mounted: function() {
+			#embed("Helpers/easymde-factory")
+		},
+		updated: function() {
+			#embed("Helpers/easymde-factory")
 		},
 		methods: {
 			addField: function(type) {

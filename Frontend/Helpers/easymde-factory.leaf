@@ -1,0 +1,18 @@
+this.fields.forEach( (field, index) => {
+	const textareaID = `textarea${index}`
+	if (field.type === 'Markdown' && this.easyMDE[textareaID] == null) {
+		this.easyMDE[textareaID] = new EasyMDE({
+			element: document.getElementById(textareaID),
+			toolbar: ['bold', 'italic', 'strikethrough', 'heading', '|', 'code', 'quote', 'unordered-list', 'ordered-list', '|', 'link', 'image', 'horizontal-rule', '|', 'preview', '|', 'redo', 'undo', '|', {
+				name: 'help',
+				action: 'https://daringfireball.net/projects/markdown/basics',
+				className: 'fa fab fa-question-circle',
+				title: 'Help',
+			}],
+			renderingConfig: {
+				codeSyntaxHighlighting: true
+			},
+			initialValue: field.value.markdown
+		});
+	}
+})
