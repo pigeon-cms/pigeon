@@ -9,6 +9,8 @@ class GraphQLController: PigeonController {
         router.post(["/graphql"], use: graphQLPostQueryHandler)
         router.get(["/graphql"], use: graphQLGetQueryHandler)
     }
+    
+    lazy var supportedTypes: [GraphQLNamedType] = SupportedType.graphQLNamedTypes
 
 }
 
@@ -37,7 +39,7 @@ private extension GraphQLController {
                 query: GraphQLObjectType(
                     name: "RootQueryType",
                     fields: rootFields),
-                types: SupportedType.graphQLNamedTypes
+                types: self.supportedTypes
             )
             return schema
         }
