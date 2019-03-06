@@ -33,7 +33,7 @@ public func configure(_ config: inout Config, _ env: inout Environment, _ servic
     let user = Environment.get("USER") ?? "root"
     let hostname = Environment.get("DATABASE_HOSTNAME") ?? "localhost"
     let name = Environment.get("DATABASE_DB") ?? "pigeon"
-    let password = Environment.get("DATABASE_PASSWORD") ?? ""
+    let password = Environment.get("DATABASE_PASSWORD") ?? nil
     // Configure our database, from: `createdb pigeon`
     var databases = DatabasesConfig()
     let databaseConfig = PostgreSQLDatabaseConfig(hostname: hostname,
