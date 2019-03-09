@@ -60,6 +60,7 @@ private extension PostController {
     func createPostController(_ request: Request, item: ContentItem) throws -> Future<Response> {
         item.authors = try [request.user().publicUser]
         return item.save(on: request).flatMap { item in
+            /// TODO: check scheduled status, set timer if necessary
             return item.category.get(on: request).map { category in
                 let response = HTTPResponse(status: .created,
                                             headers: HTTPHeaders([("Location", "/content/\(category.plural)")]))
@@ -76,6 +77,7 @@ private extension PostController {
                 post.content = item.content
                 post.authors = item.authors
                 return post.update(on: request).map { _ in
+                    /// TODO: check scheduled status, set timer if necessary
                     let response = HTTPResponse(status: .created,
                                                 headers: HTTPHeaders([("Location", "/content/\(category.plural)")]))
                     return Response(http: response, using: request.sharedContainer)

@@ -42,9 +42,10 @@ public func configure(_ config: inout Config, _ env: inout Environment, _ servic
     services.register(databases)
 
     var migrations = MigrationConfig()
+    migrations.add(migration: ContentState.self, database: .psql)
+    migrations.add(model: ContentItem.self, database: .psql)
     migrations.add(model: User.self, database: .psql)
     migrations.add(model: ContentCategory.self, database: .psql)
-    migrations.add(model: ContentItem.self, database: .psql)
     migrations.prepareCache(for: .psql)
     services.register(migrations)
 

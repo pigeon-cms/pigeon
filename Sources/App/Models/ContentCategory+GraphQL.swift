@@ -1,4 +1,5 @@
 import Vapor
+import Fluent
 import GraphQL
 import Pagination
 
@@ -29,7 +30,9 @@ extension ContentCategory {
             let page = args["page"].int
             let per = min(args["per"].int ?? 20, 20) /// TODO: non hardcoded upper limit
 
-            return try self.items.query(on: request).paginate(
+            return try self.items.query(on: request).filter(
+                    \.state == .published
+                ).paginate(
                 page: page ?? 1,
                 per: per,
                 ContentItem.defaultPageSorts
