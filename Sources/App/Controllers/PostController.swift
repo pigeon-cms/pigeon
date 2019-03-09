@@ -73,6 +73,8 @@ private extension PostController {
         return item.category.get(on: request).flatMap { category in
             guard let postID = item.id else { throw Abort(.notFound) }
             return try request.post(type: category.plural, post: postID).flatMap { (post, category) in
+                post.state = item.state
+                post.scheduled = item.scheduled
                 post.updated = item.updated
                 post.content = item.content
                 post.authors = item.authors
