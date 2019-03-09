@@ -41,7 +41,8 @@
 					categoryID: #js(category.id),
 					authors: [],
 					created: new Date().toISOString(),
-					content: this.fields
+					content: this.fields,
+					state: "draft"
 				}
 			},
 			handleSubmit: function(event) {
