@@ -8,6 +8,7 @@ final class ContentItem: Content, Paginatable, PostgreSQLUUIDModel, Migration {
     var state: ContentState
     var created: Date?
     var updated: Date?
+    var scheduled: Date?
     var authors: [PublicUser]?
     var content: [ContentField] // All the content for a single item
     var category: Parent<ContentItem, ContentCategory> {
