@@ -92,8 +92,6 @@ extension ContentCategory {
 
     func graphQLSingleItemFieldsType() throws -> [String: GraphQLField] {
         var fields = [String: GraphQLField]()
-        
-        var content = [String: GraphQLField]()
         for field in self.template {
             var type = field.type.graphQL
             if field.required {
