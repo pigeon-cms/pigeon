@@ -16,6 +16,7 @@
 		data: {
 			name: #js(category.name),
 			plural: #js(category.plural),
+			state: "draft",
 			fields: [
 				#for(field in category.template) {
 					{
@@ -41,7 +42,8 @@
 					categoryID: #js(category.id),
 					authors: [],
 					created: new Date().toISOString(),
-					content: this.fields
+					content: this.fields,
+					state: this.state
 				}
 			},
 			handleSubmit: function(event) {

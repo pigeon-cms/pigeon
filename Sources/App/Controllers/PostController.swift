@@ -58,8 +58,11 @@ private extension PostController {
     }
 
     func createPostController(_ request: Request, item: ContentItem) throws -> Future<Response> {
+        var item = item
         item.authors = try [request.user().publicUser]
+        item = managePublishDate(for: item)
         return item.save(on: request).flatMap { item in
+            /// TODO: check scheduled status, set timer if necessary
             return item.category.get(on: request).map { category in
                 let response = HTTPResponse(status: .created,
                                             headers: HTTPHeaders([("Location", "/content/\(category.plural)")]))
@@ -72,10 +75,16 @@ private extension PostController {
         return item.category.get(on: request).flatMap { category in
             guard let postID = item.id else { throw Abort(.notFound) }
             return try request.post(type: category.plural, post: postID).flatMap { (post, category) in
+                var item = item
+                item = self.managePublishDate(for: item, previouslySaved: post)
+                post.state = item.state
+                post.scheduled = item.scheduled
                 post.updated = item.updated
+                post.published = item.published
                 post.content = item.content
                 post.authors = item.authors
                 return post.update(on: request).map { _ in
+                    /// TODO: check scheduled status, set timer if necessary
                     let response = HTTPResponse(status: .created,
                                                 headers: HTTPHeaders([("Location", "/content/\(category.plural)")]))
                     return Response(http: response, using: request.sharedContainer)
@@ -102,6 +111,18 @@ private extension PostController {
                 return .ok
             }
         }
+    }
+    
+    func managePublishDate(for item: ContentItem,
+                           previouslySaved: ContentItem? = nil) -> ContentItem {
+        if item.state == .published && previouslySaved?.published == nil {
+            /// this is the first time this post has been published
+            item.published = Date()
+        } else if item.state != .published {
+            item.published = nil
+        }
+        
+        return item
     }
 
     struct PostListPage: Codable {
