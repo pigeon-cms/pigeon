@@ -43,7 +43,8 @@ extension ContentCategory {
     }
 
     func graphQLNodeType() throws -> GraphQLOutputType {
-        let node = try GraphQLObjectType(name: name.pascalCase(), fields: graphQLSingleItemFieldsType())
+        let node = try GraphQLObjectType(name: name.pascalCase(),
+                                         fields: graphQLSingleItemFieldsType())
         return node
     }
 
@@ -89,7 +90,7 @@ extension ContentCategory {
         return fields
     }
 
-    func graphQLSingleItemFieldsType() -> [String: GraphQLField] {
+    func graphQLSingleItemFieldsType() throws -> [String: GraphQLField] {
         var fields = [String: GraphQLField]()
         for field in self.template {
             var type = field.type.graphQL
@@ -98,6 +99,9 @@ extension ContentCategory {
             }
             fields[field.name.camelCase()] = GraphQLField(type: type, resolve: graphQLSingleItemResolver(field))
         }
+        
+        fields["meta"] = GraphQLField(type: GraphQLPostMetaType,
+                                      resolve: GraphQLPassthroughResolver)
 
         return fields
     }
@@ -134,7 +138,6 @@ extension ContentCategory {
             return eventLoopGroup.next().newSucceededFuture(result: source)
         }
     }
-
 
     func graphQLSingleItemResolver(_ field: ContentField) -> GraphQLFieldResolve {
         return { (source, args, context, eventLoopGroup, info) -> EventLoopFuture<Any?> in
