@@ -4,7 +4,7 @@ import GraphQL
 extension SupportedType {
     var graphQL: GraphQLOutputType {
         switch self {
-        case .markdown: return graphQLMarkdownType
+        case .markdown: return GraphQLMarkdownType
         case .string: return GraphQLString
         case .int: return GraphQLInt
         case .float: return GraphQLFloat
@@ -38,7 +38,7 @@ extension SupportedValue {
     }
 }
 
-public var graphQLMarkdownType: GraphQLOutputType = {
+public var GraphQLMarkdownType: GraphQLOutputType = {
     let fields = [
         "html": GraphQLField(type: GraphQLString, resolve: { (source, args, context, eventLoopGroup, info) -> EventLoopFuture<Any?> in
             guard let markdown = source as? Markdown else {

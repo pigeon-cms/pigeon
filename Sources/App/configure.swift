@@ -3,6 +3,8 @@ import FluentPostgreSQL
 import Vapor
 import Leaf
 
+public let PigeonDateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+
 public func configure(_ config: inout Config, _ env: inout Environment, _ services: inout Services) throws {
     /// Register providers first
     try services.register(FluentPostgreSQLProvider())
@@ -22,7 +24,7 @@ public func configure(_ config: inout Config, _ env: inout Environment, _ servic
 
     /// Modify date configuration
     let dateFormatter = DateFormatter()
-    dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+    dateFormatter.dateFormat = PigeonDateFormat
     let jsonDecoder = JSONDecoder()
     jsonDecoder.dateDecodingStrategy = .formatted(dateFormatter)
     var contentConfig = ContentConfig.default()

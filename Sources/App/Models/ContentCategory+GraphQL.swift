@@ -98,6 +98,8 @@ extension ContentCategory {
             }
             fields[field.name.camelCase()] = GraphQLField(type: type, resolve: graphQLSingleItemResolver(field))
         }
+        fields["published"] = GraphQLField(type: GraphQLNonNull(GraphQLString),
+                                           resolve: graphQLPublishDateResolver())
 
         return fields
     }
@@ -145,6 +147,24 @@ extension ContentCategory {
             let contentValue = item.content.first(where: { $0.name == field.name })?.value
             let value = contentValue?.rawValue
             return eventLoopGroup.next().newSucceededFuture(result: value)
+        }
+    }
+    
+    func graphQLPublishDateResolver() -> GraphQLFieldResolve {
+        return { (source, args, context, eventLoopGroup, info) -> EventLoopFuture<Any?> in
+            guard let item = source as? ContentItem else {
+                throw Abort(.serviceUnavailable)
+            }
+            
+            guard let date = item.published else {
+                throw Abort(.serviceUnavailable)
+            }
+            
+            let formatter = DateFormatter()
+            formatter.timeZone = TimeZone(abbreviation: "UTC")!
+            formatter.dateFormat = PigeonDateFormat
+            
+            return eventLoopGroup.future(formatter.string(from: date))
         }
     }
 
