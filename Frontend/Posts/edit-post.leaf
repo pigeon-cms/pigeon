@@ -44,6 +44,7 @@
 		data: {
 			name: #js(category.name),
 			plural: #js(category.plural),
+			state: #js(post.state),
 			fields: [
 				#for(field in post.content) {
 					{
@@ -85,7 +86,8 @@
 					categoryID: #js(post.categoryID),
 					updated: new Date().toISOString(),
 					content: this.fields,
-					authors: this.authors.length != 0 ? this.authors : null
+					authors: this.authors.length != 0 ? this.authors : null,
+					state: this.state
 				}
 			},
 			editAuthors: function() {
