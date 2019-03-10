@@ -89,7 +89,7 @@ extension ContentCategory {
         return fields
     }
 
-    func graphQLSingleItemFieldsType() -> [String: GraphQLField] {
+    func graphQLSingleItemFieldsType() throws -> [String: GraphQLField] {
         var fields = [String: GraphQLField]()
         for field in self.template {
             var type = field.type.graphQL
@@ -100,8 +100,21 @@ extension ContentCategory {
         }
         fields["published"] = GraphQLField(type: GraphQLNonNull(GraphQLString),
                                            resolve: graphQLPublishDateResolver())
+        
+        fields["authors"] = try graphQLAuthorsField()
 
         return fields
+    }
+    
+    func graphQLAuthorsField() throws -> GraphQLField {
+        let author = try GraphQLObjectType(
+            name: "Author",
+            fields: ["name": GraphQLField(type: GraphQLNonNull(GraphQLString),
+                                          resolve: graphQLAuthorNameResolver())]
+        )
+        let authors = GraphQLList(author)
+        let field = GraphQLField(type: authors, resolve: graphQLAuthorsResolver())
+        return field
     }
 
     func graphQLNodesResolver() -> GraphQLFieldResolve {
@@ -165,6 +178,26 @@ extension ContentCategory {
             formatter.dateFormat = PigeonDateFormat
             
             return eventLoopGroup.future(formatter.string(from: date))
+        }
+    }
+    
+    func graphQLAuthorsResolver() -> GraphQLFieldResolve {
+        return { (source, args, context, eventLoopGroup, info) -> EventLoopFuture<Any?> in
+            guard let item = source as? ContentItem else {
+                throw Abort(.serviceUnavailable)
+            }
+            
+            return eventLoopGroup.future(item.authors)
+        }
+    }
+    
+    func graphQLAuthorNameResolver() -> GraphQLFieldResolve {
+        return { (source, args, context, eventLoopGroup, info) -> EventLoopFuture<Any?> in
+            guard let author = source as? PublicUser else {
+                throw Abort(.serviceUnavailable)
+            }
+            
+            return eventLoopGroup.future(author.name)
         }
     }
 
