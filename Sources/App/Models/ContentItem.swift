@@ -15,6 +15,14 @@ final class ContentItem: Content, Paginatable, PostgreSQLUUIDModel, Migration {
     var category: Parent<ContentItem, ContentCategory> {
         return parent(\.categoryID)
     }
+    static var defaultPageSorts: [ContentItem.Database.QuerySort] {
+        return [
+            ContentItem.Database.querySort(ContentItem.Database.queryField(.keyPath(\ContentItem.published)),
+                                           .descending),
+            ContentItem.Database.querySort(ContentItem.Database.queryField(.keyPath(\ContentItem.created)),
+                                           .descending)
+        ]
+    }
 }
 
 final class ContentItemPublic: Content {
