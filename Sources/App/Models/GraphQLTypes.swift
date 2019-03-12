@@ -91,10 +91,8 @@ public var GraphQLPostMetaType: GraphQLOutputType = {
                     throw Abort(.serviceUnavailable)
                 }
                 
-                let formatter = DateFormatter()
-                formatter.timeZone = TimeZone(abbreviation: "UTC")!
-                formatter.dateFormat = PigeonDateFormat
-                
+                var formatter = ISO8601DateFormatter()
+                formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
                 return eventLoopGroup.future(formatter.string(from: date))
             })
     ]
