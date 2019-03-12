@@ -91,8 +91,7 @@ public var GraphQLPostMetaType: GraphQLOutputType = {
                     throw Abort(.serviceUnavailable)
                 }
                 
-                var formatter = ISO8601DateFormatter()
-                formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+                let formatter = DateFormatter.iso8601
                 return eventLoopGroup.future(formatter.string(from: date))
             })
     ]

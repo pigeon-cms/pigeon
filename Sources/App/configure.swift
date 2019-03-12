@@ -22,21 +22,7 @@ public func configure(_ config: inout Config, _ env: inout Environment, _ servic
 
     /// Modify date configuration
     let jsonDecoder = JSONDecoder()
-    jsonDecoder.dateDecodingStrategy = .custom { decoder -> Date in
-        let formatter = ISO8601DateFormatter()
-        formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
-        
-        let container = try decoder.singleValueContainer()
-        let string = try container.decode(String.self)
-        
-        guard let date = formatter.date(from: string) else {
-            throw DecodingError.dataCorruptedError(
-                in: container,
-                debugDescription: "Cannot decode date string \(string)"
-            )
-        }
-        return date
-    }
+    jsonDecoder.dateDecodingStrategy = .formatted(DateFormatter.iso8601)
     var contentConfig = ContentConfig.default()
     contentConfig.use(decoder: jsonDecoder, for: .json)
     services.register(contentConfig)
