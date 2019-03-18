@@ -1,5 +1,6 @@
 import Vapor
 import GraphQL
+import Pagination
 
 extension SupportedType {
     var graphQL: GraphQLOutputType {
@@ -37,6 +38,36 @@ extension SupportedValue {
         }
     }
 }
+
+public var GraphQLPageInfoType: GraphQLOutputType = {
+    let paginationResolver: GraphQLFieldResolve = { (source, args, context, eventLoopGroup, info) -> EventLoopFuture<Any?> in
+        guard let page = source as? Page<ContentItem> else {
+            throw Abort(.serviceUnavailable)
+        }
+        guard info.path.count > 2 else {
+            throw Abort(.serviceUnavailable)
+        }
+        switch info.path[2].keyValue {
+        case "current":
+            return eventLoopGroup.next().newSucceededFuture(result: page.number)
+        case "total":
+            return eventLoopGroup.next().newSucceededFuture(result: Int(ceil(Float(page.total) / Float(page.size))))
+        case "size":
+            return eventLoopGroup.next().newSucceededFuture(result: page.size)
+        default:
+            throw Abort(.serviceUnavailable)
+        }
+    }
+    
+    var fields = [String: GraphQLField]()
+    fields["current"] = GraphQLField(type: GraphQLInt, resolve: paginationResolver)
+    fields["size"] = GraphQLField(type: GraphQLInt, resolve: paginationResolver)
+    fields["total"] = GraphQLField(type: GraphQLInt, resolve: paginationResolver)
+    
+    let pageInfo = try! GraphQLObjectType(name: "PageInfo",
+                                          fields: fields)
+    return pageInfo
+}()
 
 public var GraphQLMarkdownType: GraphQLOutputType = {
     let fields = [
