@@ -80,7 +80,6 @@ private extension PostController {
                 post.state = item.state
                 post.scheduled = item.scheduled
                 post.updated = item.updated
-                post.published = item.published
                 post.content = item.content
                 post.authors = item.authors
                 return post.update(on: request).map { _ in
@@ -115,9 +114,14 @@ private extension PostController {
     
     func managePublishDate(for item: ContentItem,
                            previouslySaved: ContentItem? = nil) -> ContentItem {
-        if item.state == .published && previouslySaved?.published == nil {
-            /// this is the first time this post has been published
-            item.published = Date()
+        if item.state == .published {
+            if previouslySaved?.published == nil {
+                /// this is the first time this post has been published
+                item.published = Date()
+            } else if previouslySaved?.state == .published {
+                /// use the existing published date
+                item.published = previouslySaved?.published
+            }
         } else if item.state != .published {
             item.published = nil
         }
