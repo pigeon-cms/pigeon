@@ -19,25 +19,7 @@ private extension GraphQLController {
     }
 
     func schema(_ request: Request) throws -> Future<GraphQLSchema> {
-        return request.allContentTypes().map { contentTypes in
-            var rootFields = [String: GraphQLField]()
-
-            for type in contentTypes {
-                rootFields[type.plural.camelCase()] = try GraphQLField(
-                    type: type.graphQLType(GraphQLPageInfoType),
-                    args: type.graphQLPaginationArgs(),
-                    resolve: type.rootResolver()
-                )
-            }
-
-            let schema = try GraphQLSchema(
-                query: GraphQLObjectType(
-                    name: "RootQueryType",
-                    fields: rootFields),
-                types: SupportedType.graphQLNamedTypes
-            )
-            return schema
-        }
+        return try request.graphQLSchema()
     }
 
     func graphQLResponse(for query: GraphQLHTTPBody, _ request: Request) throws -> Future<Response> {
