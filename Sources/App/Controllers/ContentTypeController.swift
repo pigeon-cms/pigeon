@@ -69,6 +69,7 @@ final class ContentTypeController: PigeonController {
             }
 
             return category.save(on: request).map { _ in
+                self.typesModified(request)
                 let response = HTTPResponse(status: .created,
                                             headers: HTTPHeaders([("Location", "/types")]))
                 return Response(http: response, using: request.sharedContainer)
@@ -93,6 +94,7 @@ final class ContentTypeController: PigeonController {
             existingCategory.template = category.template
 
             return existingCategory.save(on: request).map { _ in
+                self.typesModified(request)
                 let response = HTTPResponse(status: .created,
                                             headers: HTTPHeaders([("Location", "/types")]))
                 return Response(http: response, using: request.sharedContainer)
@@ -100,6 +102,10 @@ final class ContentTypeController: PigeonController {
                     throw Abort(.internalServerError, reason: error.localizedDescription)
             }
         }
+    }
+
+    private func typesModified(_ request: Request) {
+        request.invalidateGraphQLSchema()
     }
 
     /// Removes % characters from a string to ensure we can properly escape and unescape it for URLs.

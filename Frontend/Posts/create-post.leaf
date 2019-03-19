@@ -16,6 +16,7 @@
 		data: {
 			name: #js(category.name),
 			plural: #js(category.plural),
+			state: "draft",
 			fields: [
 				#for(field in category.template) {
 					{
@@ -27,15 +28,22 @@
 				}
 			],
 			authors: null,
-			errors: []
+			errors: [],
+			easyMDE: {}
+		},
+		mounted: function() {
+			#embed("Helpers/easymde-factory")
 		},
 		methods: {
 			createItem: function() {
+				#embed("Helpers/fields-markdown-conversion")
+
 				return {
 					categoryID: #js(category.id),
 					authors: [],
 					created: new Date().toISOString(),
-					content: this.fields
+					content: this.fields,
+					state: this.state
 				}
 			},
 			handleSubmit: function(event) {

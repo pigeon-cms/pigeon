@@ -111,6 +111,10 @@ td:not(:first-child) {
 	text-align: center;
 }
 
+td div {
+  text-align: left;
+}
+
 td, th, div.field {
 	padding: 0.25rem 0.4rem;
 }
@@ -351,6 +355,9 @@ button.remove {
 	height: 28px;
 	background-size: 28px 28px;
 	background-color: transparent;
+}
+.editor-toolbar button {
+	color: #1E1E21;
 }
 .author button.remove {
 	margin-left: 0.5rem;

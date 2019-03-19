@@ -27,10 +27,8 @@ public func configure(_ config: inout Config, _ env: inout Environment, _ servic
     config.prefer(LeafRenderer.self, for: ViewRenderer.self)
 
     /// Modify date configuration
-    let dateFormatter = DateFormatter()
-    dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
     let jsonDecoder = JSONDecoder()
-    jsonDecoder.dateDecodingStrategy = .formatted(dateFormatter)
+    jsonDecoder.dateDecodingStrategy = .formatted(DateFormatter.iso8601)
     var contentConfig = ContentConfig.default()
     contentConfig.use(decoder: jsonDecoder, for: .json)
     services.register(contentConfig)
@@ -39,7 +37,7 @@ public func configure(_ config: inout Config, _ env: inout Environment, _ servic
     let user = Environment.get("USER") ?? "root"
     let hostname = Environment.get("DATABASE_HOSTNAME") ?? "localhost"
     let name = Environment.get("DATABASE_DB") ?? "pigeon"
-    let password = Environment.get("PASSWORD") ?? nil
+    let password = Environment.get("DATABASE_PASSWORD")
 
     // Configure our database, from: `createdb pigeon`
     var databases = DatabasesConfig()
@@ -51,9 +49,10 @@ public func configure(_ config: inout Config, _ env: inout Environment, _ servic
     services.register(databases)
 
     var migrations = MigrationConfig()
+    migrations.add(migration: ContentState.self, database: .psql)
+    migrations.add(model: ContentItem.self, database: .psql)
     migrations.add(model: User.self, database: .psql)
     migrations.add(model: ContentCategory.self, database: .psql)
-    migrations.add(model: ContentItem.self, database: .psql)
     migrations.prepareCache(for: .psql)
     services.register(migrations)
 

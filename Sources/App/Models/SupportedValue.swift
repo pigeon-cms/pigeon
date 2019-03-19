@@ -2,6 +2,7 @@ import Vapor
 import Foundation
 
 enum SupportedValue: Content, Equatable, TemplateDataRepresentable {
+    case markdown(Markdown?)
     case string(String?)
     case int(Int?)
     case float(Float?)
@@ -12,6 +13,10 @@ enum SupportedValue: Content, Equatable, TemplateDataRepresentable {
 
     init(from decoder: Decoder) throws {
         let container = try decoder.singleValueContainer()
+        do {
+            self = .markdown(try container.decode(Markdown.self))
+            return
+        } catch { }
         do {
             self = .date(try container.decode(Date.self))
             return
@@ -46,6 +51,7 @@ enum SupportedValue: Content, Equatable, TemplateDataRepresentable {
     func encode(to encoder: Encoder) throws {
         var container = encoder.singleValueContainer()
         switch self {
+        case .markdown(let markdown): try container.encode(markdown)
         case .string(let string): try container.encode(string)
         case .int(let int): try container.encode(int)
         case .float(let float): try container.encode(float)
@@ -58,6 +64,12 @@ enum SupportedValue: Content, Equatable, TemplateDataRepresentable {
 
     func convertToTemplateData() throws -> TemplateData {
         switch self {
+        case .markdown(let markdown):
+            guard let markdown = markdown else {
+                return TemplateData.null
+            }
+            return TemplateData.dictionary(["markdown": TemplateData.string(markdown.markdown),
+                                            "html": TemplateData.string(markdown.html)])
         case .string(let string):
             guard let string = string else {
                 return TemplateData.null

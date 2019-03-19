@@ -6,6 +6,7 @@ enum SupportedType: Content, ReflectionDecodable, Equatable, RawRepresentable {
     typealias RawValue = String
 
     case string
+    case markdown
     case int
     case float
     case bool
@@ -16,6 +17,7 @@ enum SupportedType: Content, ReflectionDecodable, Equatable, RawRepresentable {
     init?(rawValue: RawValue) {
         switch rawValue {
         case "String": self = .string
+        case "Markdown": self = .markdown
         case "Int": self = .int
         case "Float": self = .float
         case "Bool": self = .bool
@@ -46,6 +48,7 @@ enum SupportedType: Content, ReflectionDecodable, Equatable, RawRepresentable {
     var rawValue: RawValue {
         switch self {
         case .string: return "String"
+        case .markdown: return "Markdown"
         case .int: return "Int"
         case .float: return "Float"
         case .bool: return "Bool"

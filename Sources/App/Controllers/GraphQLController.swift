@@ -1,6 +1,5 @@
 import Vapor
 import GraphQL
-import Pagination
 import AnyCodable
 
 final class GraphQLController: PigeonController {
@@ -21,60 +20,7 @@ private extension GraphQLController {
     }
 
     func schema(_ request: Request) throws -> Future<GraphQLSchema> {
-        return request.allContentTypes().flatMap { contentTypes in
-            return try request.defaultPageSize().map { pageSize in
-                var rootFields = [String: GraphQLField]()
-
-                let pageInfo = try self.graphQLPageInfoType()
-
-                for type in contentTypes {
-                    rootFields[type.plural.camelCase()] = try GraphQLField(
-                        type: type.graphQLType(pageInfo),
-                        args: type.graphQLPaginationArgs(pageSize),
-                        resolve: type.rootResolver(pageSize)
-                    )
-                }
-
-                let schema = try GraphQLSchema(
-                    query: GraphQLObjectType(
-                        name: "RootQueryType",
-                        fields: rootFields)
-                )
-                return schema
-            }
-        }
-    }
-
-    func graphQLPageInfoType() throws -> GraphQLOutputType {
-        var fields = [String: GraphQLField]()
-        fields["current"] = GraphQLField(type: GraphQLInt, resolve: paginationResolver())
-        fields["size"] = GraphQLField(type: GraphQLInt, resolve: paginationResolver())
-        fields["total"] = GraphQLField(type: GraphQLInt, resolve: paginationResolver())
-
-        let pageInfo = try GraphQLObjectType(name: "PageInfo",
-                                             fields: fields)
-        return pageInfo
-    }
-
-    func paginationResolver() -> GraphQLFieldResolve {
-        return { (source, args, context, eventLoopGroup, info) -> EventLoopFuture<Any?> in
-            guard let page = source as? Page<ContentItem> else {
-                throw Abort(.serviceUnavailable)
-            }
-            guard info.path.count > 2 else {
-                throw Abort(.serviceUnavailable)
-            }
-            switch info.path[2].keyValue {
-            case "current":
-                return eventLoopGroup.next().newSucceededFuture(result: page.number)
-            case "total":
-                return eventLoopGroup.next().newSucceededFuture(result: Int(ceil(Float(page.total) / Float(page.size))))
-            case "size":
-                return eventLoopGroup.next().newSucceededFuture(result: page.size)
-            default:
-                throw Abort(.serviceUnavailable)
-            }
-        }
+        return try request.graphQLSchema()
     }
 
     func graphQLResponse(for query: GraphQLHTTPBody, _ request: Request) throws -> Future<Response> {

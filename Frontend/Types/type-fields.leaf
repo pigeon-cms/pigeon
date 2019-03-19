@@ -1,4 +1,8 @@
 #embed("errors")
+
+<link rel="stylesheet" href="https://unpkg.com/easymde/dist/easymde.min.css">
+<script src="https://unpkg.com/easymde/dist/easymde.min.js"></script>
+
 <form
 	v-on:submit.prevent="handleSubmit"
 >
@@ -41,7 +45,7 @@
 		<td><input type="text" disabled class="placeholder"></input></td>
 		<td><label><input type="checkbox" disabled class="placeholder"><span></span></label></span></td>
 	</tr>
-	<tr v-cloak v-for="field in fields">
+	<tr v-cloak v-for="(field, index) in fields">
 		<td>
 			<b class="field-label" v-text="field.type"></b>
 		</td>
@@ -60,6 +64,11 @@
 			v-model="field.value"
 			placeholder="Default value"
 		/>
+		<textarea
+			v-if="field.type == 'Markdown'"
+			v-bind:id=`textarea${index}`
+		>
+		</textarea>
 		<label v-if="field.type == 'Bool'">
 			<input
 				type="checkbox"
@@ -93,6 +102,7 @@
 </form>
 <div class="add-field">
 	<button v-on:click="addField('String')">Text</button>
+	<button v-on:click="addField('Markdown')">Rich text</button>
 	<button v-on:click="addField('Date')">Date</button>
 	<button v-on:click="addField('URL')">Link</button>
 	<button v-on:click="addField('Bool')">Switch</button>

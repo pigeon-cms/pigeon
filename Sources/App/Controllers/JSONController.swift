@@ -1,4 +1,5 @@
 import Vapor
+import Fluent
 import Pagination
 
 final class JSONController: PigeonController {
