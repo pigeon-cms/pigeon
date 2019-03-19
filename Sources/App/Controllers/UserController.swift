@@ -3,7 +3,7 @@ import Fluent
 import Crypto
 
 /// Manages logging in and registering users.
-class UserController: PigeonController {
+final class UserController: PigeonController {
 
     override func authBoot(router: Router) throws {
         router.get("/login", use: handleUnauthenticatedUser)

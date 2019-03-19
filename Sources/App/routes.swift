@@ -2,21 +2,17 @@ import Vapor
 import Authentication
 
 public func routes(_ router: Router) throws {
-    let userRouteController = UserController()
-    try router.register(collection: userRouteController)
+    try router.register(collection: UserController())
 
-    let rootViewController = RootViewController()
-    try router.register(collection: rootViewController)
+    try router.register(collection: RootViewController())
 
-    let contentController = ContentTypeController()
-    try router.register(collection: contentController)
+    try router.register(collection: ContentTypeController())
 
-    let postController = PostController()
-    try router.register(collection: postController)
+    try router.register(collection: PostController())
 
-    let jsonController = JSONController()
-    try router.register(collection: jsonController)
+    try router.register(collection: SettingsController())
 
-    let graphQLController = GraphQLController()
-    try router.register(collection: graphQLController)
+    try router.register(collection: JSONController())
+
+    try router.register(collection: GraphQLController())
 }

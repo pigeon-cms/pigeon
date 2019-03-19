@@ -36,27 +36,29 @@ private final class PigeonGraphQLSchema {
             return request.future(existing)
         }
         
-        return request.allContentTypes().map { contentTypes in
-            var rootFields = [String: GraphQLField]()
-            
-            for type in contentTypes {
-                rootFields[type.plural.camelCase()] = try GraphQLField(
-                    type: type.graphQLType(GraphQLPageInfoType),
-                    args: type.graphQLPaginationArgs(),
-                    resolve: type.rootResolver()
+        return request.allContentTypes().flatMap { contentTypes in
+            return try request.defaultPageSize().map { pageSize in
+                var rootFields = [String: GraphQLField]()
+
+                for type in contentTypes {
+                    rootFields[type.plural.camelCase()] = try GraphQLField(
+                        type: type.graphQLType(GraphQLPageInfoType),
+                        args: type.graphQLPaginationArgs(pageSize),
+                        resolve: type.rootResolver(pageSize)
+                    )
+                }
+
+                let schema = try GraphQLSchema(
+                    query: GraphQLObjectType(
+                        name: "RootQueryType",
+                        fields: rootFields),
+                    types: SupportedType.graphQLNamedTypes
                 )
+
+                self.schema = schema
+
+                return schema
             }
-
-            let schema = try GraphQLSchema(
-                query: GraphQLObjectType(
-                    name: "RootQueryType",
-                    fields: rootFields),
-                types: SupportedType.graphQLNamedTypes
-            )
-
-            self.schema = schema
-
-            return schema
         }
     }
 

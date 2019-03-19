@@ -1,0 +1,120 @@
+#embed("header")
+#embed("nav")
+#embed("modal")
+<h1>Settings</h1>
+<section class="content">
+<div id="settings">
+
+#embed("errors")
+
+<form
+	v-on:submit.prevent="handleSubmit"
+>
+<table class="list">
+	<tr>
+		<td>JSON API</td>
+		<td>/json</td>
+		<td>
+			<label>
+				<input
+					type="checkbox"
+					v-model="jsonEndpointEnabled"
+				/>
+				<span></span>
+			</label>
+		</td>
+	</tr>
+	<tr>
+		<td>GraphQL API</td>
+		<td>/graphql</td>
+		<td>
+			<label>
+				<input
+					type="checkbox"
+					v-model="graphQLEndpointEnabled"
+				/>
+				<span></span>
+			</label>
+		</td>
+	</tr>
+	<tr>
+		<td>Default page size</td>
+		<td>
+			<input
+				type="number"
+				v-model="defaultPageSize"
+				placeholder="#(settings.defaultPageSize)"
+			/>
+		</td>
+		<td></td>
+	</tr>
+	<tr>
+		<td>Maximum page size</td>
+		<td>
+			<input
+				type="number"
+				v-model="maxPageSize"
+				v-bind:placeholder="#js(settings.maxPageSize) || '—'"
+			/>
+		</td>
+		<td></td>
+	</tr>
+</table>
+<button>Save</button>
+</form>
+
+</div>
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<script>
+var create = new Vue({
+	el: '#settings',
+	data: {
+		jsonEndpointEnabled: #js(settings.jsonEndpointEnabled),
+		graphQLEndpointEnabled: #js(settings.graphQLEndpointEnabled),
+		defaultPageSize: #js(settings.defaultPageSize),
+		maxPageSize: #js(settings.maxPageSize) || null,
+		errors: []
+	},
+	methods: {
+		createSettings: function() {
+			return {
+				jsonEndpointEnabled: this.jsonEndpointEnabled,
+				graphQLEndpointEnabled: this.graphQLEndpointEnabled,
+				defaultPageSize: Number(this.defaultPageSize),
+				maxPageSize: Number(this.maxPageSize) === 0 ? null : Number(this.maxPageSize)
+			}
+		},
+		handleSubmit: function(event) {
+			const self = this
+			self.errors = []
+			let settings = self.createSettings()
+
+			var xhr = new XMLHttpRequest()
+			xhr.open('POST', '/settings', true)
+			xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8')
+			xhr.send(JSON.stringify(settings))
+
+			xhr.onloadend = function () {
+				if (xhr.statusText === 'Accepted') {
+					console.log("TODO: Show a nice green success check")
+				}
+
+				if (xhr.responseText) {
+					const response = xhr.responseText
+					if (response.error) {
+						self.handleError(response.reason)
+					}
+				}
+			}
+		},
+		handleError: function(error) {
+			this.errors.push(error)
+		}
+	}
+})
+</script>
+
+
+#embed("footer")

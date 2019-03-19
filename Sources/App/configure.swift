@@ -8,6 +8,12 @@ public func configure(_ config: inout Config, _ env: inout Environment, _ servic
     try services.register(FluentPostgreSQLProvider())
     try services.register(AuthenticationProvider())
 
+//    /// CMS global settings
+//    services.register { container in
+//        /// TODO: `Services.singleton`
+//        return SettingsService()
+//    }
+
     services.register([TemplateRenderer.self, ViewRenderer.self]) { container -> LeafRenderer in
         var tagConfig = LeafTagConfig.default()
         tagConfig.use(JSEscapedFormat(), as: "js")
@@ -32,6 +38,7 @@ public func configure(_ config: inout Config, _ env: inout Environment, _ servic
     let hostname = Environment.get("DATABASE_HOSTNAME") ?? "localhost"
     let name = Environment.get("DATABASE_DB") ?? "pigeon"
     let password = Environment.get("DATABASE_PASSWORD")
+
     // Configure our database, from: `createdb pigeon`
     var databases = DatabasesConfig()
     let databaseConfig = PostgreSQLDatabaseConfig(hostname: hostname,

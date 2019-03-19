@@ -2,9 +2,10 @@ import Vapor
 import GraphQL
 import AnyCodable
 
-class GraphQLController: PigeonController {
+final class GraphQLController: PigeonController {
 
     override func authBoot(router: Router) throws {
+         // TODO: query path not hardcoded
         router.post(["/graphql"], use: graphQLPostQueryHandler)
         router.get(["/graphql"], use: graphQLGetQueryHandler)
     }
@@ -40,20 +41,32 @@ private extension GraphQLController {
     }
 
     func graphQLPostQueryHandler(_ request: Request) throws -> Future<Response> {
-        guard let json = try? request.content.decode(json: GraphQLHTTPBody.self, using: JSONDecoder()) else {
-            throw Abort(.badRequest)
-        }
+        return try request.graphQLEnabled().flatMap { enabled in
+            guard enabled else {
+                throw Abort(.notFound)
+            }
 
-        return json.flatMap { query in
-            return try self.graphQLResponse(for: query, request)
+            guard let json = try? request.content.decode(json: GraphQLHTTPBody.self, using: JSONDecoder()) else {
+                throw Abort(.badRequest)
+            }
+
+            return json.flatMap { query in
+                return try self.graphQLResponse(for: query, request)
+            }
         }
     }
 
     func graphQLGetQueryHandler(_ request: Request) throws -> Future<View> {
-        if request.http.accept.contains(where: { $0.mediaType.type == "text" && $0.mediaType.subType == "html" }) {
-            return try request.view().render("GraphQL/graphql-playground") // TODO: query path not hardcoded
+        return try request.graphQLEnabled().flatMap { enabled in
+            guard enabled else {
+                throw Abort(.notFound)
+            }
+
+            if request.http.accept.contains(where: { $0.mediaType.type == "text" && $0.mediaType.subType == "html" }) {
+                return try request.view().render("GraphQL/graphql-playground")
+            }
+            throw Abort(.notFound) // TODO: GraphQL GET queries
         }
-        throw Abort(.notFound) // TODO: GraphQL GET queries
     }
 
 }
