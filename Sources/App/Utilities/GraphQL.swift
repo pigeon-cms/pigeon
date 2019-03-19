@@ -7,18 +7,23 @@ extension Request {
     func graphQLSchema() throws ->  Future<GraphQLSchema> {
         return try PigeonGraphQLSchema.shared.schema(self)
     }
+
+    func invalidateGraphQLSchema() {
+        NotificationCenter.default.post(Notification(name: PigeonGraphQLSchema.schemaChangeNotification))
+    }
 }
 
 private final class PigeonGraphQLSchema {
-    
+
     /// Thread-specific GraphQL schema
     private static let thread: ThreadSpecificVariable<PigeonGraphQLSchema> = .init()
-    
+
     static var shared: PigeonGraphQLSchema {
         if let existing = thread.currentValue {
             return existing
         } else {
             let new = PigeonGraphQLSchema()
+            new.monitorSchema()
             thread.currentValue = new
             return new
         }
@@ -53,6 +58,19 @@ private final class PigeonGraphQLSchema {
 
             return schema
         }
+    }
+
+    static let schemaChangeNotification = Notification.Name("schemaChangeNotification")
+
+    private func monitorSchema() {
+        NotificationCenter.default.addObserver(forName: PigeonGraphQLSchema.schemaChangeNotification, object: self, queue: nil) { notification in
+            fatalError()
+        }
+    }
+
+    private func removeSavedSchema(_ notification: Notification) {
+        print("REMOVING")
+        fatalError()
     }
     
     private init() { }
