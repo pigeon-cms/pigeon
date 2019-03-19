@@ -80,6 +80,7 @@ private extension PostController {
                 post.state = item.state
                 post.scheduled = item.scheduled
                 post.updated = item.updated
+                post.published = item.published
                 post.content = item.content
                 post.authors = item.authors
                 return post.update(on: request).map { _ in

@@ -33,8 +33,8 @@
         "repositoryURL": "https://github.com/vapor/core.git",
         "state": {
           "branch": null,
-          "revision": "439d6dcd6c520451ae30d39b2ca9f2aba96c22f4",
-          "version": "3.7.0"
+          "revision": "7fe113f5e857c690b25960ccd6d9430cd34d038d",
+          "version": "3.7.1"
         }
       },
       {
@@ -105,8 +105,8 @@
         "repositoryURL": "https://github.com/vapor/http.git",
         "state": {
           "branch": null,
-          "revision": "b57005e0de30ba36372ac41bfce1ac12b2bc3272",
-          "version": "3.1.8"
+          "revision": "24282b07c5b6fab13b7f2248eec45bc4e4e46eff",
+          "version": "3.1.10"
         }
       },
       {
@@ -141,8 +141,8 @@
         "repositoryURL": "https://github.com/vapor/postgresql.git",
         "state": {
           "branch": null,
-          "revision": "830abbc80de4fad428987bea1bf3d43013f17cc1",
-          "version": "1.4.0"
+          "revision": "41cec2846f9cdd8233675da0d256efa3b8d62b21",
+          "version": "1.4.1"
         }
       },
       {
@@ -195,8 +195,8 @@
         "repositoryURL": "https://github.com/apple/swift-nio.git",
         "state": {
           "branch": null,
-          "revision": "87dbd0216c47ea2e7ddb1b545271b716e03b943e",
-          "version": "1.13.1"
+          "revision": "29a9f2aca71c8afb07e291336f1789337ce235dd",
+          "version": "1.13.2"
         }
       },
       {
