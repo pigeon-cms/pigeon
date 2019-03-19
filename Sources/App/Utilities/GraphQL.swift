@@ -60,7 +60,7 @@ private final class PigeonGraphQLSchema {
         }
     }
 
-    static let schemaChangeNotification = Notification.Name("schemaChangeNotification")
+    static let schemaChangeNotification = Notification.Name(rawValue: "schemaChangeNotification")
 
     private func monitorSchema() {
         NotificationCenter.default.addObserver(forName: PigeonGraphQLSchema.schemaChangeNotification, object: nil, queue: nil, using: removeSavedSchema)
