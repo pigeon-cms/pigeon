@@ -63,14 +63,11 @@ private final class PigeonGraphQLSchema {
     static let schemaChangeNotification = Notification.Name("schemaChangeNotification")
 
     private func monitorSchema() {
-        NotificationCenter.default.addObserver(forName: PigeonGraphQLSchema.schemaChangeNotification, object: self, queue: nil) { notification in
-            fatalError()
-        }
+        NotificationCenter.default.addObserver(forName: PigeonGraphQLSchema.schemaChangeNotification, object: nil, queue: nil, using: removeSavedSchema)
     }
 
     private func removeSavedSchema(_ notification: Notification) {
-        print("REMOVING")
-        fatalError()
+        schema = nil
     }
     
     private init() { }
